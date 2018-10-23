@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "MultPakTool",
+	"Description": "One Step",
+	"Category": "Other",
+	"CreatedBy": "YIYUCHENG",
+	"CreatedByURL": "www.12306.cn",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "MultPakTool",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}
