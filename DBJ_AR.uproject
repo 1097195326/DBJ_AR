@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "4.20",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "DBJ_AR",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
