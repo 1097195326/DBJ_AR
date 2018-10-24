@@ -2,16 +2,12 @@
 
 #include "GData.h"
 #include <map>
-#include "UIXMLData.h"
+#include "ProjectDataType.h"
+#include "UIPrototype.h"
 
 using namespace std;
 
-enum DataIndex
-{
-    E_UIXMLData = 100
 
-
-};
 
 class DBJ_AR_API DataManager : public GObject
 {
@@ -27,6 +23,6 @@ public:
     void LoadAllXMLData();
 
 
-    UIXMLData * GetUIXMLData();
+    GData * GetProtoType(PrototypeIndex _id);
 
 };

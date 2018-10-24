@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+    HTTP 映射表.
+ -->
+
+<root type="HttpMappingPrototype">
+
+  <httpMapping pid="200" name="IOS">
+
+    <mapping msgId="1001" channel="hosaHttp" url="" uri="member/login" dest="登陆"/>
+    <mapping msgId="2003" channel="Local" url="" uri="" dest="Request Shop Url"/>
+    
+  <httpMapping/>
+  
+</root>

@@ -16,10 +16,10 @@ void DataManager::LoadAllXMLData()
 
     UE_LOG(LogTemp,Log,TEXT("zhx : DataManager::LoadAllXMLData : %s"),*mLocalConfigPath);
     
-    if (!LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("UIXMLData.xml"))))
-    {
-        return;
-    }
+	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("ControllerPrototype.xml")));
+	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("HttpMappingPrototype.xml")));
+	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("ServerPrototype.xml")));
+	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("UIPrototype.xml")));
 
 }
 bool DataManager::LoadXMLFile(const FString & _xmlPath)
@@ -71,7 +71,8 @@ bool DataManager::LoadXMLFile(const FString & _xmlPath)
     doc.Clear();
     return true;
 }
-UIXMLData * DataManager::GetUIXMLData()
+GData * DataManager::GetProtoType(PrototypeIndex _id)
 {
-    return (UIXMLData*)m_DataMap[E_UIXMLData];
+    return m_DataMap[_id];
+
 }

@@ -16,7 +16,7 @@ struct UIData
     }
 };
 
-class DBJ_AR_API UIXMLData : public DataT
+class DBJ_AR_API UIPrototype : public DataT
 {
 private:
     TMap<FString, UIData> m_UIXMLData;
@@ -24,6 +24,6 @@ public:
     virtual void InitWithXML(TiXmlElement * _xml) override;
 
 public:
-    UIData GetUIDataByKey(FString _key);
+    UIData GetDataByKey(FString _key);
 
 };

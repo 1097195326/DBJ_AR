@@ -1,10 +1,10 @@
-#include "UIXMLData.h"
+#include "UIPrototype.h"
 
-G_REGISTER_CLASS(UIXMLData)
+G_REGISTER_CLASS(UIPrototype)
 
-void UIXMLData::InitWithXML(TiXmlElement * xml)
+void UIPrototype::InitWithXML(TiXmlElement * _xml)
 {
-    for (TiXmlElement* elem = xml->FirstChildElement(); elem != NULL; elem = elem->NextSiblingElement())
+    for (TiXmlElement* elem = _xml->FirstChildElement(); elem != NULL; elem = elem->NextSiblingElement())
     {
         UIData data;
         data.m_Key = UTF8_TO_TCHAR(elem->Attribute("key"));
@@ -14,7 +14,7 @@ void UIXMLData::InitWithXML(TiXmlElement * xml)
         m_UIXMLData.Add(data.m_Key, data);
     }
 }
-UIData UIXMLData::GetUIDataByKey(FString _key)
+UIData UIPrototype::GetDataByKey(FString _key)
 {
     if (m_UIXMLData.Contains(_key))
     {

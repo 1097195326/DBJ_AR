@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!-- 
+		设置项目的配置文件.
+ -->
+
+<root type="ServerPrototype">
+	<server pid="300" desc="dug HTTP.">
+		<param key="platform"      value="WINDOWS"             desc="当前运行的平台"/>
+
+		<param key="serverUrl"     value="http://47.94.153.43:9090/"           desc="http url"/>
+
+		<param key="errorHttpUrl"       value="http://47.94.153.43:8090/exception/log"                desc="异常url"/>
+
+		<param key="sharedHttpUrl"       value="http://test-h5.fafaapp.com/"                desc="异常url"/>
+	</server> 
+
+	<server pid="82" desc="android Http.">
+		
+	</server> 
+
+</root>    
