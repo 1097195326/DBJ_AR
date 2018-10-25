@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GAppInstance.h"
-#include "AppCore/Managers/ManagerHeader.h"
+#include "AppCore/Managers/DataManager.h"
 #include "AppInstance.generated.h"
 
 UCLASS()

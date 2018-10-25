@@ -7,7 +7,7 @@
 
 using namespace std;
 
-
+#define Data_M DataManager::GetInstance()
 
 class DBJ_AR_API DataManager : public GObject
 {

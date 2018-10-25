@@ -15,5 +15,5 @@ void UButtonScript::OnButtonClick()
 }
 void UButtonScript::On_Delete()
 {
-	RemoveFromRoot();
+	
 }

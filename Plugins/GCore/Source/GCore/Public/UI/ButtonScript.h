@@ -6,22 +6,25 @@
 #include <functional>
 #include "ButtonScript.generated.h"
 
-typedef std::function<void(int)> BUTTON_CLICK_CALL;
+
 
 UCLASS()
-class UButtonScript : public UObject, public GObject
+class GCORE_API UButtonScript : public UObject, public GObject
 {
 	GENERATED_BODY()
+	
 private:
+	typedef std::function<void(int)> BUTTON_CLICK_CALL;
+
 	UButton * m_Button;
 	int		m_Index;
 	BUTTON_CLICK_CALL	m_Call;
 
-	UFUNCTION()
-		void OnButtonClick();
 public:
 	static UButtonScript * Create();
-
+	
+	UFUNCTION()
+		void OnButtonClick();
 	virtual void On_Delete() override;
 
 	template<typename T>

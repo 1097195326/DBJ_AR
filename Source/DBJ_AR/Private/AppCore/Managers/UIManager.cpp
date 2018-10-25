@@ -1,5 +1,5 @@
 #include "UIManager.h"
-#include "ManagerHeader.h"
+#include "DataManager.h"
 #include "AppInstance.h"
 
 UIManager * UIManager::GetInstance()
@@ -27,9 +27,14 @@ UBaseUI* UIManager::OpenUI(const FString & _uiName)
     }
     return nullptr;
 }
-void UIManager::UnRegisterButton(UButtonScript * _btn)
+void UIManager::UnRegisterButton(UButton * _btn)
 {
-    m_ButtonList.remove(_btn);
-    _btn->On_Delete();
+	if (m_ButtonMap.Contains(_btn))
+	{
+		UButtonScript * bs = *(m_ButtonMap.Find(_btn));
+		m_ButtonMap.Remove(_btn);
+		bs->RemoveFromRoot();
+	}
+	
 
 }

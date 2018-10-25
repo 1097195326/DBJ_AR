@@ -6,11 +6,14 @@
 #include "BaseUI.h"
 #include <list>
 
+
+#define UI_M UIManager::GetInstance()
+
 class DBJ_AR_API UIManager : public GObject
 {
 private:
     // single instance
-    std::list<UButtonScript*>        m_ButtonList;
+    TMap<UButton*, UButtonScript*>        m_ButtonMap;
 
 public:
     static UIManager * GetInstance();
@@ -20,9 +23,9 @@ public:
     template<typename T>
     void RegisterButton(int _bid, UButton * _btn, T * _obj, void(T::*_func)(int))
     {
-        UButtonScript * bs = UButtonScript::Create();
-        bs->BindFunctionCall(_bid, _btn, _obj, _func);
-        m_ButtonList.push_back(bs);
+		UButtonScript * bs = UButtonScript::Create();
+		bs->BindFunctionCall(_bid, _btn, _obj, _func);
+		m_ButtonMap.Add(_btn, bs);
     }
-    void UnRegisterButton(UButtonScript * _btn);
+    void UnRegisterButton(UButton * _btn);
 };

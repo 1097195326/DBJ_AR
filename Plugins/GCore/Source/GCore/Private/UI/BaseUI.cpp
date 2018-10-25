@@ -10,18 +10,19 @@ UBaseUI::UBaseUI(const FObjectInitializer& ObjectInitializer):Super(ObjectInitia
 
 bool UBaseUI::Initialize()
 {
-	if (Super::Initialize())
+	if (!Super::Initialize())
 	{
-		On_Init();
-		return true;
+		
+		return false;
 	}
-	return false;
+	On_Init();
+	return true;
 }
 void UBaseUI::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-
+	On_Start();
 }
 void UBaseUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
