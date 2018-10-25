@@ -3,14 +3,20 @@
 #include "ProjectDataType.h"
 #include "CoreMinimal.h"
 
+struct ControllerData
+{
+
+};
 
 class ControllerPrototype : public DataT
 {
+private:
+	TMap<FString, float>	m_DataMap;
 public:
 	int					m_Platform;
-	PrototypeIndex		m_Server_ID;
-	PrototypeIndex		m_UI_ID;
-	PrototypeIndex		m_Http_ID;
+	int					m_Server_ID;
+	int					m_UI_ID;
+	int					m_Http_ID;
 
 	float				m_AppVersion;
 public:

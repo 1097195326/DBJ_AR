@@ -1,6 +1,6 @@
 #include "UIManager.h"
 #include "ManagerHeader.h"
-#include "GAppInstance.h"
+#include "AppInstance.h"
 
 UIManager * UIManager::GetInstance()
 {
@@ -21,7 +21,7 @@ UBaseUI* UIManager::OpenUI(const FString & _uiName)
         if (loadClass == nullptr)
             return nullptr;
 
-        UWorld * mWorld = UGAppInstance::GetInstance()->GetWorld();
+        UWorld * mWorld = UAppInstance::GetInstance()->GetWorld();
         UBaseUI* _sceneObj = (UBaseUI*)CreateWidget<UUserWidget>(mWorld, loadClass);
         return _sceneObj;
     }

@@ -5,12 +5,8 @@
  -->
 
 <root type="HttpMappingPrototype">
-
   <httpMapping pid="200" name="IOS">
-
-    <mapping msgId="1001" channel="hosaHttp" url="" uri="member/login" dest="登陆"/>
-    <mapping msgId="2003" channel="Local" url="" uri="" dest="Request Shop Url"/>
-    
+    <mapping msgId="1001" channel="hosaHttp" url="" uri="member/login" desc="登陆"/>
+    <mapping msgId="2003" channel="Local" url="" uri="" desc="Request Shop Url"/>
   <httpMapping/>
-  
 </root>

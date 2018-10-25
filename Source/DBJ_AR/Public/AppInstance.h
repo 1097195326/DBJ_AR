@@ -8,9 +8,10 @@ UCLASS()
 class DBJ_AR_API UAppInstance : public UGAppInstance
 {
 	GENERATED_BODY()
-private:
-
+	
 public:
+	UAppInstance();
+
 	virtual void On_Init() override;
 
 };

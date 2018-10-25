@@ -11,5 +11,5 @@ public:
 
 	virtual void On_Init();
 	virtual void On_Start();
-
+	virtual void On_Delete();
 };

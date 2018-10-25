@@ -18,7 +18,7 @@ UCLASS()
 class GCORE_API UGAppInstance : public UGameInstance, public GObject
 {
     GENERATED_BODY()
-private:
+protected:
     static UGAppInstance *  m_Instance;
 public:
     static UGAppInstance * GetInstance();

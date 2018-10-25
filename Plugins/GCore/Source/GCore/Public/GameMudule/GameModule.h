@@ -8,10 +8,12 @@ class GameModule : public GObject
 private:
 
 protected:
-	UIController * m_UIController;
+	//list<UIController*>		m_UIControllers;
+
+	UIController * m_CurrentUIController;
 public:
 	
 	void SetUIController(UIController * _uiController);
 
-	
+	UIController * GetCurrentUIController();
 };
