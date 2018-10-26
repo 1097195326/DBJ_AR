@@ -31,12 +31,42 @@ void MsgCenter::RemoveMsgHeader(MsgChanelId _channelId, int _msgId,void * _obj)
         channel->RemoveMsgHeader(_msgId, _obj);
     }
 }
-void MsgCenter::SendMsg(_msg_ptr _msg)
+void MsgCenter::SendMsg(msg_ptr _msg)
 {
     auto iter = m_Channel_Map.find(_msg->GetMsgChannelId());
     if (iter != m_Channel_Map.end())
     {
         MsgChannel * channel = iter->second;
         channel->SendMsg(_msg);
-    }
+	}
+	else
+	{
+		MsgChannel * channel = nullptr;
+		MsgChanelId channelID = _msg->m_MsgChannelId;
+		switch (channelID)
+		{
+		case Msg_Local:
+		{
+			channel = new LocalChannel();
+			break;
+		}
+		case Msg_HttpRequest:
+		{
+			channel = new HttpChannel();
+			break;
+		}
+		default:
+			return;
+		}
+		channel->SetChannelId(channelID);
+		m_Channel_Map.insert(pair<MsgChanelId, MsgChannel*>(channelID, channel));
+		channel->SendMsg(_msg);
+	}
+}
+void MsgCenter::StopSendMsg()
+{
+	for (auto channel : m_Channel_Map)
+	{
+		channel.second->StopSendMsg();
+	}
 }

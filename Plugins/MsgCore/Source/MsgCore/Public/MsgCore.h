@@ -4,7 +4,7 @@
 
 #include "ModuleManager.h"
 
-class FMsgCore : public IModuleInterface
+class MSGCORE_API FMsgCore : public IModuleInterface
 {
 public:
 

@@ -19,7 +19,8 @@ public class MsgCore : ModuleRules
         
 		PublicIncludePaths.AddRange(
 			new string[] {
-                "MsgCore/Public"
+                "MsgCore/Public",
+                "MsgCore/Public/SubClass"
 				
 				// ... add public include paths required here ...
 			}
@@ -29,7 +30,7 @@ public class MsgCore : ModuleRules
 		PrivateIncludePaths.AddRange(
 			new string[] {
                 "MsgCore/Private",
-				
+                 "MsgCore/Private/SubClass"
 				// ... add other private include paths required here ...
 			}
 			);
@@ -39,7 +40,10 @@ public class MsgCore : ModuleRules
 			new string[]
 			{
 				"Core",
-				
+                "HTTP",
+                "JsonUtilities",
+                "Json",
+                "Networking",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

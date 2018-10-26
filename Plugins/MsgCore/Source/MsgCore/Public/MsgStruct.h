@@ -7,6 +7,7 @@
 //
 #pragma once
 
+#include "Serialization/JsonSerializer.h"
 
 #include <stdio.h>
 #include <string>
@@ -17,19 +18,17 @@ using namespace std;
 enum MsgChanelId
 {
     Msg_Local = 1,
-    Msg_HttpRequest,
-    Msg_HttpRespose
+    Msg_HttpRequest
 };
-class MsgStruct
+class MSGCORE_API  MsgStruct
 {
-private:
+public:
 	void *      m_MsgContent;  // 消息内容
 	int         m_MsgId;  // 消息编号
 	MsgChanelId         m_MsgChannelId; // 消息通道编号
 protected:
 	char *      m_MsgError; // 消息报错
 public:
-	MsgStruct(MsgChanelId _channelId, int _msgId, void * _msgContent);
 	virtual ~MsgStruct();
 
 	int GetMsgId();
@@ -38,10 +37,10 @@ public:
 	char *      GetMsgError();
 
 	template<typename T>
-	T * ContentToT()
+	T * ConvertToT()
 	{
-		return (T*)(m_MsgContent);
+		return (T*)(this);
 	}
 };
-typedef shared_ptr<MsgStruct> _msg_ptr;
+typedef shared_ptr<MsgStruct> msg_ptr;
 

@@ -23,6 +23,12 @@ public:
     void LoadAllXMLData();
 
 
-    GData * GetProtoType(PrototypeIndex _id);
+	template<typename T>
+	T * GetProtoType(int _id)
+	{
+		return (T*)m_DataMap[_id];
+	};
+
+	FString	GetURL(int index);
 
 };

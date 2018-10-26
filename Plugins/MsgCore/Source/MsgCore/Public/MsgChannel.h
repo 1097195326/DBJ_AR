@@ -14,7 +14,7 @@
 #include <map>
 #include <functional>
 
-typedef function<void(_msg_ptr)> MsgFunction;
+typedef function<void(msg_ptr)> MsgFunction;
 
 struct MsgHeader
 {
@@ -22,9 +22,10 @@ struct MsgHeader
     MsgFunction m_Fun_Header;
 };
 
-class MsgChannel
+class MSGCORE_API MsgChannel
 {
-private:
+protected:
+
     typedef list<MsgHeader>                     Msg_Header_List;
     typedef map<int,Msg_Header_List>            Msg_Header_Map;
     
@@ -36,7 +37,7 @@ public:
     virtual ~MsgChannel();
     
     template<typename T>
-    void RegisterMsgHeader(int _msgId, T * _obj, void(T::*_func)(_msg_ptr))
+    void RegisterMsgHeader(int _msgId, T * _obj, void(T::*_func)(msg_ptr))
     {
         MsgFunction mTemFunc = bind(_func, _obj, placeholders::_1);
         
@@ -58,7 +59,9 @@ public:
     }
     void RemoveMsgHeader(int _msgId,void * _obj);
     
-    void SendMsg(_msg_ptr _msg);
+    virtual void SendMsg(msg_ptr _msg);
     
     void SetChannelId(MsgChanelId _channelId);
+
+	virtual void StopSendMsg();
 };

@@ -11,7 +11,7 @@ struct ControllerData
 class ControllerPrototype : public DataT
 {
 private:
-	TMap<FString, float>	m_DataMap;
+	TMap<FString, int>	m_DataMap;
 public:
 	int					m_Platform;
 	int					m_Server_ID;

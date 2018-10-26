@@ -12,7 +12,7 @@ public class DBJ_AR : ModuleRules
         "Slate", "SlateCore","UMG"
 });
 
-        PublicDependencyModuleNames.AddRange(new string[] {"GCore",  "GXmlPlugins" });
+        PublicDependencyModuleNames.AddRange(new string[] {"GCore",  "GXmlPlugins", "MsgCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

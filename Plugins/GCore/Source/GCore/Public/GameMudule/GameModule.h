@@ -9,7 +9,6 @@ private:
 
 protected:
 	//list<UIController*>		m_UIControllers;
-
 	UIController * m_CurrentUIController;
 public:
 	

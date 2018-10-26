@@ -2,6 +2,10 @@
 #include "FileHelper.h"
 #include "Base64.h"
 //#include "EncryptDecryptTool.h"
+#include "ServerPrototype.h"
+#include "HttpMappingPrototype.h"
+#include "ControllerPrototype.h"
+
 
 DataManager * DataManager::GetInstance()
 {
@@ -71,8 +75,14 @@ bool DataManager::LoadXMLFile(const FString & _xmlPath)
     doc.Clear();
     return true;
 }
-GData * DataManager::GetProtoType(PrototypeIndex _id)
-{
-    return m_DataMap[_id];
 
+FString DataManager::GetURL(int index)
+{
+	ControllerPrototype * controller = GetProtoType<ControllerPrototype>(PrototypeIndex::E_Controller_ID);
+	ServerPrototype * server = GetProtoType<ServerPrototype>(controller->m_Server_ID);
+	HttpMappingPrototype * http = GetProtoType<HttpMappingPrototype>(controller->m_Http_ID);
+	ServerData serverData = server->GetDataByKey("serverUrl");
+	HttpData httpData = http->GetDataByKey(index);
+	FString url = FString::Printf(TEXT("%s%s"), *serverData.m_Value, *httpData.m_Uri);
+	return url;
 }

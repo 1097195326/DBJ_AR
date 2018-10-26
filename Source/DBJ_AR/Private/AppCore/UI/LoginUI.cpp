@@ -1,6 +1,8 @@
 #include "LoginUI.h"
 #include "UIManager.h"
+#include "LoginGameModule.h"
 
+#include "MsgCenter.h"
 
 void ULoginUI::On_Init()
 {
@@ -43,6 +45,22 @@ void ULoginUI::On_Delete()
 void ULoginUI::On_Button_Click(int _index)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::On_Button_Click : %d"), _index);
-
+	switch (_index)
+	{
+	case 1:
+	{
+		UE_LOG(LogTemp,Log,TEXT("zhx : msm code button click "));
+		FString phoneNum = m_Phone_Text->GetText().ToString();
+		LoginGameModule::GetInstance()->GetSmsCodeToLogin(TEXT("15652707598"));
+		break;
+	}
+	case 2:
+	{
+		
+		break;
+	}
+	default:
+		break;
+	}
 
 }

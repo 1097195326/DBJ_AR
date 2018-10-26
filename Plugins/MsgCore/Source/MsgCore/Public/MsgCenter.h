@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "MsgChannel.h"
+#include "LocalChannel.h"
+#include "HttpChannel.h"
 
-
-class MsgCenter
+class MSGCORE_API MsgCenter
 {
 private:
     map<MsgChanelId,MsgChannel*>    m_Channel_Map;
@@ -23,12 +23,25 @@ public:
     static MsgCenter * Instance();
     
     template<typename T>
-    void RegisterMsgHeader(MsgChanelId _channelId, int _msgId, T * _obj, void(T::*_func)(_msg_ptr))
+    void RegisterMsgHeader(MsgChanelId _channelId, int _msgId, T * _obj, void(T::*_func)(msg_ptr))
     {
         auto ChannelIter = m_Channel_Map.find(_channelId);
         if (ChannelIter == m_Channel_Map.end())
         {
-            MsgChannel * channel = new MsgChannel();
+			MsgChannel * channel = nullptr;
+			switch (_channelId)
+			{
+			case Msg_Local:
+			{
+				channel = new LocalChannel();
+			}
+			case Msg_HttpRequest:
+			{
+				channel = new HttpChannel();
+			}
+			default:
+				return;
+			}
             channel->SetChannelId(_channelId);
             channel->RegisterMsgHeader(_msgId, _obj, _func);
             
@@ -41,6 +54,7 @@ public:
     }
     void RemoveMsgHeader(MsgChanelId _channelId, int _msgId,void * _obj);
     
-    void SendMsg(_msg_ptr _msg);
+    void SendMsg(msg_ptr _msg);
     
+	void StopSendMsg();
 };

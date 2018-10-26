@@ -1,12 +1,8 @@
+
 #include "MsgStruct.h"
 
 
-MsgStruct::MsgStruct(MsgChanelId _channelId, int _msgId,void * _msgContent)
-{
-    m_MsgId = _msgId;
-    m_MsgContent = _msgContent;
-    m_MsgChannelId = _channelId;
-}
+
 MsgStruct::~MsgStruct()
 {
     

@@ -13,7 +13,7 @@ void HttpMappingPrototype::InitWithXML(TiXmlElement * _xml)
 			HttpData data;
 			data.m_msgID = atoi(id);
 			data.m_Channel = UTF8_TO_TCHAR(elem->Attribute("channel"));
-			data.m_Url = UTF8_TO_TCHAR(elem->Attribute("url"));
+			//data.m_Url = UTF8_TO_TCHAR(elem->Attribute("url"));
 			data.m_Uri = UTF8_TO_TCHAR(elem->Attribute("uri"));
 			data.m_desc = UTF8_TO_TCHAR(elem->Attribute("desc"));
 
