@@ -64,7 +64,7 @@ void ULoginUI::On_Button_Click(int _index)
 		FString phoneNum = m_Phone_Text->GetText().ToString();
 		FString veriCodeNum = m_VeriCode_Text->GetText().ToString();
 //        LoginGameModule::GetInstance()->UserLogin(TEXT("15652707598"), veriCodeNum);
-        UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+        UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));
 
 		break;
 	}
