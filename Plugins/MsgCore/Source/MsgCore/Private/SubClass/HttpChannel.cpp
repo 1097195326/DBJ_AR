@@ -6,12 +6,14 @@
 HttpChannel::HttpChannel():m_CanRun(true)
 {
 	m_IsRequesting = false;
-	m_Thread = thread(std::bind(&HttpChannel::Update, this));
-	m_Thread.detach();
+	/*m_Thread = thread(std::bind(&HttpChannel::Update, this));
+	m_Thread.detach();*/
 }
 void HttpChannel::SendMsg(msg_ptr _msg)
 {
 	m_Msg_Queue.push(_msg);
+	m_CurrentMsg = m_Msg_Queue.front();
+	SendMsgToHttp(m_CurrentMsg);
 }
 void HttpChannel::Update()
 {
@@ -62,30 +64,27 @@ void HttpChannel::OnMsgResponse(FHttpRequestPtr inReq, FHttpResponsePtr inResp, 
 	if (isSuccess && inResp.IsValid())
 	{
 		FString mResponseMsg = inResp->GetContentAsString();
-		UE_LOG(LogTemp, Log, TEXT("zhx : response : %s"), *mResponseMsg);
-		/*if (!mResponseMsg.IsEmpty())
+		UE_LOG(LogTemp, Error, TEXT("zhx : response : %s"), *mResponseMsg);
+		if (!mResponseMsg.IsEmpty())
 		{
 			TSharedPtr<FJsonObject> mJsonObject;
 			TSharedRef<TJsonReader<>> t_reader = TJsonReaderFactory<>::Create(mResponseMsg);
 			if (FJsonSerializer::Deserialize(t_reader, mJsonObject))
 			{
-				int32 code = mJsonObject->GetIntegerField(TEXT("code"));
-				FString sMsg = mJsonObject->GetStringField(TEXT("message"));
+				// detach msg
+				auto iter = m_Msg_Header_Map.find(m_CurrentMsg->GetMsgId());
+				if (iter != m_Msg_Header_Map.end())
+				{
+					Msg_Header_List msgList = iter->second;
+					list<MsgHeader>::iterator lIter;
+					for (lIter = msgList.begin(); lIter != msgList.end(); lIter++)
+					{
+						msg_ptr msg(new MsgStruct(mJsonObject));
+						lIter->m_Fun_Header(msg);
+					}
+				}
 			}
-		}*/
-		// detach msg
-		/*auto iter = m_Msg_Header_Map.find(m_CurrentMsg->GetMsgId());
-		if (iter != m_Msg_Header_Map.end())
-		{
-		Msg_Header_List msgList = iter->second;
-		list<MsgHeader>::iterator lIter;
-		for (lIter = msgList.begin(); lIter != msgList.end(); lIter++)
-		{
-			msg_ptr msg(new LocalMsg());
-			
-			lIter->m_Fun_Header(msg);
 		}
-		}*/
 	}
 
 	m_Msg_Queue.pop();

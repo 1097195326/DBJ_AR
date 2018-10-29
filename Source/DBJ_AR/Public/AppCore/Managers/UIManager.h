@@ -28,4 +28,5 @@ public:
 		m_ButtonMap.Add(_btn, bs);
     }
     void UnRegisterButton(UButton * _btn);
+
 };

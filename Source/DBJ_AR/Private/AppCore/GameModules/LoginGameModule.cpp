@@ -39,6 +39,20 @@ void LoginGameModule::GetSmsCodeToLogin(FString _phoneNum)
 	msg_ptr mMsg(msg); //
 	
 	// 3.通过消息系统发送消息.
-	MsgCenter::Instance()->SendMsg(mMsg);
+	MsgCenter::GetInstance()->SendMsg(mMsg);
 
+}
+void LoginGameModule::UserLogin(FString _phoneNum, FString _smsCodeNum)
+{
+	TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
+
+	t_jsonObject->SetStringField(TEXT("phone"), _phoneNum);
+	t_jsonObject->SetStringField(TEXT("smsCode"), _smsCodeNum);
+
+	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1001, t_jsonObject);
+	msg->m_httpUrl = Data_M->GetURL(msg->m_MsgId);
+	msg_ptr mMsg(msg); //
+
+					   // 3.通过消息系统发送消息.
+	MsgCenter::GetInstance()->SendMsg(mMsg);
 }

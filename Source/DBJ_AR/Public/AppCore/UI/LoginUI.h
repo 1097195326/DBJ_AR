@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseUI.h"
+#include "MsgCenter.h"
 #include "LoginUI.generated.h"
 
 UCLASS()
@@ -21,5 +22,6 @@ public:
 
 	void On_Button_Click(int _index);
 
-
+	void OnGetSmsCode(msg_ptr _msg);
+	void OnUserLogin(msg_ptr _msg);
 };

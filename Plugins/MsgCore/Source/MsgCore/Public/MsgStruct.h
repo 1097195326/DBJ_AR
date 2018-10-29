@@ -24,15 +24,20 @@ class MSGCORE_API  MsgStruct
 {
 public:
 	void *      m_MsgContent;  // 消息内容
+	TSharedPtr<FJsonObject>		m_JsonObject;
 	int         m_MsgId;  // 消息编号
 	MsgChanelId         m_MsgChannelId; // 消息通道编号
 protected:
 	char *      m_MsgError; // 消息报错
 public:
+	MsgStruct();
+	MsgStruct(void * _msgContent);
+	MsgStruct(TSharedPtr<FJsonObject> _jsonObject);
 	virtual ~MsgStruct();
 
 	int GetMsgId();
 	void * GetMsgContent();
+	TSharedPtr<FJsonObject> GetJsonObject();
 	MsgChanelId      GetMsgChannelId();
 	char *      GetMsgError();
 

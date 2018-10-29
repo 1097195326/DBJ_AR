@@ -17,7 +17,7 @@ MsgCenter::~MsgCenter()
 {
     
 }
-MsgCenter * MsgCenter::Instance()
+MsgCenter * MsgCenter::GetInstance()
 {
     static MsgCenter m;
     return &m;

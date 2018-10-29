@@ -13,4 +13,5 @@ private:
 public:
 	AEditerARGameMode();
 
+	virtual void StartPlay()override;
 };

@@ -1,8 +1,8 @@
 #include "LoginUI.h"
 #include "UIManager.h"
 #include "LoginGameModule.h"
+#include "AppInstance.h"
 
-#include "MsgCenter.h"
 
 void ULoginUI::On_Init()
 {
@@ -29,10 +29,14 @@ void ULoginUI::On_Init()
 void ULoginUI::On_Start()
 {
 	
-	
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &ULoginUI::OnGetSmsCode);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &ULoginUI::OnUserLogin);
 }
 void ULoginUI::On_Delete()
 {
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1002, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1001, this);
+
 	if (m_Login_Button)
 	{
 		UI_M->UnRegisterButton(m_Login_Button);
@@ -57,10 +61,30 @@ void ULoginUI::On_Button_Click(int _index)
 	case 2:
 	{
 		
+		FString phoneNum = m_Phone_Text->GetText().ToString();
+		FString veriCodeNum = m_VeriCode_Text->GetText().ToString();
+		LoginGameModule::GetInstance()->UserLogin(TEXT("15652707598"), veriCodeNum);
+
 		break;
 	}
 	default:
 		break;
 	}
+
+}
+void ULoginUI::OnGetSmsCode(msg_ptr _msg)
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnGetSmsCode : "));
+
+}
+void ULoginUI::OnUserLogin(msg_ptr _msg)
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnUserLogin : "));
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+
+
+	//UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+	UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));
+
 
 }

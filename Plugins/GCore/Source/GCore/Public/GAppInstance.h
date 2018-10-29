@@ -25,8 +25,9 @@ public:
     
     virtual void Init() override;
     
-    UFUNCTION(Exec)
-    void ShowLog();
+
+    virtual	void OpenLevel(const FString & _levelName);
+
     
 };
 

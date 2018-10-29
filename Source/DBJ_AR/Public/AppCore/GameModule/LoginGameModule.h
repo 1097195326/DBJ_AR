@@ -14,5 +14,5 @@ public:
 	virtual void On_Delete();
 
 	void GetSmsCodeToLogin(FString _phoneNum);
-
+	void UserLogin(FString _phoneNum, FString _smsCodeNum);
 };

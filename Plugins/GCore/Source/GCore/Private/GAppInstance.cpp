@@ -21,8 +21,7 @@ void UGAppInstance::Init()
     
 	On_Init();
 }
-void UGAppInstance::ShowLog()
+void UGAppInstance::OpenLevel(const FString & _levelName)
 {
-    UE_LOG(LogTemp,Log,TEXT("zhx :: UGAppInstance::ShowLog"));
-    
+	
 }

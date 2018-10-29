@@ -24,6 +24,7 @@ void DataManager::LoadAllXMLData()
 	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("HttpMappingPrototype.xml")));
 	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("ServerPrototype.xml")));
 	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("UIPrototype.xml")));
+	LoadXMLFile(FString::Printf(TEXT("%s%s"), *mLocalConfigPath, TEXT("ScenePrototype.xml")));
 
 }
 bool DataManager::LoadXMLFile(const FString & _xmlPath)

@@ -20,7 +20,7 @@ public:
     MsgCenter();
     virtual ~MsgCenter();
     
-    static MsgCenter * Instance();
+    static MsgCenter * GetInstance();
     
     template<typename T>
     void RegisterMsgHeader(MsgChanelId _channelId, int _msgId, T * _obj, void(T::*_func)(msg_ptr))
@@ -34,10 +34,12 @@ public:
 			case Msg_Local:
 			{
 				channel = new LocalChannel();
+				break;
 			}
 			case Msg_HttpRequest:
 			{
 				channel = new HttpChannel();
+				break;
 			}
 			default:
 				return;

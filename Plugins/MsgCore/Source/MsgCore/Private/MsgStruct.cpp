@@ -2,7 +2,18 @@
 #include "MsgStruct.h"
 
 
+MsgStruct::MsgStruct()
+{
 
+}
+MsgStruct::MsgStruct(void * _msgContent)
+{
+	m_MsgContent = _msgContent;
+}
+MsgStruct::MsgStruct(TSharedPtr<FJsonObject> _jsonObject)
+{
+	m_JsonObject = _jsonObject;
+}
 MsgStruct::~MsgStruct()
 {
     
@@ -15,6 +26,10 @@ int MsgStruct::GetMsgId()
 void* MsgStruct::GetMsgContent()
 {
     return m_MsgContent;
+}
+TSharedPtr<FJsonObject> MsgStruct::GetJsonObject()
+{
+	return m_JsonObject;
 }
 MsgChanelId MsgStruct::GetMsgChannelId()
 {
