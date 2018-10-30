@@ -7,28 +7,28 @@
 //
 
 #include "GCore.h"
-#include "GPawnController.h"
+#include "GameController.h"
 
 
-void AGPawnController::PostInitializeComponents()
+void AGameController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
 	On_Init();
 }
-void AGPawnController::BeginPlay()
+void AGameController::BeginPlay()
 {
 	Super::BeginPlay();
 
 	On_Start();
 }
-void AGPawnController::Tick(float DeltaSeconds)
+void AGameController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
 	On_Tick(DeltaSeconds);
 }
-void AGPawnController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void AGameController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 

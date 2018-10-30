@@ -11,10 +11,10 @@
 #include "CoreMinimal.h"
 #include "GObject.h"
 #include "GameFramework/PlayerController.h"
-#include "GPawnController.generated.h"
+#include "GameController.generated.h"
 
 UCLASS()
-class GCORE_API AGPawnController : public APlayerController, public GObject
+class GCORE_API AGameController : public APlayerController, public GObject
 {
     GENERATED_BODY()
     

@@ -7,14 +7,13 @@
 //
 
 #include "BehaviorTreeGameMode.h"
-#include "UserPawn.h"
-#include "UserPawnController.h"
+#include "UserController.h"
 
 
 ABehaviorTreeGameMode::ABehaviorTreeGameMode()
 {
-    DefaultPawnClass = AUserPawn::StaticClass();
-    PlayerControllerClass = AUserPawnController::StaticClass();
+//    DefaultPawnClass = AUserPawn::StaticClass();
+    PlayerControllerClass = AUserController::StaticClass();
     
 }
 void ABehaviorTreeGameMode::SetTargetLocation(FVector targetLocation)
