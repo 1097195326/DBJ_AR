@@ -13,7 +13,7 @@
 ABehaviorTreeGameMode::ABehaviorTreeGameMode()
 {
 //    DefaultPawnClass = AUserPawn::StaticClass();
-    PlayerControllerClass = AUserController::StaticClass();
+//    PlayerControllerClass = AUserController::StaticClass();
     
 }
 void ABehaviorTreeGameMode::SetTargetLocation(FVector targetLocation)

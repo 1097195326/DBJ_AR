@@ -5,7 +5,7 @@
 
 AEditerARGameMode::AEditerARGameMode()
 {
-//    PlayerControllerClass = AUserController::StaticClass();
+    PlayerControllerClass = AUserController::StaticClass();
     
     
 	EditerARGameModule::GetInstance()->On_Init();
