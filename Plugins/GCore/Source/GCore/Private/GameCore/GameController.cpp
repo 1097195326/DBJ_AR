@@ -12,25 +12,25 @@
 
 void AGameController::PostInitializeComponents()
 {
-	Super::PostInitializeComponents();
+    Super::PostInitializeComponents();
 
-	On_Init();
+    On_Init();
 }
 void AGameController::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	On_Start();
+    On_Start();
 }
 void AGameController::Tick(float DeltaSeconds)
 {
-	Super::Tick(DeltaSeconds);
+    Super::Tick(DeltaSeconds);
 
-	On_Tick(DeltaSeconds);
+    On_Tick(DeltaSeconds);
 }
 void AGameController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::EndPlay(EndPlayReason);
+    Super::EndPlay(EndPlayReason);
 
-	On_End();
+    On_End();
 }

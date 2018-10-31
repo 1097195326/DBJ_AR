@@ -20,10 +20,10 @@ class GCORE_API AGameController : public APlayerController, public GObject
     
 public:
 	// feng zhuang APawn ,override AActor Functions 
-	virtual void PostInitializeComponents();
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaSeconds) override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    virtual void PostInitializeComponents();
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaSeconds) override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 public:
 
     

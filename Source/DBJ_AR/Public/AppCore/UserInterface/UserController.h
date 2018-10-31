@@ -29,9 +29,11 @@ public:
     
     virtual bool InputTouch(uint32 Handle, ETouchType::Type Type, const FVector2D& TouchLocation, float Force, FDateTime DeviceTimestamp, uint32 TouchpadIndex) override;
     
-private:
-    UPROPERTY()
+public:
+    UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
     AActor * m_SelectActor;
     
+    UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+    bool  m_ARIsSetUP;
     
 };

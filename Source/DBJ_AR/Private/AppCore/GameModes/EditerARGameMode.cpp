@@ -14,6 +14,8 @@ AEditerARGameMode::AEditerARGameMode()
 
 void AEditerARGameMode::StartPlay()
 {
+    Super::StartPlay();
+    
 	EditerARGameModule::GetInstance()->On_Start();
 
 

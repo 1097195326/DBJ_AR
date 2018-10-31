@@ -9,7 +9,7 @@ class DBJ_AR_API AEditerARGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 private:
-	FVector    m_TargetLocation;
+	
 public:
 	AEditerARGameMode();
 

@@ -7,7 +7,6 @@
 //
 
 #include "UserController.h"
-//#include "Runtime/AugmentedReality/Public/ARBlueprintLibrary.h"
 
 void AUserController::On_Init()
 {
@@ -17,8 +16,8 @@ void AUserController::On_Init()
 void AUserController::On_Start()
 {
     UE_LOG(LogTemp,Log,TEXT("zhx : user controller start"));
-    
     StartARSession();
+    
 }
 void AUserController::On_Tick(float DeltaSeconds)
 {
