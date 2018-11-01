@@ -28,7 +28,7 @@ void AUserController::On_Delete()
 }
 bool AUserController::InputTouch(uint32 Handle, ETouchType::Type Type, const FVector2D& TouchLocation, float Force, FDateTime DeviceTimestamp, uint32 TouchpadIndex)
 {
-    UE_LOG(LogTemp, Log, TEXT("zhx : user controller input touch : "));
+    //UE_LOG(LogTemp, Log, TEXT("zhx : user controller input touch : "));
     
     switch(Type)
     {
