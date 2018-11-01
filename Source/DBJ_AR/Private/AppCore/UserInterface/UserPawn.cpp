@@ -26,8 +26,12 @@ AUserPawn::AUserPawn(const FObjectInitializer& ObjectInitializer)
 }
 void AUserPawn::On_Init()
 {
-    UE_LOG(LogTemp, Log, TEXT("zhx : user pawn create func2"));
+    UE_LOG(LogTemp, Log, TEXT("zhx : user pawn init"));
     
+}
+void AUserPawn::On_Start()
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
 void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -41,6 +45,7 @@ void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 #endif
     
 }
+
 void AUserPawn::OnFingerTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx :: AUserPawn::OnFingerTouch"));
@@ -60,7 +65,61 @@ void AUserPawn::OneFingerPress()
     UE_LOG(LogTemp, Log, TEXT("zhx :: AUserPawn::OneFingerPress"));
 
     FHitResult HitResult;
-    ((AUserController*)Controller)->
-    GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), true, HitResult);
     
+    //GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), true, HitResult);
+    
+}
+
+FVector2D AUserPawn::GetFingerPosition(int _fingerNum)
+{
+	FVector2D SPostion;
+	switch (_fingerNum)
+	{
+	case 1:
+	{
+		FVector2D oneFgLocation;
+		bool pressed;
+		Cast<AUserController>(Controller)->GetInputTouchState(ETouchIndex::Touch1, oneFgLocation.X, oneFgLocation.Y, pressed);
+		SPostion = oneFgLocation;
+		
+	}break;
+	case 2:
+	{
+		FVector2D oneFgLocation, twoFgLocation;
+		bool pressed;
+		Cast<AUserController>(Controller)->GetInputTouchState(ETouchIndex::Touch1, oneFgLocation.X, oneFgLocation.Y, pressed);
+		Cast<AUserController>(Controller)->GetInputTouchState(ETouchIndex::Touch2, twoFgLocation.X, twoFgLocation.Y, pressed);
+		SPostion = (oneFgLocation + twoFgLocation) * 0.5;
+	}break;
+	default:
+		break;
+	}
+	return SPostion;
+}
+
+bool AUserPawn::IsHaveActorInScreenPosition(AActor * _outActor, FVector2D _position)
+{
+	bool isHave = false;
+
+
+
+	return isHave;
+}
+
+AActor * AUserPawn::CreateARActor()
+{
+	AActor * actor = nullptr;
+
+
+	return actor;
+}
+
+void AUserPawn::MoveSelecteARActor(FVector _location)
+{
+
+}
+
+void AUserPawn::RotateSelectARActor(FRotator _rotation)
+{
+
 }
