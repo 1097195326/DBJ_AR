@@ -14,6 +14,7 @@ void LoginGameModule::On_Init()
 	m_CurrentUIController = new LoginUIController();
 	m_CurrentUIController->On_Init();
 
+    
 }
 void LoginGameModule::On_Start()
 {

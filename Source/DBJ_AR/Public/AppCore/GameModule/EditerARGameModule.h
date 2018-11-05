@@ -13,5 +13,6 @@ public:
 	virtual void On_Start();
 	virtual void On_Delete();
 
-
+    void    GetProductList();
+    void    OnGetProductList(msg_ptr _msg);
 };
