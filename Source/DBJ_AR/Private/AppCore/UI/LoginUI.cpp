@@ -29,13 +29,13 @@ void ULoginUI::On_Init()
 void ULoginUI::On_Start()
 {
 	
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &ULoginUI::OnGetSmsCode);
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &ULoginUI::OnUserLogin);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2002, this, &ULoginUI::OnGetSmsCode);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2001, this, &ULoginUI::OnUserLogin);
 }
 void ULoginUI::On_Delete()
 {
-	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1002, this);
-	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1001, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2002, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2001, this);
 
 	if (m_Login_Button)
 	{
@@ -63,9 +63,9 @@ void ULoginUI::On_Button_Click(int _index)
 		
 		FString phoneNum = m_Phone_Text->GetText().ToString();
 		FString veriCodeNum = m_VeriCode_Text->GetText().ToString();
-//        LoginGameModule::GetInstance()->UserLogin(TEXT("15652707598"), veriCodeNum);
+        LoginGameModule::GetInstance()->UserLogin(TEXT("15652707598"), veriCodeNum);
 //        UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));
-        UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+        //UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
         
 		break;
 	}

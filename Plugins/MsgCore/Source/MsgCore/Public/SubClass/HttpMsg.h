@@ -22,8 +22,9 @@ public:
 	FString m_httpContent;
 	FString m_operator;
 	FString m_token;
+	bool	m_IsGet;
 
-	EnumHttpRequestType m_HttpRequestType;
+	//EnumHttpRequestType m_HttpRequestType;
 
 	// 消息体，http内容jsonObject格式.
 	TSharedPtr<FJsonObject> m_httpJsonObj;
@@ -38,5 +39,5 @@ public:
 public:
 	HttpMsg();
 	~HttpMsg();
-	HttpMsg(MsgChanelId _channelID, int32 _unMsgID,  TSharedPtr<FJsonObject> & _content, FString _token = TEXT("token"),  FString _operator = TEXT("operator"), EnumHttpRequestType _httpReqType = Http_Post);
+	HttpMsg(MsgChanelId _channelID, int32 _unMsgID,  TSharedPtr<FJsonObject> & _content, bool _IsGet = false, FString _token = TEXT("token"),  FString _operator = TEXT("operator"));
 };

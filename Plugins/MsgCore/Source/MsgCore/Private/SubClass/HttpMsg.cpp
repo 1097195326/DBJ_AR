@@ -7,13 +7,13 @@ HttpMsg::HttpMsg()
 
 }
 //
-HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, TSharedPtr<FJsonObject> & _content, FString _token, FString _operator, EnumHttpRequestType _httpReqType)
+HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, TSharedPtr<FJsonObject> & _content, bool _IsGet, FString _token, FString _operator)
 {
 	m_MsgChannelId = _channelID;
 	m_MsgId = _unMsgID;
 	m_token = _token;
 	m_operator = _operator;
-	m_HttpRequestType = _httpReqType;
+	m_IsGet = _IsGet;
 
 	TSharedRef<TJsonWriter<TCHAR>> t_writer = TJsonWriterFactory<>::Create(&m_httpContent);
 	FJsonSerializer::Serialize(_content.ToSharedRef(), t_writer);

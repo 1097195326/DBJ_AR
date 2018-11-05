@@ -41,8 +41,11 @@ void EditerARGameModule::GetProductList()
     t_jsonObject->SetNumberField(TEXT("typeId"), 0);
     t_jsonObject->SetNumberField(TEXT("materialId"), 0);
     t_jsonObject->SetNumberField(TEXT("innerDiameterId"), 0);
+
+	//bafa3b91c83546c2a1cc2b21d880893e
+	FString token = TEXT("bafa3b91c83546c2a1cc2b21d880893e");
     
-    HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1008, t_jsonObject);
+    HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1008, t_jsonObject,true,token);
     msg->m_httpUrl = Data_M->GetURL(msg->m_MsgId);
     msg_ptr mMsg(msg);
     

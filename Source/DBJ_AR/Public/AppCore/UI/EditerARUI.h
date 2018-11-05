@@ -10,8 +10,7 @@ class UEditerARUI : public UBaseUI
     GENERATED_BODY()
     
 public:
-    UButton * m_Login_Button;
-    UButton * m_VeriCode_Button;
+    UButton * m_ProductListButton;
     
 public:
     virtual void On_Init() override;

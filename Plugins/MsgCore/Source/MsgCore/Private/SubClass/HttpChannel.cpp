@@ -45,7 +45,7 @@ void HttpChannel::SendMsgToHttp(msg_ptr _msg)
 
 	HttpRequest->SetURL(mHttpMsg->m_httpUrl);
 
-	const FString verb = TEXT("POST");
+	const FString verb = mHttpMsg->m_IsGet ? TEXT("GET") : TEXT("POST");
 	HttpRequest->SetVerb(verb);
 
 	HttpRequest->SetContentAsString(mHttpMsg->m_httpContent);
