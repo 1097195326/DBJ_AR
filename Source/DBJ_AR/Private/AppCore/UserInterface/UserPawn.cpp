@@ -99,9 +99,9 @@ void AUserPawn::OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const 
 void AUserPawn::OnFingerTouchMoved(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 //    UE_LOG(LogTemp, Log, TEXT("zhx :: AUserPawn::OnFingerTouch moved"));
-//    if (m_SelectActor)
+    if (m_SelectActor)
     {
-//        if (m_FingerNum == 1)
+        if (m_FingerNum == 1)
         {
             MoveSelecteARActor();
         }
