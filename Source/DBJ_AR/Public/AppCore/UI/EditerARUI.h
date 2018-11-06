@@ -19,4 +19,5 @@ public:
     
     void On_Button_Click(int _index);
     
+	void OnGetProductList(msg_ptr _msg);
 };

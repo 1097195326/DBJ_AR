@@ -12,8 +12,13 @@ class DBJ_AR_API  UGoodsList : public UBaseUI
 public:
     virtual void On_Init() override;
 
-    UButton * m_ViewButton;
+	void InitView();
 
     UFUNCTION()
         void OnButtonClick();
+private:
+	UButton * m_ViewButton;
+	UScrollBox * m_IconScrolBox;
+	UGridPanel * m_IconList;
+
 };

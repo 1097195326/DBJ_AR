@@ -2,7 +2,7 @@
 #include "GameModule.h"
 
 
-class EditerARGameModule : public GameModule
+class DBJ_AR_API EditerARGameModule : public GameModule
 {
 private:
 

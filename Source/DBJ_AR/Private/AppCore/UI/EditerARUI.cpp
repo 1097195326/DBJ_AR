@@ -2,6 +2,7 @@
 #include "UIManager.h"
 #include "EditerARGameModule.h"
 #include "AppInstance.h"
+#include "GoodsList.h"
 
 
 void UEditerARUI::On_Init()
@@ -16,13 +17,12 @@ void UEditerARUI::On_Init()
 void UEditerARUI::On_Start()
 {
     
-//    MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &ULoginUI::OnGetSmsCode);
-//    MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &ULoginUI::OnUserLogin);
+    MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UEditerARUI::OnGetProductList);
+
 }
 void UEditerARUI::On_Delete()
 {
-//    MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1002, this);
-//    MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1001, this);
+    MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2008, this);
     
     if (m_ProductListButton)
     {
@@ -49,4 +49,10 @@ void UEditerARUI::On_Button_Click(int _index)
             break;
     }
     
+}
+void UEditerARUI::OnGetProductList(msg_ptr _msg)
+{
+	UGoodsList * goodsList = (UGoodsList *)UIManager::GetInstance()->OpenUI(TEXT("GoodsList"));
+	goodsList->AddToViewport();
+
 }

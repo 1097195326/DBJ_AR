@@ -40,10 +40,22 @@ void HttpChannel::SendMsgToHttp(msg_ptr _msg)
 	HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json; charset=utf-8"));
 
 	HttpRequest->SetHeader(TEXT("token"), mHttpMsg->m_token);
+	HttpRequest->SetHeader(TEXT("Cookie"), mHttpMsg->m_Cookie);
 
 	HttpRequest->SetHeader(TEXT("operator"), mHttpMsg->m_operator);
 
-	HttpRequest->SetURL(mHttpMsg->m_httpUrl);
+	FString httpUrl;
+	if (!mHttpMsg->m_AppendUrl.IsEmpty() && !mHttpMsg->m_AppendUrl.Equals(""))
+	{
+		httpUrl = FString::Printf(TEXT("%s?%s"), *mHttpMsg->m_httpUrl, *mHttpMsg->m_AppendUrl);
+	}
+	else
+	{
+		httpUrl = mHttpMsg->m_httpUrl;
+	}
+	httpUrl.RemoveSpacesInline();
+	HttpRequest->SetURL(httpUrl);
+	
 
 	const FString verb = mHttpMsg->m_IsGet ? TEXT("GET") : TEXT("POST");
 	HttpRequest->SetVerb(verb);
@@ -52,7 +64,7 @@ void HttpChannel::SendMsgToHttp(msg_ptr _msg)
 
 	HttpRequest->OnProcessRequestComplete() = FHttpRequestCompleteDelegate::CreateRaw(this, &HttpChannel::OnMsgResponse);
 
-	UE_LOG(LogTemp, Log, TEXT("zhx : url(%s),parameter:%s"),*mHttpMsg->m_httpUrl,*mHttpMsg->m_httpContent);
+	UE_LOG(LogTemp, Log, TEXT("zhx : url(%s),parameter:%s"),*httpUrl,*mHttpMsg->m_httpContent);
 
 	HttpRequest->ProcessRequest();
 
@@ -71,6 +83,10 @@ void HttpChannel::OnMsgResponse(FHttpRequestPtr inReq, FHttpResponsePtr inResp, 
 			TSharedRef<TJsonReader<>> t_reader = TJsonReaderFactory<>::Create(mResponseMsg);
 			if (FJsonSerializer::Deserialize(t_reader, mJsonObject))
 			{
+				FString msgContent;
+				TSharedRef<TJsonWriter<TCHAR>> t_writer = TJsonWriterFactory<>::Create(&msgContent);
+				FJsonSerializer::Serialize(mJsonObject.ToSharedRef(), t_writer);
+				UE_LOG(LogTemp, Error, TEXT("zhx : response : %s"), *msgContent);
 				// detach msg
 				auto iter = m_Msg_Header_Map.find(m_CurrentMsg->GetMsgId());
 				if (iter != m_Msg_Header_Map.end())

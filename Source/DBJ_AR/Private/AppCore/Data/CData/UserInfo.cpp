@@ -32,11 +32,14 @@ UserInfo * UserInfo::Get()
 }
 
 
-FString UserInfo::GetCookieFromToken(FString &token)
+FString UserInfo::GetCookie()
 {
-	 return FString::Printf(TEXT("AR_BTAONY_MGW_TOKEN=%s"), *token); 
+	 return FString::Printf(TEXT("AR_BTAONY_MGW_TOKEN=%s"), *m_SaveUserData.token); 
 }
-
+FString UserInfo::GetToken()
+{
+	return m_SaveUserData.token;
+}
 bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj)
 {
 	//序列化.

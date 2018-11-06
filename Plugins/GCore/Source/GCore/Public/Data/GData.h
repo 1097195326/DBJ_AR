@@ -10,6 +10,6 @@ class GCORE_API GData : public GObject
 {
 
 public :
-	virtual void InitWithJson(TSharedPtr<FJsonObject> &obj);
+	virtual void InitWithJson(const TSharedPtr<FJsonObject> &obj);
 	virtual void InitWithXML(TiXmlElement * elem);
 };

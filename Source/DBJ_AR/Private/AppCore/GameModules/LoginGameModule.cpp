@@ -11,6 +11,12 @@ LoginGameModule * LoginGameModule::GetInstance()
 }
 void LoginGameModule::On_Init()
 {
+	UserInfo::Get()->ReadLocalData();
+
+	FString token = UserInfo::Get()->GetLocalData().token;
+	UE_LOG(LogTemp, Log, TEXT("zhx : LoginGameModule::On_Init : token = %s"), *token);
+
+
 	m_CurrentUIController = new LoginUIController();
 	m_CurrentUIController->On_Init();
 
@@ -39,8 +45,9 @@ void LoginGameModule::GetSmsCodeToLogin(FString _phoneNum)
 
 	t_jsonObject->SetStringField(TEXT("phone"), _phoneNum);
 
-	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1002, t_jsonObject);
-	msg->m_httpUrl = Data_M->GetURL(msg->m_MsgId);
+	FString httpUrl = Data_M->GetURL(1002);
+	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1002, t_jsonObject, httpUrl);
+	
 	msg_ptr mMsg(msg); //
 	
 	// 3.通过消息系统发送消息.
@@ -54,20 +61,20 @@ void LoginGameModule::OnGetSmsCode(msg_ptr _msg)
 }
 void LoginGameModule::UserLogin(FString _phoneNum, FString _smsCodeNum)
 {
-	msg_ptr msg(new LocalMsg(Msg_Local, 2001,nullptr));
-	MsgCenter::GetInstance()->SendMsg(msg);
+	/*msg_ptr msg(new LocalMsg(Msg_Local, 2001,nullptr));
+	MsgCenter::GetInstance()->SendMsg(msg);*/
 
-	//TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
+	TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
 
-	//t_jsonObject->SetStringField(TEXT("phone"), _phoneNum);
-	//t_jsonObject->SetStringField(TEXT("smsCode"), _smsCodeNum);
+	t_jsonObject->SetStringField(TEXT("phone"), _phoneNum);
+	t_jsonObject->SetStringField(TEXT("smsCode"), _smsCodeNum);
 
-	//HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1001, t_jsonObject);
-	//msg->m_httpUrl = Data_M->GetURL(msg->m_MsgId);
-	//msg_ptr mMsg(msg); //
+	FString httpUrl = Data_M->GetURL(1001);
+	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1001, t_jsonObject,httpUrl);
+	msg_ptr mMsg(msg); //
 
-	//				   // 3.通过消息系统发送消息.
-	//MsgCenter::GetInstance()->SendMsg(mMsg);
+					   // 3.通过消息系统发送消息.
+	MsgCenter::GetInstance()->SendMsg(mMsg);
 }
 void LoginGameModule::OnUserLogin(msg_ptr _msg)
 {

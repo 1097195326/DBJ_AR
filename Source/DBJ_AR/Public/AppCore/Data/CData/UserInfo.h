@@ -30,5 +30,6 @@ public:
 	bool SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj);
 	const FSaveUserData&  GetLocalData();
 	bool IsExistLocalFile();
-	FString GetCookieFromToken(FString &token);
+	FString GetCookie();
+	FString GetToken();
 };

@@ -3,7 +3,7 @@
 
 
 
-void GData::InitWithJson(TSharedPtr<FJsonObject> &obj)
+void GData::InitWithJson(const TSharedPtr<FJsonObject> &obj)
 {
 
 }
