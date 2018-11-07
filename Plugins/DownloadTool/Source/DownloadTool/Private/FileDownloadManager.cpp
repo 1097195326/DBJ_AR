@@ -157,7 +157,7 @@ void UFileDownloadManager::DownloadFileCompleteCallback(FHttpRequestPtr Request,
         TArray<uint8> pak = Response->GetContent();
         if (CalculateMd5(pak) == DoingTask->DownloadInfo.Md5)
         {
-            FString tmpPath = FString::Printf(TEXT("%s/Dlc/Paks/%d_%s"),*FPaths::ProjectSavedDir(),DoingTask->DownloadInfo.Id,*DoingTask->DownloadInfo.Md5);
+            FString tmpPath = FString::Printf(TEXT("%s/dlc/paks/%d_%s"),*FPaths::ProjectSavedDir(),DoingTask->DownloadInfo.Id,*DoingTask->DownloadInfo.Md5);
            
             FArchive* ar = IFileManager::Get().CreateFileWriter(*tmpPath,0);
    

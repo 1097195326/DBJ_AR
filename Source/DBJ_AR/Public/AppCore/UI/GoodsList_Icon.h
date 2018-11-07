@@ -2,6 +2,7 @@
 
 #include "BaseUI.h"
 #include "GoodsData.h"
+#include "FileDownloadManager.h"
 #include "GoodsList_Icon.generated.h"
 
 
@@ -12,11 +13,14 @@ class DBJ_AR_API  UGoodsList_Icon : public UBaseUI
 
 public:
     virtual void On_Init() override;
+	virtual void On_Delete() override;
 
 	void	SetData(GoodsData * _data);
 
 	UFUNCTION()
-		void OnButtonClick();
+		void OnButtonClick(int index);
+	//UFUNCTION()
+		void OnGetPakFinish(int _finish, FFileInfo _info);
 private:
     UButton *	m_SelectButton;
 	UButton	*	m_DownloadButton;
@@ -25,5 +29,5 @@ private:
 	UNativeWidgetHost * m_ImageHost;
 	GoodsData * m_Data;
     
-
+	bool m_IsDowning;
 };

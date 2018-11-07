@@ -1,18 +1,19 @@
 #include "GoodsList_Icon.h"
-#include "FileDownloadManager.h"
 
+#include "UIManager.h"
 
 void UGoodsList_Icon::On_Init()
 {
     if (UButton * button = (UButton*)GetWidgetFromName("IconButton"))
     {
         m_SelectButton = button;
-		m_SelectButton->OnClicked.AddDynamic(this, &UGoodsList_Icon::OnButtonClick);
+		UI_M->RegisterButton(1, m_SelectButton, this, &UGoodsList_Icon::OnButtonClick);
+
     }
 	if (UButton * button = (UButton*)GetWidgetFromName("DownButton"))
 	{
 		m_DownloadButton = button;
-		m_DownloadButton->OnClicked.AddDynamic(this, &UGoodsList_Icon::OnButtonClick);
+		UI_M->RegisterButton(2, m_DownloadButton, this, &UGoodsList_Icon::OnButtonClick);
 	}
 	if (UImage * image = (UImage*)GetWidgetFromName("IconImage"))
 	{
@@ -29,9 +30,52 @@ void UGoodsList_Icon::On_Init()
 
     
 }
-void UGoodsList_Icon::OnButtonClick()
+void UGoodsList_Icon::On_Delete()
 {
-    UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
+	UI_M->UnRegisterButton(m_SelectButton);
+	UI_M->UnRegisterButton(m_DownloadButton);
+
+}
+void UGoodsList_Icon::OnButtonClick(int index)
+{
+	if (m_IsDowning)
+	{
+		return;
+	}
+
+    UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnButtonClick : "));
+	switch (index)
+	{
+	case 1:
+	{
+
+	}break;
+	case 2:
+	{
+		FFileInfo info;
+		info.Id = m_Data->modelId;
+		info.FileSize = m_Data->pakSize;
+		info.Url = m_Data->pakUrl;
+		info.Md5 = m_Data->pakMd5;
+		if (UFileDownloadManager::Get()->RequestDownloadFile(info))
+		{
+			m_IsDowning = true;
+			UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
+		}
+	}break;
+	default:
+		break;
+	}
+}
+void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnGetPakFinish : "));
+	m_IsDowning = false;
+	if (_finish == 0 && _info.Id == m_Data->modelId)
+	{
+
+	}
+
 
 }
 void UGoodsList_Icon::SetData(GoodsData * _data)
