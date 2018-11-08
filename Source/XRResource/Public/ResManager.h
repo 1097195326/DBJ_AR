@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 #include "Object.h"
 #include "IPlatformFilePak.h"
-#include "Runtime/Engine/Classes/Animation/AnimSequence.h"
 #include "XmlParser.h"
 #include "ResTypes.h"
 #include "GenericPlatformChunkInstall.h"
+#include "XRTypes.h"
 #include "XRCommonTypes.h"
-#include "engine/Classes/Materials/MaterialInstanceDynamic.h"
-#include "Engine.h"
-#include "Core.h"
+#include "Engine/SkeletalMesh.h"
+#include "Engine/StaticMesh.h"
+#include "Animation/AnimSequence.h"
 #include "ResManager.generated.h"
 
 class FSlateTextureRenderTarget2DResource;
@@ -41,20 +41,37 @@ struct XRRESOURCE_API FVRSObject
 	FString FileName;
 	FString FilePath;
 	EResourceType FileType;
-	FString MaterialParameter;
-	FString LightParameter;
+	FString Param;
 	//标准化导入的pak（用工具导入制作的模型，必定有pak.xml文件）
 	bool bNormalized;
 	int32 SynID;
-	int32 Version;
+
+	//吸附面类型
+	EMeshSnapType SnapType;
+	//模型旋转轴点类型
+	EMeshOriginType OriginType;
+
+	//插槽信息
+	struct FSocketData
+	{
+		FSocketData(FVector InLocation, FRotator InRotation)
+			: Location(InLocation), Rotation(InRotation)
+		{}
+		FVector Location;
+		FRotator Rotation;
+	};
+
+	//插槽列表
+	TArray<FSocketData> SocketList;
 
 	FVRSObject()
 	{
-		FileType = EResourceType::None;
 		bNormalized = false;
 		MaterialParaMismatch = false;
 		BoundOrigin = FVector::ZeroVector;
 		BoundExtent = FVector::ZeroVector;
+		SnapType = EMeshSnapType::MST_None;
+		OriginType = EMeshOriginType::MOT_None;
 	}
 
 	void ResetMaterialParameters()
@@ -242,6 +259,9 @@ public:
 	//传入一个UMaterialInterface，创建一个UMaterialInstanceDynamic。这个过程中会调用CloneObject。这样保证所有材质Object都独立信息不重复。
 	UMaterialInstanceDynamic* CreateMID(UMaterialInterface* _MI);
 
+	//检查文件是否存在，或者正在下载中
+	EFileExistenceState CheckFileExistState(FString _FilePath, FString _NetMD5);
+
 	//传入AActor，如果它是一个AStaticMeshActor，则返回它的UStaticMeshComponent
 	UStaticMeshComponent* GetActorSMC(AActor* _InActor);
 
@@ -265,8 +285,7 @@ public:
 	//载入Common包Pak
 	void LoadCommonData();
 
-	//载入本地的pak文件，可能是模型，材质，交互物体，交互灯
-	FVRSObject LoadPakFile(FString InFilePath);
+
 
 	AActor* CreateCustomActor(UWorld* _OwnerWorld, FString _FilePath, FVector _Location = FVector(0, 0, 0), FRotator _Rotation = FRotator::ZeroRotator, FVector _Scale = FVector(1, 1, 1));
 	UMaterialInterface* CreateCustomMaterial(FString _FilePath);
@@ -356,10 +375,14 @@ public:
 
 	UFUNCTION()
 	void OnActorPasted(AActor* _Actor);
-	AActor* CreateActorInternal(FVRSObject* InObjectInfo);
-	UMaterialInterface* CreateMaterialInternal(FVRSObject* InObjectInfo);
+
+	//返回pak秘钥
+	const ANSICHAR* GetAESKey();
+	const ANSICHAR* AESKey = "8DEF1FC02DE17BBC4283C7DEB882CF99\0";
+
 private:
-	
+	AActor* CreateActorInternal(FVRSObject* _ObjectInfo, int32 _ObjID, int32 _SynID, FVector _Location = FVector::ZeroVector, FRotator _Rotation = FRotator::ZeroRotator, FVector _Scale = FVector(1, 1, 1));
+	UMaterialInterface* CreateMaterialInternal(FVRSObject* _ObjectInfo, int32 _ObjID, int32 _SynID);
 	bool LoadObjInternal(FVRSObject& _OutObj);
 	void MountPakReturnFiles(FString _PakPath, TArray<FString>& OutPakFilenameList, int32 _Order = 3, bool _IDontWantToMount = false);
 	void MountPak(FString _PakPath);
@@ -421,14 +444,14 @@ public:
 	//TSet<FString> CommentateActors;
 	//TEnumAsByte<EVRSCameraMode> CameraMode;
 
-	/*class AXRPointLightActor* AddPointLight(UWorld* InWorld, float _AttenuationRadius = 700.f, float _Intensity = 5000.f);
+	class AXRPointLightActor* AddPointLight(UWorld* InWorld, float _AttenuationRadius = 700.f, float _Intensity = 5000.f);
 	class AXRSpotLightActor* AddSpotLight(UWorld* InWorld);
 	class AXRReflectionCaptureActor* AddReflectionSphere(UWorld* InWorld);
-	class AXRLevelAssetBoardActor* AddLevelAssetBoard(UWorld* InWorld);*/
+	class AXRLevelAssetBoardActor* AddLevelAssetBoard(UWorld* InWorld);
 
 	//int32 GetHomeID();
 	//int32 GetPlanID();
-	
+
 	//当前户型为绘制户型
 	bool bDIYHome;
 	//当前加载了之前保存的绘制户型，而不是从新开始绘制
@@ -439,8 +462,8 @@ public:
 	//FContentItemSpace::FContentItem LoadedHomeItemData;
 	//FContentItemSpace::FContentItem LoadedPlanItemData;
 
-	FActorDelegate OnLevelActorAdded;
-	FActorDelegate OnLevelActorRemoved;
+	FMultiActorDelegate OnLevelActorAdded;
+	FMultiActorDelegate OnLevelActorRemoved;
 	FSimpleDelegate OnLevelActorCleared;
 
 	struct ActorSizeInfo

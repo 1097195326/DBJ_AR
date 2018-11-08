@@ -38,6 +38,7 @@ void UGoodsList::InitView()
 
 			GoodsData * data = goods[i];
 			icon->SetData(data);
+			icon->SetParentUI(this);
 			/*if (mIndex % 2 > 0)
 			{
 				mTemp->SetPadding(FMargin(20.f, 0.0f, 0.f, 30.f));

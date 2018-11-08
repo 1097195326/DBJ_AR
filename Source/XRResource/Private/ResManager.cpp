@@ -1,5 +1,9 @@
 #include "ResManager.h"
 #include "SceneViewport.h"
+#include "XRPointLightActor.h"
+#include "XRSpotLightActor.h"
+#include "XRReflectionCaptureActor.h"
+#include "XRLevelAssetBoardActor.h"
 #include "XmlFile.h"
 #include "PlatformFilemanager.h"
 #include "Materials/MaterialInstanceConstant.h"
@@ -7,8 +11,14 @@
 #include "Engine/StaticMeshActor.h"
 #include "Components/SpotLightComponent.h"
 #include "Components/PointLightComponent.h"
+#include "Components/SphereReflectionCaptureComponent.h"
+#include "XRDownloadModule.h"
 #include "XRCommonTypes.h"
-#include "XRResourceModule.h"
+#include "XREngineModule.h"
+#include "XRFurnitureActor.h"
+
+#include "Runtime/Engine/Classes/Animation/AnimSequence.h"
+
 UXRResourceManager::UXRResourceManager()
 {
 	bDIYHome = true;
@@ -23,15 +33,8 @@ UXRResourceManager::~UXRResourceManager()
 
 void UXRResourceManager::Init()
 {
-//  	Render_ThumbnailMI = NewObject<UXRMaterialInstanceThumbnailRenderer>(UXRMaterialInstanceThumbnailRenderer::StaticClass());
-//  	Render_ThumbnailTexture = NewObject<UXRTextureThumbnailRenderer>(UXRTextureThumbnailRenderer::StaticClass());
-//  	SharedThumbnailRT = new FSlateTextureRenderTarget2DResource(
-//  		FLinearColor::Black,
-//  		256,
-//  		256,
-//  		PF_B8G8R8A8, SF_Point, TA_Wrap, TA_Wrap, 0.0f
-//  	);
-//  	BeginInitResource(SharedThumbnailRT);
+	//@打扮家 马云龙 绑定秘钥获取代理
+	FCoreDelegates::GetPakEncryptionKeyDelegate().BindUObject(this, &UXRResourceManager::GetAESKey);
 
 	bGodMode = false;
 	DLCFileMode = 1;//pak
@@ -42,9 +45,7 @@ void UXRResourceManager::Init()
 	{
 		if (PakPlatform.IsValid())
 		{
-			//PakPlatform->Initialize(LocalPlatformFile, TEXT(""));
-			PakPlatform->Initialize(LocalPlatformFile, TEXT("Singedpak"));
-			PakPlatform->InitializeNewAsyncIO();
+			PakPlatform->Initialize(LocalPlatformFile, TEXT(""));
 		}
 	}
 
@@ -266,7 +267,7 @@ void UXRResourceManager::Init()
 	StaticMIParaList.Add(735, FXRParameter(TEXT("层遮罩_反相"), TEXT("LayerMask_Invert"), TEXT("LayerMask_Invert"), 0.f, 1.f));
 	StaticMIParaList.Add(736, FXRParameter(TEXT("层遮罩_对比度"), TEXT("LayerMask_Contrast"), TEXT("LayerMask_Contrast"), 0.f, 10.f));
 	StaticMIParaList.Add(737, FXRParameter(TEXT("层遮罩_偏移"), TEXT("LayerMask_Offset"), TEXT("LayerMask_Offset"), -1.f, 1.f));
-	
+
 	//-----------------------------------------------------800
 	StaticMIParaList.Add(800, FXRParameter(TEXT("折射率"), TEXT("Refraction_Bias"), TEXT("Refraction_Bias"), -1.f, 1.f));
 	StaticMIParaList.Add(801, FXRParameter(TEXT("RefractionMap_Strength"), TEXT("RefractionMap_Strength"), TEXT("RefractionMap_Strength"), 0.f, 1.f));
@@ -365,7 +366,7 @@ EResourceType UXRResourceManager::GetFileType(FString _PakName)
 	else if (_PakName.StartsWith(TEXT("A_"), ESearchCase::IgnoreCase))
 		return EResourceType::BlueprintClass;
 	else if (_PakName.StartsWith(TEXT("HP_"), ESearchCase::IgnoreCase))
-		return EResourceType::LevelPlan;
+		return EResourceType::Plan;
 	else if (_PakName.StartsWith(TEXT("GP_"), ESearchCase::IgnoreCase))
 		return EResourceType::GroupPlan;
 
@@ -386,7 +387,7 @@ FString UXRResourceManager::GetPathFromFileName(EResourceType _PakType, FString&
 {
 	FString FilePath;
 	//绘制户型文件
-	if (_PakType == EResourceType::DrawHome)
+	if (_PakType == EResourceType::Home)
 		FilePath = FResTools::GetDrawHomeDir(_Test) + _PakName;
 	//烘焙户型文件
 	else if (_PakType == EResourceType::CookedHome)
@@ -404,22 +405,24 @@ FString UXRResourceManager::GetPathFromFileName(EResourceType _PakType, FString&
 	else if (_PakType == EResourceType::GroupPlan)
 		FilePath = FResTools::GetGroupPlanDir(_Test) + _PakName;
 	//户型方案
-	else if (_PakType == EResourceType::LevelPlan)
+	else if (_PakType == EResourceType::Plan)
 		FilePath = FResTools::GetLevelPlanDir(_Test) + _PakName;
+	else if(_PakType==ComponentDXF)
+		FilePath=FResTools::GetComponentDir()+_PakName;
 
 	return FilePath;
 }
 
 int32 UXRResourceManager::GetItemIDFromObj(UObject* _Obj)
 {
-	//if (_Obj)
-	//{
-	//	int32 SynID = _Obj->GetSynID();
-	//	if (SynList.IsValidIndex(SynID))
-	//	{
-	//		return SynList[SynID]->ID;
-	//	}
-	//}
+	if (_Obj)
+	{
+		int32 SynID = _Obj->GetSynID();
+		if (SynList.IsValidIndex(SynID))
+		{
+			return SynList[SynID]->ID;
+		}
+	}
 	return -1;
 }
 
@@ -427,11 +430,11 @@ int32 UXRResourceManager::GetItemIDFromActor(AActor* _Actor)
 {
 	if (_Actor)
 	{
-		/*int32 SynID = _Actor->GetSynID();
+		int32 SynID = _Actor->GetSynID();
 		if (SynList.IsValidIndex(SynID))
 		{
 			return SynList[SynID]->ID;
-		}*/
+		}
 	}
 	return -1;
 }
@@ -591,12 +594,12 @@ FString UXRResourceManager::FindLevelPath(FString _HomePakName, bool _Test)
 bool UXRResourceManager::CloneObject(UObject* _NewObject, UObject* _OldObject)
 {
 	//根据ObjID查找原有Obj
-	FVRSObject* ResultObj=new FVRSObject();// = GetObjFromObjID(_OldObject->GetObjID());
+	FVRSObject* ResultObj = GetObjFromObjID(_OldObject->GetObjID());
 	if (ResultObj)
 	{
 		//设置新Object的ObjID
-		//_NewObject->SetObjID(ObjList.Num());
-		//_NewObject->SetSynID(_OldObject->GetSynID());
+		_NewObject->SetObjID(ObjList.Num());
+		_NewObject->SetSynID(_OldObject->GetSynID());
 		FVRSObject NewVRSObj = *ResultObj;
 		//仅仅把Object替换为NewObject
 		NewVRSObj.SetFirstObject(_NewObject);
@@ -656,6 +659,85 @@ UMaterialInstanceDynamic* UXRResourceManager::CreateMID(UMaterialInterface* _MI)
 	return NULL;
 }
 
+EFileExistenceState UXRResourceManager::CheckFileExistState(FString _FilePath, FString _NetMD5)
+{
+	FString FileName = FResTools::GetFileNameFromPath(_FilePath);
+	FString FolderName = FResTools::GetFolderFromPath(_FilePath);
+	FString FileExtension = FResTools::GetFileExtension(FileName);
+	int32 FileID = FResTools::GetFileIDFromName(FileName);
+
+	// 是否正在下载
+    if (FXRDownloadModule::Get().GetDownloadManager()->GetTask(FileName).IsValid())
+    {
+        return EFileExistenceState::PendingDownload;
+    }
+
+	// 如果本地存在这个文件.temp
+    if (FPaths::FileExists(*(_FilePath + TEXT(".temp"))))
+    {
+		return EFileExistenceState::NotExist;
+    }
+
+	// 如果本地存在这个文件
+	FString FileNameMatchedID = FileName;
+	FileNameMatchedID = FString::FromInt(FileID);
+	FileNameMatchedID = FString::Printf(TEXT("%d_*.%s"), FileID, *FileExtension);
+
+	// 在目标文件目录下寻找该文件是否已存在
+	TArray<FString> Filenames;
+	IFileManager::Get().FindFilesRecursive(Filenames, *FolderName, *FileNameMatchedID, true, false);
+	if (Filenames.Num() > 0)
+	{
+		//FString LocalFilePath = Filenames[0];
+		FString NetMD5 = FResTools::GetMD5FromFileName(Filenames[0]);
+
+		// 查看模型是否已被加载
+		bool bPakLoaded = false;
+		for (auto& It : ObjList)
+		{
+			if (It.ItemID == FileID && NetMD5 == _NetMD5)
+			{
+				bPakLoaded = true;
+				break;
+			}
+		}
+
+		// 已载入的模型直接视为Complete，暂考虑下载更新
+        if (bPakLoaded)
+        {
+			return EFileExistenceState::Complete;
+        }
+
+		// 在filenames中查找，只要存在所查找的文件,则无需下载
+		for (auto&It : Filenames)
+		{
+			//如果文件名相同，即MD5相同，则无需下载
+            if (_FilePath == *It)
+            {
+				return EFileExistenceState::Complete;
+            }
+		}
+		//// 如果文件名相同，即MD5相同，则无需下载
+		//if (_FilePath == LocalFilePath)
+		//	return EFileExistenceState::Complete;
+
+		// 如果MD5不同，直接删除，需要后面下载更新		
+		for (auto&It : Filenames)
+		{
+			IFileManager::Get().Delete(*It, false, true);
+		}
+		return EFileExistenceState::NotExist;
+
+	}
+	else
+	{
+		// 如果不存在这个文件，需要下载
+		return EFileExistenceState::NotExist;
+	}
+
+	return EFileExistenceState::NotExist;
+}
+
 UStaticMeshComponent* UXRResourceManager::GetActorSMC(AActor* _InActor)
 {
 	AStaticMeshActor* SMA = Cast<AStaticMeshActor>(_InActor);
@@ -684,6 +766,8 @@ EActorType UXRResourceManager::GetActorType(AActor* _InActor)
 			return EActorType::Blueprint_Window;
 		else if (_InActor->Tags[0] == "EnvironmentAsset")
 			return EActorType::EnvironmentAsset;
+		else if (_InActor->Tags.Contains("HydropowerPipeActor"))
+			return EActorType::PipeLine;
 		else
 			return EActorType::Other;
 	}
@@ -699,7 +783,7 @@ AActor* UXRResourceManager::CreateActor(UWorld* _OwnerWorld, TSharedPtr<FContent
 	FVRSObject* NewVRSObj = LoadObj(_SynData, OutObjID, OutSynID);
 	if (NewVRSObj)
 	{
-		NewActor = CreateActorInternal(NewVRSObj);
+		NewActor = CreateActorInternal(NewVRSObj, OutObjID, OutSynID, _Location, _Rotation, _Scale);
 	}
 	//UploadActorSize();
 	return NewActor;
@@ -713,7 +797,7 @@ UMaterialInterface* UXRResourceManager::CreateMaterial(UWorld* _OwnerWorld, TSha
 	FVRSObject* NewVRSObj = LoadCustomObj(_SynData, OutObjID, OutSynID);
 	if (NewVRSObj)
 	{
-		NewMaterial = CreateMaterialInternal(NewVRSObj);
+		NewMaterial = CreateMaterialInternal(NewVRSObj, OutObjID, OutSynID);
 	}
 	return NewMaterial;
 }
@@ -726,36 +810,42 @@ AActor* UXRResourceManager::CreateCustomActor(UWorld* _OwnerWorld, FString _File
 
 	FString FileName = FResTools::GetFileNameFromPath(_FilePath);
 	int32 FileID = FResTools::GetFileIDFromName(FileName);
-	TSharedPtr<FContentItemSpace::FModelRes> ModelRes = MakeShareable(new FContentItemSpace::FModelRes(FileName, _FilePath, "", "0", "", ""));
+	TArray<TSharedPtr<FContentItemSpace::FResObj> > ModelRes;
+	ModelRes.Add(MakeShareable(new FContentItemSpace::FModelRes(FileName, _FilePath, "", "0", EResourceType::None, "", "")));
 	TSharedPtr<FContentItemSpace::FContentItem> SynData = MakeShareable(new FContentItemSpace::FContentItem(EResourceType::MoveableMesh, FileID, FileName, "", ModelRes));
 	FVRSObject* NewVRSObj = LoadCustomObj(SynData, OutObjID, OutSynID);
 	if (NewVRSObj)
 	{
-		NewActor = CreateActorInternal(NewVRSObj);
+		NewActor = CreateActorInternal(NewVRSObj, OutObjID, OutSynID, _Location, _Rotation, _Scale);
 	}
 	return NewActor;
 }
 
 UMaterialInterface* UXRResourceManager::CreateCustomMaterial(FString _FilePath)
 {
+	FString ext = FPaths::GetExtension(_FilePath);
+	if (!ext.Equals(TEXT("pak")))
+		return nullptr;
 	int32 OutSynID, OutObjID;
 	UMaterialInterface* NewMaterial = NULL;
 
 	FString FileName = FResTools::GetFileNameFromPath(_FilePath);
 	int32 FileID = FResTools::GetFileIDFromName(FileName);
-	TSharedPtr<FContentItemSpace::FModelRes> ModelRes = MakeShareable(new FContentItemSpace::FModelRes(FileName, _FilePath, "", "0", "", ""));
+	TArray<TSharedPtr<FContentItemSpace::FResObj> > ModelRes;
+	ModelRes.Add(MakeShareable(new FContentItemSpace::FModelRes(FileName, _FilePath, "", "0", EResourceType::None, "", "")));
 	TSharedPtr<FContentItemSpace::FContentItem> SynData = MakeShareable(new FContentItemSpace::FContentItem(EResourceType::Material, FileID, FileName, "", ModelRes));
 	FVRSObject* NewVRSObj = LoadCustomObj(SynData, OutObjID, OutSynID);
 	if (NewVRSObj)
 	{
-		NewMaterial = CreateMaterialInternal(NewVRSObj);
+		NewMaterial = CreateMaterialInternal(NewVRSObj, OutObjID, OutSynID);
 	}
 	return NewMaterial;
 }
 
 FVRSObject* UXRResourceManager::LoadCustomObj(TSharedPtr<FContentItemSpace::FContentItem> _SynData, int32& _OutObjID, int32& _OutSynID)
 {
-	if (!FPaths::FileExists(*_SynData->ResObj->FilePath))
+	TArray<TSharedPtr<FContentItemSpace::FResObj> >resArr = _SynData->GetResObjNoComponent();
+	if (resArr.Num() > 0 && !FPaths::FileExists(resArr[0]->FilePath))
 		return NULL;
 
 	//---------------------------------------------------------------------------------把同步数据插入到SynList中
@@ -805,7 +895,7 @@ FVRSObject* UXRResourceManager::LoadCustomObj(TSharedPtr<FContentItemSpace::FCon
 				UMaterialInstanceDynamic* MID = CreateMID(MI);
 				if (MID)
 				{
-					//MID->SetSynID(_OutSynID);
+					MID->SetSynID(_OutSynID);
 					_OutObjID = ObjList.Num() - 1;
 					return &ObjList.Last();
 				}
@@ -823,22 +913,22 @@ FVRSObject* UXRResourceManager::LoadCustomObj(TSharedPtr<FContentItemSpace::FCon
 	{
 		FVRSObject NewVRSObj;
 		NewVRSObj.ItemID = _SynData->ID;
-		NewVRSObj.FileName = _SynData->ResObj->FileName;
-		NewVRSObj.FilePath = _SynData->ResObj->FilePath;
-		NewVRSObj.MaterialParameter = StaticCastSharedPtr<FContentItemSpace::FModelRes>(_SynData->ResObj)->MaterialParameter;
+		NewVRSObj.FileName = resArr[0]->FileName;
+		NewVRSObj.FilePath = resArr[0]->FilePath;
+		NewVRSObj.Param = StaticCastSharedPtr<FContentItemSpace::FModelRes>(resArr[0])->MaterialParameter;
 		NewVRSObj.SynID = _OutSynID;
 		//如果加载成功，则新添加一条记录（这样以后无需每次都从Pak加载）
 		if (LoadObjInternal(NewVRSObj))
 		{
 			_OutObjID = ObjList.Num();
-			/*NewVRSObj.GetFirstObject()->SetObjID(ObjList.Num());
+			NewVRSObj.GetFirstObject()->SetObjID(ObjList.Num());
 			NewVRSObj.GetFirstObject()->SetSynID(_OutSynID);
 			if (NewVRSObj.GetSkeletalMeshObject())
 				NewVRSObj.GetSkeletalMeshObject()->SetObjID(ObjList.Num());
 			if (NewVRSObj.GetAnimSequenceObject())
 				NewVRSObj.GetAnimSequenceObject()->SetObjID(ObjList.Num());
 			if (NewVRSObj.GetLampMeshObject())
-				NewVRSObj.GetLampMeshObject()->SetObjID(ObjList.Num());*/
+				NewVRSObj.GetLampMeshObject()->SetObjID(ObjList.Num());
 			ObjList.Add(NewVRSObj);
 			return &ObjList.Last();
 		}
@@ -855,16 +945,16 @@ AActor* UXRResourceManager::CreateActorFromID(UWorld* _OwnerWorld, int32 _FileID
 	FVRSObject* NewVRSObj = LoadObjFromFileID(_FileID, OutObjID, OutSynID);
 	if (NewVRSObj)
 	{
-		return CreateActorInternal(NewVRSObj);
+		return CreateActorInternal(NewVRSObj, OutObjID, OutSynID, _Location, _Rotation, _Scale);
 	}
 	return NULL;
 }
 
 FVRSObject* UXRResourceManager::LoadObj(TSharedPtr<FContentItemSpace::FContentItem> _SynData, int32& _OutObjID, int32& _OutSynID)
 {
+	TArray<TSharedPtr<FContentItemSpace::FResObj> >resArr = _SynData->GetResObjNoComponent();
 	int32 ItemID = _SynData->ID;
-	FString FilePath = _SynData->ResObj->FilePath;
-	if (!FPaths::FileExists(*FilePath))
+	if (resArr.Num() > 0 && !FPaths::FileExists(*resArr[0]->FilePath))
 	{
 		return NULL;
 	}
@@ -885,15 +975,15 @@ FVRSObject* UXRResourceManager::LoadObj(TSharedPtr<FContentItemSpace::FContentIt
 	{
 		_OutSynID = ResultSynIndex;
 		//在下载时（UDownloadItem）因为有检测xml是否存在，如果存在则会尝试继续下载，但是这个时候下载的内容是没有智能设计方案ID的并且存储到了缓存，导致在智能设计替换后的actor对应的ContentItem没有方案ID而无法做下一步智能替换
-// 		if (ResultSynData->ResObj.AutoDesignPlanID == -1 || 
-// 			ResultSynData->ResObj.AutoDesignSpaceTypeID == -1 || 
-// 			ResultSynData->ResObj.AutoDesignActorTypeID == -1)
+// 		if (ResultSynData->ResObjArr[0].AutoDesignPlanID == -1 || 
+// 			ResultSynData->ResObjArr[0].AutoDesignSpaceTypeID == -1 || 
+// 			ResultSynData->ResObjArr[0].AutoDesignActorTypeID == -1)
 // 		{
-// 			ResultSynData->ResObj.AutoDesignPlanID = _SynData.ResObj.AutoDesignPlanID;
-// 			ResultSynData->ResObj.AutoDesignSpaceTypeID = _SynData.ResObj.AutoDesignSpaceTypeID;
-// 			ResultSynData->ResObj.AutoDesignActorTypeID = _SynData.ResObj.AutoDesignActorTypeID;
-// 			ResultSynData->ResObj.AutoDesignActorClassID = _SynData.ResObj.AutoDesignActorClassID;
-// 			ResultSynData->ResObj.AutoDesignActorDefault = _SynData.ResObj.AutoDesignActorDefault;
+// 			ResultSynData->ResObjArr[0].AutoDesignPlanID = _SynData.ResObj.AutoDesignPlanID;
+// 			ResultSynData->ResObjArr[0].AutoDesignSpaceTypeID = _SynData.ResObj.AutoDesignSpaceTypeID;
+// 			ResultSynData->ResObjArr[0].AutoDesignActorTypeID = _SynData.ResObj.AutoDesignActorTypeID;
+// 			ResultSynData->ResObjArr[0].AutoDesignActorClassID = _SynData.ResObj.AutoDesignActorClassID;
+// 			ResultSynData->ResObjArr[0].AutoDesignActorDefault = _SynData.ResObj.AutoDesignActorDefault;
 // 		}
 	}
 	else
@@ -928,7 +1018,7 @@ FVRSObject* UXRResourceManager::LoadObj(TSharedPtr<FContentItemSpace::FContentIt
 				UMaterialInstanceDynamic* MID = CreateMID(MI);
 				if (MID)
 				{
-					//MID->SetSynID(_OutSynID);
+					MID->SetSynID(_OutSynID);
 					_OutObjID = ObjList.Num() - 1;
 					return &ObjList.Last();
 				}
@@ -946,23 +1036,23 @@ FVRSObject* UXRResourceManager::LoadObj(TSharedPtr<FContentItemSpace::FContentIt
 	{
 		FVRSObject NewVRSObj;
 		NewVRSObj.ItemID = _SynData->ID;
-		NewVRSObj.FileName = _SynData->ResObj->FileName;
-		NewVRSObj.FilePath = _SynData->ResObj->FilePath;
+		NewVRSObj.FileName = resArr[0]->FileName;
+		NewVRSObj.FilePath = resArr[0]->FilePath;
 		NewVRSObj.FileType = _SynData->ResourceType;
-		NewVRSObj.MaterialParameter = StaticCastSharedPtr<FContentItemSpace::FModelRes>(_SynData->ResObj)->MaterialParameter;
+		NewVRSObj.Param = StaticCastSharedPtr<FContentItemSpace::FModelRes>(resArr[0])->MaterialParameter;
 		NewVRSObj.SynID = _OutSynID;
 		//如果加载成功，则新添加一条记录（这样以后无需每次都从Pak加载）
 		if(LoadObjInternal(NewVRSObj))
 		{
 			_OutObjID = ObjList.Num();
-	/*		NewVRSObj.GetFirstObject()->SetObjID(ObjList.Num());
+			NewVRSObj.GetFirstObject()->SetObjID(ObjList.Num());
 			NewVRSObj.GetFirstObject()->SetSynID(_OutSynID);
 			if (NewVRSObj.GetSkeletalMeshObject())
 				NewVRSObj.GetSkeletalMeshObject()->SetObjID(ObjList.Num());
 			if (NewVRSObj.GetAnimSequenceObject())
 				NewVRSObj.GetAnimSequenceObject()->SetObjID(ObjList.Num());
 			if (NewVRSObj.GetLampMeshObject())
-				NewVRSObj.GetLampMeshObject()->SetObjID(ObjList.Num());*/
+				NewVRSObj.GetLampMeshObject()->SetObjID(ObjList.Num());
 			ObjList.Add(NewVRSObj);
 			return &ObjList.Last();
 		}
@@ -1013,7 +1103,7 @@ FVRSObject* UXRResourceManager::LoadObjFromFileID(int32 _ItemID, int32& _OutObjI
 				UMaterialInstanceDynamic* MID = CreateMID(MI);
 				if (MID)
 				{
-					//MID->SetSynID(_OutSynID);
+					MID->SetSynID(_OutSynID);
 					_OutObjID = ObjList.Num() - 1;
 					//复制出来的材质，要恢复到Server的默认值，返回后再根据Para字段去覆盖得出最新的效果
 					ObjList.Last().ResetMaterialParameters();
@@ -1029,27 +1119,30 @@ FVRSObject* UXRResourceManager::LoadObjFromFileID(int32 _ItemID, int32& _OutObjI
 		}
 	}
 	//如果没有记录，则尝试加载
-	else if(SynList.IsValidIndex(ResultSynIndex))
+	else if (SynList.IsValidIndex(ResultSynIndex))
 	{
+		TArray<TSharedPtr<FContentItemSpace::FResObj> >resArr = SynList[ResultSynIndex]->GetResObjNoComponent();
+		if (resArr.Num() < 1)
+			return NULL;
 		FVRSObject NewVRSObj;
 		NewVRSObj.ItemID = SynList[ResultSynIndex]->ID;
-		NewVRSObj.FileName = SynList[ResultSynIndex]->ResObj->FileName;
-		NewVRSObj.FilePath = SynList[ResultSynIndex]->ResObj->FilePath;
+		NewVRSObj.FileName = resArr[0]->FileName;
+		NewVRSObj.FilePath = resArr[0]->FilePath;
 		NewVRSObj.FileType = SynList[ResultSynIndex]->ResourceType;
-		NewVRSObj.MaterialParameter = StaticCastSharedPtr<FContentItemSpace::FModelRes>(SynList[ResultSynIndex]->ResObj)->MaterialParameter;
+		NewVRSObj.Param = StaticCastSharedPtr<FContentItemSpace::FModelRes>(resArr[0])->MaterialParameter;
 		NewVRSObj.SynID = _OutSynID;
 		//如果加载成功，则新添加一条记录（这样以后无需每次都从Pak加载）
 		if (LoadObjInternal(NewVRSObj))
 		{
 			_OutObjID = ObjList.Num();
-			//NewVRSObj.GetFirstObject()->SetObjID(ObjList.Num());
-			//NewVRSObj.GetFirstObject()->SetSynID(ResultSynIndex);
-			//if (NewVRSObj.GetSkeletalMeshObject())
-			//	NewVRSObj.GetSkeletalMeshObject()->SetObjID(ObjList.Num());
-			//if (NewVRSObj.GetAnimSequenceObject())
-			//	NewVRSObj.GetAnimSequenceObject()->SetObjID(ObjList.Num());
-			//if (NewVRSObj.GetLampMeshObject())
-			//	NewVRSObj.GetLampMeshObject()->SetObjID(ObjList.Num());
+			NewVRSObj.GetFirstObject()->SetObjID(ObjList.Num());
+			NewVRSObj.GetFirstObject()->SetSynID(ResultSynIndex);
+			if (NewVRSObj.GetSkeletalMeshObject())
+				NewVRSObj.GetSkeletalMeshObject()->SetObjID(ObjList.Num());
+			if (NewVRSObj.GetAnimSequenceObject())
+				NewVRSObj.GetAnimSequenceObject()->SetObjID(ObjList.Num());
+			if (NewVRSObj.GetLampMeshObject())
+				NewVRSObj.GetLampMeshObject()->SetObjID(ObjList.Num());
 			ObjList.Add(NewVRSObj);
 			return &ObjList.Last();
 		}
@@ -1109,9 +1202,12 @@ bool UXRResourceManager::LoadObjInternal(FVRSObject& _OutObj)
 			FXmlNode* ActorTemplateNode = XMLRootNode->FindChildNode(TEXT("ActorTemplate"));
 			if (ActorTemplateNode)
 				ActorTemplateType = ActorTemplateNode->GetAttribute(TEXT("Type"));
+			TArray<TSharedPtr<FContentItemSpace::FResObj> >resArr = GetContentItemFromID(_OutObj.SynID)->GetResObjNoComponent();
+			if (resArr.Num() < 1)
+				return false;
 			//获取pak的xml版本号，用来判断材质的加载方式
-			//GetContentItemFromID(_OutObj.SynID)->ResObj->Version = FCString::Atoi(*XMLVersion);
-			_OutObj.Version = FCString::Atoi(*XMLVersion);
+			resArr[0]->Version = FCString::Atoi(*XMLVersion);
+
 			//确定要加载的是什么类型物体
 			if (ObjectType == "Model")
 				_OutObj.FileType = EResourceType::MoveableMesh;
@@ -1149,7 +1245,7 @@ bool UXRResourceManager::LoadObjInternal(FVRSObject& _OutObj)
 					FString TextureName = Filename.RightChop(pos + 1);
 
 					//加载到内存
-					LoadedObject = StaticLoadObject(UObject::StaticClass(), NULL, *Filename);
+					LoadedObject = StaticLoadObject(UObject::StaticClass(), NULL,*Filename);
 
 					//如果为UTexture类型，则存入贴图映射表
 					UTexture* TextureObject = Cast<UTexture>(LoadedObject);
@@ -1294,6 +1390,38 @@ bool UXRResourceManager::LoadObjInternal(FVRSObject& _OutObj)
 			//模型，加载里面MaterialList节点，创建对应的UMaterialInstanceDynamic
 			if (ObjectType == TEXT("Model") || ObjectType == TEXT("Actor"))
 			{
+				//获取插槽列表
+				FXmlNode* SocketListNode = XMLRootNode->FindChildNode(TEXT("SocketList"));
+				if (SocketListNode)
+				{
+					const TArray<FXmlNode*> ChildrenArray = SocketListNode->GetChildrenNodes();
+
+					for (auto& It : ChildrenArray)
+					{
+						FVector SocketLocation;
+						FRotator SocketRotation;
+						FXmlNode* SocketLocationNode = It->FindChildNode("Location");
+						FXmlNode* SocketRotationNode = It->FindChildNode("Rotation");
+						if (SocketLocationNode)
+							SocketLocation.InitFromString(SocketLocationNode->GetContent());
+						if (SocketRotationNode)
+							SocketRotation.InitFromString(SocketRotationNode->GetContent());
+						_OutObj.SocketList.Add(FVRSObject::FSocketData(SocketLocation, SocketRotation));
+					}
+				}
+
+				//获取模型吸附面和原点位置类型
+				FXmlNode* SettingsNode = XMLRootNode->FindChildNode(TEXT("Settings"));
+				if (SettingsNode)
+				{
+					FXmlNode* SnapTypeNode = SettingsNode->FindChildNode(TEXT("SnapType"));
+					if (SnapTypeNode)
+						_OutObj.SnapType = EMeshSnapType(FCString::Atoi(*SnapTypeNode->GetContent()));
+					FXmlNode* OriginTypeNode = SettingsNode->FindChildNode(TEXT("OriginType"));
+					if (OriginTypeNode)
+						_OutObj.OriginType = EMeshOriginType(FCString::Atoi(*OriginTypeNode->GetContent()));
+				}
+
 				const TArray<FXmlNode*> ChildrenArray = XMLRootNode->GetChildrenNodes();
 				TArray<FXmlNode*> MaterialArray;
 				for (auto& It : ChildrenArray)
@@ -1305,7 +1433,7 @@ bool UXRResourceManager::LoadObjInternal(FVRSObject& _OutObj)
 				}
 				for (int32 i = 0; i < MaterialArray.Num(); i++)
 				{
-					FModelMaterialData ModelMaterialData = CreateModelMaterialData(_OutObj.Version, MaterialArray[i], TextureMap);
+					FModelMaterialData ModelMaterialData = CreateModelMaterialData(resArr[0]->Version, MaterialArray[i], TextureMap);
 					_OutObj.MaterialList.Add(ModelMaterialData);
 				}
 			}
@@ -1340,8 +1468,9 @@ bool UXRResourceManager::LoadObjInternal(FVRSObject& _OutObj)
 					{
 						FString TextureSizeStr = ChildNode->GetContent();
 						TextureSize.InitFromString(TextureSizeStr);
-						TextureSize.X = 800.f / TextureSize.X;
-						TextureSize.Y = 800.f / TextureSize.Y;
+						/*		TextureSize.X = 800.f / TextureSize.X;
+								TextureSize.Y = 800.f / TextureSize.Y;*/
+						TextureSize = FVector2D(1, 1);
 					}
 				}
 				FModelMaterialData MaterialData = CreateMaterialData(MaterialName, TextureSize, DiffuseMap, NormalMap);
@@ -1350,10 +1479,10 @@ bool UXRResourceManager::LoadObjInternal(FVRSObject& _OutObj)
 			}
 			//模型，加载里面MaterialList节点，创建对应的UMaterialInstanceDynamic
 			//--------------------------------------------------------------------------------解析从网络获取的Para字符串，然后覆盖ParaList数据
-			if (!_OutObj.MaterialParameter.IsEmpty())
+			if (!_OutObj.Param.IsEmpty())
 			{
 				TArray<FModelMaterialData> ServerParaList;
-				if (ConvertJsonToModelMaterialList(ObjectType == TEXT("Material"), _OutObj.MaterialParameter, ServerParaList))
+				if (ConvertJsonToModelMaterialList(ObjectType == TEXT("Material"), _OutObj.Param, ServerParaList))
 				{
 					//5.0之前的服务器数据没有SlotName，则直接按照顺序一一覆盖
 					if (ServerParaList.Num() > 0 && ServerParaList[0].SlotName.IsEmpty())
@@ -1512,13 +1641,10 @@ bool UXRResourceManager::LoadObjInternal(FVRSObject& _OutObj)
 	return false;
 }
 
-AActor* UXRResourceManager::CreateActorInternal(FVRSObject* _ObjectInfo)
+AActor* UXRResourceManager::CreateActorInternal(FVRSObject* _ObjectInfo, int32 _ObjID, int32 _SynID, FVector _Location, FRotator _Rotation, FVector _Scale)
 {
 	AActor* CreatedActor = NULL;
-	FVector _Location = FVector::ZeroVector;
-	FRotator _Rotation = FRotator::ZeroRotator;
-	FVector _Scale = FVector(1,1,1);
-	// 	if (_bSelect)
+// 	if (_bSelect)
 // 	{
 // 		FIntPoint size = CurWorld->GetGameViewport()->GetGameViewport()->GetSize();
 // 		CurWorld->GetGameViewport()->GetGameViewport()->SetMouse(size.X / 2, size.Y * 2 / 3);
@@ -1550,8 +1676,8 @@ AActor* UXRResourceManager::CreateActorInternal(FVRSObject* _ObjectInfo)
 			}
 
 			CreatedActor = SMA;
-			//CreatedActor->SetObjID(_ObjID);
-			//CreatedActor->SetSynID(_SynID);
+			CreatedActor->SetObjID(_ObjID);
+			CreatedActor->SetSynID(_SynID);
 
 			//if (_bSelect)
 			//{
@@ -1569,11 +1695,42 @@ AActor* UXRResourceManager::CreateActorInternal(FVRSObject* _ObjectInfo)
 				//if (bDIYHome)
 				//	SMA->GetStaticMeshComponent()->SetMobility(EComponentMobility::Static);
 				//else
-					SMA->GetStaticMeshComponent()->IndirectLightingCacheQuality = EIndirectLightingCacheQuality::ILCQ_Volume;
+				//SMA->GetStaticMeshComponent()->IndirectLightingCacheQuality = EIndirectLightingCacheQuality::ILCQ_Volume;
 
 			//}
 		}
 	}
+	/*else if (_ObjectInfo->FileType==EResourceType::Hydropower)
+	{
+		UStaticMesh* SM=Cast<UStaticMesh>(_ObjectInfo->GetFirstObject());
+		if(SM!=NULL)
+		{
+			FActorSpawnParameters SpawnInfo;
+			SpawnInfo.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			SpawnInfo.bNoFail=true;
+			SpawnInfo.ObjectFlags=RF_Transient;
+			AXRFurnitureActor* SMA=CurWorld->SpawnActor<AXRFurnitureActor>(SpawnInfo);
+			SMA->GetStandStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
+			SMA->SetActorLocation(_Location);
+			SMA->SetActorRotation(_Rotation);
+			SMA->SetActorScale3D(_Scale);
+			SMA->GetStandStaticMeshComponent()->SetStaticMesh(SM);
+			SMA->GetStandStaticMeshComponent()->SetCollisionProfileName("BlockAllDynamic");
+			SMA->GetStandStaticMeshComponent()->SetCollisionObjectType(ECC_VRSSM);
+			SMA->GetStandStaticMeshComponent()->SetCollisionResponseToChannel(ECC_VRSSM,ECR_Block);
+			SMA->Tags.Reset();
+			SMA->Tags.Add(FName("MoveableMeshActor"));
+			for(int32 i=0; i<_ObjectInfo->MaterialList.Num(); i++)
+			{
+				SMA->GetStandStaticMeshComponent()->SetMaterialByName(FName(*_ObjectInfo->MaterialList[i].SlotName),_ObjectInfo->MaterialList[i].DIM);
+			}
+			SMA->GetTransverseStaticMeshComponent()->SetStaticMesh(SM);
+			CreatedActor=SMA;
+			CreatedActor->SetObjID(_ObjID);
+			CreatedActor->SetSynID(_SynID);
+			SMA->GetStandStaticMeshComponent()->IndirectLightingCacheQuality=EIndirectLightingCacheQuality::ILCQ_Volume;
+		}
+	}*/
 	else if (_ObjectInfo->FileType == EResourceType::BlueprintClass)
 	{
 		UBlueprintGeneratedClass* BP = Cast<UBlueprintGeneratedClass>(_ObjectInfo->GetFirstObject());
@@ -1666,27 +1823,37 @@ AActor* UXRResourceManager::CreateActorInternal(FVRSObject* _ObjectInfo)
 							SMC2->SetMaterialByName(FName(*_ObjectInfo->MaterialList[j].SlotName), _ObjectInfo->MaterialList[j].DIM);
 						}
 					}
+
+					//@打扮家 马云龙 只有材质附上去后才能正确的关灯，否则自发光的材质会出错
+					UFunction* Function = BlueprintActor->FindFunction(FName(TEXT("OnTurnOff")));
+					if (Function)
+					{
+						BlueprintActor->ProcessEvent(Function, nullptr);
+					}
 				}
 			}
 			BlueprintActor->Tags.Reset();
 			BlueprintActor->Tags.Add(FName("BlueprintVRSActor"));
 
 			CreatedActor = BlueprintActor;
-			//CreatedActor->SetObjID(_ObjID);
-			//CreatedActor->SetSynID(_SynID);
+			CreatedActor->SetObjID(_ObjID);
+			CreatedActor->SetSynID(_SynID);
 
 			if (_ObjectInfo->GetLampMeshObject())
 			{
 				//获取灯具属性参数，并应用
 				TArray<FXRParameter> ModelSettingsList;
-				//TSharedPtr<FContentItemSpace::FContentItem> ResultSynData = GetContentItemFromID(_SynID);
-
-				
-				//if (ResultSynData.IsValid() && !StaticCastSharedPtr<FContentItemSpace::FModelRes>(ResultSynData->ResObj)->LightParameter.IsEmpty())
-				//{
-					ConvertJsonToModelSettingsList(_ObjectInfo->LightParameter, ModelSettingsList);
-					SetActorLightComponentParameters(BlueprintActor, ModelSettingsList);
-				//}
+				TSharedPtr<FContentItemSpace::FContentItem> ResultSynData = GetContentItemFromID(_SynID);
+				if (ResultSynData.IsValid())
+				{
+					TArray<TSharedPtr<FContentItemSpace::FResObj> >resArr = ResultSynData->GetResObjNoComponent();
+					if (resArr.Num() > 0 && !StaticCastSharedPtr<FContentItemSpace::FModelRes>(resArr[0])->LightParameter.IsEmpty())
+					{
+						
+						ConvertJsonToModelSettingsList(StaticCastSharedPtr<FContentItemSpace::FModelRes>(resArr[0])->LightParameter, ModelSettingsList);
+						SetActorLightComponentParameters(BlueprintActor, ModelSettingsList);
+					}
+				}
 			}
 
 			//if (_bSelect)
@@ -1733,7 +1900,7 @@ AActor* UXRResourceManager::CreateActorInternal(FVRSObject* _ObjectInfo)
 	if (CreatedActor)
 	{
 		//CreatedActor->DisableInput(GVRSPC);
-		OnLevelActorAdded.ExecuteIfBound(CreatedActor);
+		OnLevelActorAdded.Broadcast(CreatedActor);
 
 // 		FContentItemSpace::FContentItem* ContentItem = GetContentItemFromID(_SynID);
 // 		if (ContentItem && (ContentItem->ProObj.Length == 0 || ContentItem->ProObj.Width == 0))
@@ -1748,7 +1915,7 @@ AActor* UXRResourceManager::CreateActorInternal(FVRSObject* _ObjectInfo)
 	return CreatedActor;
 }
 
-UMaterialInterface* UXRResourceManager::CreateMaterialInternal(FVRSObject* _ObjectInfo)
+UMaterialInterface* UXRResourceManager::CreateMaterialInternal(FVRSObject* _ObjectInfo, int32 _ObjID, int32 _SynID)
 {
 	UMaterialInterface* NewMaterial = NULL;
 	
@@ -1757,7 +1924,7 @@ UMaterialInterface* UXRResourceManager::CreateMaterialInternal(FVRSObject* _Obje
 		NewMaterial = Cast<UMaterialInterface>(_ObjectInfo->GetFirstObject());
 		if (NewMaterial != NULL)
 		{
-			//NewMaterial->SetSynID(_SynID);
+			NewMaterial->SetSynID(_SynID);
 		}
 	}
 	return NewMaterial;
@@ -1772,10 +1939,7 @@ void UXRResourceManager::MountPakReturnFiles(FString _PakPath, TArray<FString>& 
 		FString MP = PakFile->GetMountPoint();
 		int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
 		FString MP2 = MP.RightChop(pos1);
-		FString ProjectName= FApp::GetProjectName();
-		
-		MP = TEXT("../../../") + ProjectName + MP2;
-		//MP= TEXT("../../../AR")  + MP2;
+		MP = TEXT("../../../XR") + MP2;
 		if (!_IDontWantToMount)
 			PakPlatform.Get()->Mount(*_PakPath, _Order, *MP);
 	}
@@ -1822,18 +1986,11 @@ void UXRResourceManager::MountPak(FString _PakPath)
 void UXRResourceManager::LoadCommonData()
 {
 	FPlatformFileManager::Get().SetPlatformFile(*PakPlatform);
-	FStreamableManager StreamableManager;
 
-	//扫描Common文件夹里的pak文件
-	TArray<FString> PakFilenames;
-	IFileManager::Get().FindFilesRecursive(PakFilenames, *(FPaths::ProjectContentDir() + "DBJCache/Common"), TEXT("*.pak"), true, false);
-
-	//挂载公共资源包
-	for (int32 i = 0; i < PakFilenames.Num(); i++)
-	{
-		TArray<FString> Filenames;
-		MountPakReturnFiles(PakFilenames[i], Filenames, 4);
-	}
+	//当前只调用Common_9和Common_60
+	TArray<FString> Filenames;
+	MountPakReturnFiles(FPaths::ProjectContentDir() + "DBJCache/Common/Common_9.pak", Filenames, 4);
+	MountPakReturnFiles(FPaths::ProjectContentDir() + "DBJCache/Common/Common_60.pak", Filenames, 4);
 
 	//加载18种常用材质球，用来随时更换
 	for (int32 i = 0; i < StaticCommonMaterialList.Num(); i++)
@@ -1887,28 +2044,14 @@ void UXRResourceManager::LoadCommonData()
 	FPlatformFileManager::Get().SetPlatformFile(*LocalPlatformFile);
 }
 
-FVRSObject UXRResourceManager::LoadPakFile(FString InFilePath)
-{
-	FVRSObject NewVRSObj;
-	if (FPaths::FileExists(*InFilePath))
-	{
-		NewVRSObj.FilePath = InFilePath;
-		NewVRSObj.FileName = FResTools::GetFileNameFromPath(InFilePath);
-		//NewVRSObj.Param = StaticCastSharedPtr<FContentItemSpace::FModelRes>(_SynData->ResObj)->MaterialParameter;
-		LoadObjInternal(NewVRSObj);
-	}
-
-	return NewVRSObj;
-}
-
 void UXRResourceManager::UnloadModelPak()
 {
 	for (auto& It : ObjList)
 	{
 		PakPlatform->Unmount(*It.FilePath);
 	}
-	ObjList.Reset();
-	SynList.Reset();
+	ObjList.Empty();
+	SynList.Reset(); 
 	//CommentateActors.Reset();
 }
 
@@ -2192,7 +2335,7 @@ void UXRResourceManager::ClearActorOverridenMaterials(AActor* _Actor)
 {
 	if (_Actor)
 	{
-		FVRSObject* ResultObj=new FVRSObject();// = GetObjFromObjID(_Actor->GetObjID());
+		FVRSObject* ResultObj = GetObjFromObjID(_Actor->GetObjID());
 		if (ResultObj)
 		{
 			UMeshComponent* TheMeshCOM = NULL;
@@ -2599,8 +2742,6 @@ FModelMaterialData UXRResourceManager::CreateMaterialData(FString _MaterialName,
 	TArray<FXRParameter> ParaList;
 	FCommonMaterialData::EMaterialType MaterialType = FCommonMaterialData::E_None;
 
-	MID->SetScalarParameterValue(TEXT("Diffuse_UseTexture"), 1.f);
-	MID->SetTextureParameterValue(TEXT("Diffuse_Map"), _DiffuseMap);
 	if (MID)
 	{
 		//油漆特殊处理
@@ -3029,9 +3170,7 @@ void UXRResourceManager::ChangeModelMaterialData(int32 _NewMaterialTypeIndex, FM
 	if (_OldMaterialData->DiffuseMap)
 	{
 		float UV = 0;
-		FMaterialParameterInfo mMaterialParameterInfo;
-		mMaterialParameterInfo.Name = "Diffuse_UV";
-		_OldMaterialData->DIM->GetScalarParameterValue(mMaterialParameterInfo, UV);
+		_OldMaterialData->DIM->GetScalarParameterValue("Diffuse_UV", UV);
 		NewMaterialData.DIM->SetScalarParameterValue("Diffuse_UseTexture", 1.f);
 		NewMaterialData.DIM->SetScalarParameterValue("Diffuse_UV", UV);
 		NewMaterialData.DIM->SetTextureParameterValue("Diffuse_Map", _OldMaterialData->DiffuseMap);
@@ -3040,9 +3179,7 @@ void UXRResourceManager::ChangeModelMaterialData(int32 _NewMaterialTypeIndex, FM
 	if (_OldMaterialData->NormalMap)
 	{
 		float UV = 0;
-		FMaterialParameterInfo mMaterialParameterInfo;
-		mMaterialParameterInfo.Name = "Normal_UV";
-		_OldMaterialData->DIM->GetScalarParameterValue(mMaterialParameterInfo, UV);
+		_OldMaterialData->DIM->GetScalarParameterValue("Normal_UV", UV);
 		NewMaterialData.DIM->SetScalarParameterValue("Normal_UseTexture", 1.f);
 		NewMaterialData.DIM->SetScalarParameterValue("Normal_UV", UV);
 		NewMaterialData.DIM->SetTextureParameterValue("Normal_Map", _OldMaterialData->NormalMap);
@@ -3051,9 +3188,7 @@ void UXRResourceManager::ChangeModelMaterialData(int32 _NewMaterialTypeIndex, FM
 	if (_OldMaterialData->OpacityMap)
 	{
 		float UV = 0;
-		FMaterialParameterInfo mMaterialParameterInfo;
-		mMaterialParameterInfo.Name = "Opacity_UV";
-		_OldMaterialData->DIM->GetScalarParameterValue(mMaterialParameterInfo, UV);
+		_OldMaterialData->DIM->GetScalarParameterValue("Opacity_UV", UV);
 		NewMaterialData.DIM->SetScalarParameterValue("Opacity_UseTexture", 1.f);
 		NewMaterialData.DIM->SetScalarParameterValue("Opacity_UV", UV);
 		NewMaterialData.DIM->SetTextureParameterValue("Opacity_Map", _OldMaterialData->OpacityMap);
@@ -3204,7 +3339,7 @@ void UXRResourceManager::CollectActorLightComponentsParameters(AActor* _Actor, T
 	_OutSettingsList.Reset();
 	if (_Actor)
 	{
-		FVRSObject* ResultObj = new FVRSObject();// = GetObjFromObjID(_Actor->GetObjID());
+		FVRSObject* ResultObj = GetObjFromObjID(_Actor->GetObjID());
 		if (ResultObj)
 		{
 			//如果是工具制作的标准化交互模型
@@ -3280,7 +3415,7 @@ void UXRResourceManager::SetActorLightComponentParameters(AActor* _Actor, TArray
 {
 	if (_Actor)
 	{
-		FVRSObject* ResultObj=new FVRSObject();// = GetObjFromObjID(_Actor->GetObjID());
+		FVRSObject* ResultObj = GetObjFromObjID(_Actor->GetObjID());
 		if (ResultObj)
 		{
 			//如果是工具制作的标准化交互模型
@@ -3322,7 +3457,7 @@ void UXRResourceManager::SetActorLightComponentParameters(AActor* _Actor, TArray
 
 UMeshComponent* UXRResourceManager::GetFirstMeshComponent(AActor* _Actor)
 {
-	FVRSObject* ResultObj=new FVRSObject();// = GetObjFromObjID(_Actor->GetObjID());
+	FVRSObject* ResultObj = GetObjFromObjID(_Actor->GetObjID());
 
 	UMeshComponent* NewMeshCOM = NULL;
 	TInlineComponentArray<USceneComponent*> SceneComponents;
@@ -3510,7 +3645,7 @@ void UXRResourceManager::ClearData()
 
 void UXRResourceManager::OnActorPasted(AActor* _Actor)
 {
-	FVRSObject* ResultObj = new FVRSObject();// = GetObjFromObjID(_Actor->GetObjID());
+	FVRSObject* ResultObj = GetObjFromObjID(_Actor->GetObjID());
 	if (ResultObj)
 	{
 		//从MeshComponent上获取材质列表
@@ -3561,19 +3696,19 @@ void UXRResourceManager::OnActorPasted(AActor* _Actor)
 		//获取到材质之后，会找出后期附加的材质，并且克隆，这样克隆体和原模型的材质才会互不影响
 		for (int32 i = 0; i < Materials.Num(); i++)
 		{
-		/*	int32 ObjID = Materials[i]->GetObjID();
+			int32 ObjID = Materials[i]->GetObjID();
 			if (ObjID != -1)
 			{
 				UMaterialInstanceDynamic* NewMID = CreateMID(Materials[i]);
 				NewMeshCOM->SetMaterial(i, NewMID);
-			}*/
+			}
 		}
 
 		//考虑交互灯具，要复制参数
 		if (GetActorType(_Actor) == EActorType::Blueprint)
 		{
-			TSharedPtr<FContentItemSpace::FContentItem> SynData;// = GetContentItemFromID(_Actor->GetSynID());
-			FVRSObject* ResultObj2=new FVRSObject();// = GetObjFromObjID(_Actor->GetObjID());
+			TSharedPtr<FContentItemSpace::FContentItem> SynData = GetContentItemFromID(_Actor->GetSynID());
+			FVRSObject* ResultObj2 = GetObjFromObjID(_Actor->GetObjID());
 
 			if (ResultObj2 && ResultObj2->GetLampMeshObject() && SynData.IsValid())
 			{
@@ -3604,9 +3739,10 @@ void UXRResourceManager::OnActorPasted(AActor* _Actor)
 				}
 				//获取灯具属性参数，并应用
 				TArray<FXRParameter> ModelSettingsList;
-				if (!StaticCastSharedPtr<FContentItemSpace::FModelRes>(SynData->ResObj)->LightParameter.IsEmpty())
+				TArray<TSharedPtr<FContentItemSpace::FResObj> >resArr = SynData->GetResObjNoComponent();
+				if (resArr.Num() > 0 && !StaticCastSharedPtr<FContentItemSpace::FModelRes>(resArr[0])->LightParameter.IsEmpty())
 				{
-					ConvertJsonToModelSettingsList(StaticCastSharedPtr<FContentItemSpace::FModelRes>(SynData->ResObj)->LightParameter, ModelSettingsList);
+					ConvertJsonToModelSettingsList(StaticCastSharedPtr<FContentItemSpace::FModelRes>(resArr[0])->LightParameter, ModelSettingsList);
 					SetActorLightComponentParameters(_Actor, ModelSettingsList);
 				}
 			}
@@ -3614,55 +3750,60 @@ void UXRResourceManager::OnActorPasted(AActor* _Actor)
 	}
 }
 
-//AXRPointLightActor* UXRResourceManager::AddPointLight(UWorld* InWorld, float _AttenuationRadius/* = 700.f*/, float _Intensity/* = 5000.f*/)
-//{
-//	CurWorld = InWorld;
-//	AXRPointLightActor* LightActor = CurWorld->SpawnActor<AXRPointLightActor>(FXREngineModule::Get().GetEngineResource()->GetPointLightClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
-//	LightActor->PointLightCOM->SetCastShadows(false);
-//	LightActor->PointLightCOM->SetAttenuationRadius(_AttenuationRadius);
-//	LightActor->PointLightCOM->SetIntensity(_Intensity);
-//	LightActor->Tags.Reset();
-//	LightActor->Tags.Add(FName("EnvironmentAsset"));
-// 	
-//	//OnLevelActorAdded.ExecuteIfBound(LightActor);
-// 	return LightActor;
-//}
-//
-//AXRSpotLightActor* UXRResourceManager::AddSpotLight(UWorld* InWorld)
-//{
-//	CurWorld = InWorld;
-//	AXRSpotLightActor* LightActor = CurWorld->SpawnActor<AXRSpotLightActor>(FXREngineModule::Get().GetEngineResource()->GetSpotLightClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
-// 	LightActor->SpotLightCOM->SetCastShadows(false);
-// 	LightActor->Tags.Reset();
-// 	LightActor->Tags.Add(FName("EnvironmentAsset"));
-// 
-// 	//OnLevelActorAdded.ExecuteIfBound(LightActor);
-// 	return LightActor;
-//}
-//
-//AXRReflectionCaptureActor* UXRResourceManager::AddReflectionSphere(UWorld* InWorld)
-//{
-//	CurWorld = InWorld;
-//	AXRReflectionCaptureActor* RCActor = CurWorld->SpawnActor<AXRReflectionCaptureActor>(FXREngineModule::Get().GetEngineResource()->GetReflectionCaptureClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
-// 	RCActor->SetRadius(500.f);
-// 	RCActor->SetActorEnableCollision(false);
-// 	RCActor->Tags.Reset();
-// 	RCActor->Tags.Add(FName("EnvironmentAsset"));
-// 
-// 	//OnLevelActorAdded.ExecuteIfBound(RCActor);
-// 	return RCActor;
-//}
-//
-//AXRLevelAssetBoardActor* UXRResourceManager::AddLevelAssetBoard(UWorld* InWorld)
-//{
-//	CurWorld = InWorld;
-//	AXRLevelAssetBoardActor* SpawnedActor = CurWorld->SpawnActor<AXRLevelAssetBoardActor>(FXREngineModule::Get().GetEngineResource()->GetLevelAssetBoardClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
-// 	SpawnedActor->Tags.Reset();
-// 	SpawnedActor->Tags.Add(FName("EnvironmentAsset"));
-// 
-// 	//OnLevelActorAdded.ExecuteIfBound(SpawnedActor);
-// 	return SpawnedActor;
-//}
+const ANSICHAR* UXRResourceManager::GetAESKey()
+{
+	return AESKey;
+}
+
+AXRPointLightActor* UXRResourceManager::AddPointLight(UWorld* InWorld, float _AttenuationRadius/* = 700.f*/, float _Intensity/* = 5000.f*/)
+{
+	CurWorld = InWorld;
+	AXRPointLightActor* LightActor = CurWorld->SpawnActor<AXRPointLightActor>(FXREngineModule::Get().GetEngineResource()->GetPointLightClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
+	LightActor->PointLightCOM->SetCastShadows(false);
+	LightActor->PointLightCOM->SetAttenuationRadius(_AttenuationRadius);
+	LightActor->PointLightCOM->SetIntensity(_Intensity);
+	LightActor->Tags.Reset();
+	LightActor->Tags.Add(FName("EnvironmentAsset"));
+ 	
+	//OnLevelActorAdded.ExecuteIfBound(LightActor);
+ 	return LightActor;
+}
+
+AXRSpotLightActor* UXRResourceManager::AddSpotLight(UWorld* InWorld)
+{
+	CurWorld = InWorld;
+	AXRSpotLightActor* LightActor = CurWorld->SpawnActor<AXRSpotLightActor>(FXREngineModule::Get().GetEngineResource()->GetSpotLightClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
+ 	LightActor->SpotLightCOM->SetCastShadows(false);
+ 	LightActor->Tags.Reset();
+ 	LightActor->Tags.Add(FName("EnvironmentAsset"));
+ 
+ 	//OnLevelActorAdded.ExecuteIfBound(LightActor);
+ 	return LightActor;
+}
+
+AXRReflectionCaptureActor* UXRResourceManager::AddReflectionSphere(UWorld* InWorld)
+{
+	CurWorld = InWorld;
+	AXRReflectionCaptureActor* RCActor = CurWorld->SpawnActor<AXRReflectionCaptureActor>(FXREngineModule::Get().GetEngineResource()->GetReflectionCaptureClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
+ 	RCActor->SetRadius(500.f);
+ 	RCActor->SetActorEnableCollision(false);
+ 	RCActor->Tags.Reset();
+ 	RCActor->Tags.Add(FName("EnvironmentAsset"));
+ 
+ 	//OnLevelActorAdded.ExecuteIfBound(RCActor);
+ 	return RCActor;
+}
+
+AXRLevelAssetBoardActor* UXRResourceManager::AddLevelAssetBoard(UWorld* InWorld)
+{
+	CurWorld = InWorld;
+	AXRLevelAssetBoardActor* SpawnedActor = CurWorld->SpawnActor<AXRLevelAssetBoardActor>(FXREngineModule::Get().GetEngineResource()->GetLevelAssetBoardClass(), FVector(0, 0, 0), FRotator(0, 0, 0));
+ 	SpawnedActor->Tags.Reset();
+ 	SpawnedActor->Tags.Add(FName("EnvironmentAsset"));
+ 
+ 	//OnLevelActorAdded.ExecuteIfBound(SpawnedActor);
+ 	return SpawnedActor;
+}
 
 //void UXRResourceManager::ActorSizeInfo::ComputeFromActor(AActor* InActor, FString InID, int32 InTypeID)
 //{

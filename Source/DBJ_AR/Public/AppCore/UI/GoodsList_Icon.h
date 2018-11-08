@@ -3,6 +3,7 @@
 #include "BaseUI.h"
 #include "GoodsData.h"
 #include "FileDownloadManager.h"
+#include "GFileManager.h"
 #include "GoodsList_Icon.generated.h"
 
 
@@ -16,6 +17,7 @@ public:
 	virtual void On_Delete() override;
 
 	void	SetData(GoodsData * _data);
+	void	SetParentUI(UBaseUI * _ui);
 
 	UFUNCTION()
 		void OnButtonClick(int index);
@@ -27,7 +29,11 @@ private:
 	UImage	*	m_Image;
 	UTextBlock * m_IconName;
 	UNativeWidgetHost * m_ImageHost;
+
 	GoodsData * m_Data;
-    
+	PakInfo		m_PakInfo;
+
 	bool m_IsDowning;
+
+	UBaseUI * m_ParentUI;
 };

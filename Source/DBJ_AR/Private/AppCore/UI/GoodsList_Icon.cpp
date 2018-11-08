@@ -38,17 +38,31 @@ void UGoodsList_Icon::On_Delete()
 }
 void UGoodsList_Icon::OnButtonClick(int index)
 {
-	if (m_IsDowning)
+	/*if (m_IsDowning)
 	{
 		return;
-	}
+	}*/
 
     UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnButtonClick : "));
 	switch (index)
 	{
 	case 1:
 	{
-
+		m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
+		if (!m_PakInfo.GamePath.IsEmpty())
+		{
+			AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0, 0, 10), FRotator(0, 0, 0));
+			UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>(this);
+			//UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_PakInfo.GamePath);
+			UE_LOG(LogTemp, Log, TEXT("zhx : game path :%s"), *m_PakInfo.GamePath);
+			///Game/DLC/Goods/AR_HuaPen_181026013/AR_HuaPen_181026013
+			///Game/DLC/Goods/AR_HuaPen_181026013/AR_HuaPen_181026013
+			//UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/DLC/Goods/AR_HuaPen_181026013/AR_HuaPen_181026013"));
+			UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_PakInfo.GamePath);
+			meshComponent->SetStaticMesh(mesh);
+			meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+			meshComponent->RegisterComponentWithWorld(GetWorld());
+		}
 	}break;
 	case 2:
 	{
@@ -73,10 +87,15 @@ void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
 	m_IsDowning = false;
 	if (_finish == 0 && _info.Id == m_Data->modelId)
 	{
+		m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
 
 	}
 
 
+}
+void UGoodsList_Icon::SetParentUI(UBaseUI * _ui)
+{
+	m_ParentUI = _ui;
 }
 void UGoodsList_Icon::SetData(GoodsData * _data)
 {

@@ -2,7 +2,7 @@
 #include "UIManager.h"
 #include "DataManager.h"
 #include "ScenePrototype.h"
-
+#include "GFileManager.h"
 
 
 
@@ -12,6 +12,8 @@ UAppInstance::UAppInstance()
 }
 void UAppInstance::On_Init()
 {
+	GFileManager::GetInstance()->On_Init();
+
     Data_M->LoadAllXMLData();
 
 }

@@ -165,8 +165,21 @@ AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
     FTransform t;
     if (GetTrackedGeometryTransform(_screenPosition, t))
     {
-        UClass * uclass = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/BP_Hua.BP_Hua_C"), NULL, LOAD_None, NULL);
-        GetWorld()->SpawnActor<AActor>(uclass,t);
+		UClass * uclass = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/BP_Hua.BP_Hua_C"), NULL, LOAD_None, NULL);
+
+        /*AActor * actor = GetWorld()->SpawnActor<AActor>(uclass,t);
+		UStaticMesh * mesh = LoadObject<UStaticMesh>(UObject::StaticClass(),)*/
+
+		/*UClass * uclass = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/BP_Hua.BP_Hua_C"), NULL, LOAD_None, NULL);
+		AActor * actor = GetWorld()->SpawnActor<AActor>(uclass,FVector(0,0,10),FRotator(0,0,0));*/
+
+		/*UClass * uclass = AActor::StaticClass();
+		AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0, 0, 10), FRotator(0, 0, 0));
+		UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>(this);
+		UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/TestMesh/HuaA"));
+		meshComponent->SetStaticMesh(mesh);
+		meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		meshComponent->RegisterComponentWithWorld(GetWorld());*/
     }
     return actor;
 }

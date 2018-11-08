@@ -9,7 +9,7 @@ public class DBJ_AR : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "InputCore","JsonUtilities","Json","HTTP","Networking",
-        "Slate", "SlateCore","UMG","ImageDownload"
+        "Slate", "SlateCore","UMG","ImageDownload","PakFile"
 });
 
         PublicDependencyModuleNames.AddRange(new string[] {"GCore",  "GXmlPlugins", "MsgCore", "DownloadTool" });
