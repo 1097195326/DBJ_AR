@@ -1,4 +1,4 @@
-#include "GFileManager.h"
+ï»¿#include "GFileManager.h"
 #include "FileHelper.h"
 #include "Paths.h"
 #include "PlatformFilemanager.h"
@@ -25,6 +25,11 @@ void GFileManager::On_Init()
 bool GFileManager::FileIsExist(FString _path)
 {
 	return FPaths::FileExists(_path);
+}
+void GFileManager::TestPak()
+{
+	PakMount(9, TEXT("01d222cb4f9f18fd1316328e4bb2a007"));
+
 }
 PakInfo GFileManager::PakMount(int _id, FString _md5)
 {
@@ -53,31 +58,38 @@ PakInfo GFileManager::PakMount(int _id, FString _md5)
 	
 	return info;
 }
+
 bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 {
-	/*FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);*/
+	FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);
 
 	FPakFile PakFile(m_PakPlatformFile, *_filePath, false);
 
+	//FString MP = PakFile.GetMountPoint();
+	//UE_LOG(LogTemp, Log, TEXT("zhx : pak file mout point : %s"), *MP);
+
+	//int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
+	//FString MP2 = MP.RightChop(pos1 + 9);
+	//MP = FPaths::ProjectContentDir() + MP2;
+
+
 	FString MP = PakFile.GetMountPoint();
-	UE_LOG(LogTemp, Log, TEXT("zhx : pak file mout point : %s"), *MP);
-
 	int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
-	FString MP2 = MP.RightChop(pos1 + 9);
-	MP = FPaths::ProjectContentDir() + MP2;
+	FString MP2 = MP.RightChop(pos1);
+	MP = TEXT("../../../DBJ_AR") + MP2;
 
-	if (m_PakPlatformFile->Mount(*_filePath, 3, *MP))
+	if (m_PakPlatformFile->Mount(*_filePath, 0, *MP))
 	{
-		FString VirtualMountPoint(FString::Printf(TEXT("/Game/%s"), *MP2));
+		/*FString VirtualMountPoint(FString::Printf(TEXT("/Game/%s"), *MP2));
 		FPackageName::RegisterMountPoint(VirtualMountPoint, MP);
-		UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *VirtualMountPoint);
+		UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *VirtualMountPoint);*/
 		UE_LOG(LogTemp, Log, TEXT("zhx : pak mount fail : %s"), *_filePath);
 	}
-	if (FCoreDelegates::OnMountPak.IsBound())
+	/*if (FCoreDelegates::OnMountPak.IsBound())
 	{
 		FCoreDelegates::OnMountPak.Execute(_filePath, 0, nullptr);
 		UE_LOG(LogTemp, Warning, TEXT("zhx FCoreDelegates::OnMountPak excuted!"));
-	}
+	}*/
 	TArray<FString> files;
 	PakFile.FindFilesAtPath(files, *PakFile.GetMountPoint(), true, false, true);
 	
@@ -94,7 +106,7 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 			//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *shortName);
 			if (shortName.Equals(TEXT("AR_HuaPen_181026013.uasset")))
 			{
-				//Æ´³öUObjectµÄ¼ÓÔØÂ·¾¶
+				//æ‹¼å‡ºUObjectçš„åŠ è½½è·¯å¾„
 				fileName.RemoveFromEnd(TEXT(".uasset"), ESearchCase::IgnoreCase);
 				int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
 				fileName = fileName.RightChop(pos + 8);

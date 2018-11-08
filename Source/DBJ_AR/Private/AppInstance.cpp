@@ -25,3 +25,8 @@ void UAppInstance::OpenLevel(const FString & _levelName)
 
 	UGameplayStatics::OpenLevel(this, *levelPath);
 }
+
+void UAppInstance::PakMount()
+{
+	GFileManager::GetInstance()->TestPak();
+}

@@ -44,4 +44,6 @@ public:
 	FString GetPakFilePath(int _id, FString _md5);
 	FString GetPakKey(int _id, FString _md5);
 
+
+	void TestPak();
 };
