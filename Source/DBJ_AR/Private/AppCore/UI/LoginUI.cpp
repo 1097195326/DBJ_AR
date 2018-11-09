@@ -55,7 +55,7 @@ void ULoginUI::On_Button_Click(int _index)
 	{
 		UE_LOG(LogTemp,Log,TEXT("zhx : msm code button click "));
 		FString phoneNum = m_Phone_Text->GetText().ToString();
-		LoginGameModule::GetInstance()->GetSmsCodeToLogin(TEXT("15652707598"));
+		LoginGameModule::GetInstance()->GetSmsCodeToLogin(phoneNum);
 		break;
 	}
 	case 2:
@@ -63,7 +63,7 @@ void ULoginUI::On_Button_Click(int _index)
 		
 		FString phoneNum = m_Phone_Text->GetText().ToString();
 		FString veriCodeNum = m_VeriCode_Text->GetText().ToString();
-        LoginGameModule::GetInstance()->UserLogin(TEXT("15652707598"), veriCodeNum);
+        LoginGameModule::GetInstance()->UserLogin(phoneNum, veriCodeNum);
 //        UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));
         //UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
         
@@ -77,7 +77,7 @@ void ULoginUI::On_Button_Click(int _index)
 void ULoginUI::OnGetSmsCode(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnGetSmsCode : "));
-
+    
 }
 void ULoginUI::OnUserLogin(msg_ptr _msg)
 {

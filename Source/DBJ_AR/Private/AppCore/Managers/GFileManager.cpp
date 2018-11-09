@@ -1,4 +1,4 @@
-﻿#include "GFileManager.h"
+#include "GFileManager.h"
 #include "FileHelper.h"
 #include "Paths.h"
 #include "PlatformFilemanager.h"
@@ -20,7 +20,7 @@ void GFileManager::On_Init()
 		m_PakPlatformFile->Initialize(m_LocalPlatformFile, TEXT("PakPlatformFile"));
 		m_PakPlatformFile->InitializeNewAsyncIO();
 	}
-	FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);
+//    FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);
 }
 bool GFileManager::FileIsExist(FString _path)
 {
@@ -85,11 +85,7 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 		UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *VirtualMountPoint);*/
 		UE_LOG(LogTemp, Log, TEXT("zhx : pak mount fail : %s"), *_filePath);
 	}
-	/*if (FCoreDelegates::OnMountPak.IsBound())
-	{
-		FCoreDelegates::OnMountPak.Execute(_filePath, 0, nullptr);
-		UE_LOG(LogTemp, Warning, TEXT("zhx FCoreDelegates::OnMountPak excuted!"));
-	}*/
+	
 	TArray<FString> files;
 	PakFile.FindFilesAtPath(files, *PakFile.GetMountPoint(), true, false, true);
 	
@@ -112,23 +108,21 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 				fileName = fileName.RightChop(pos + 8);
 				fileName = TEXT("/Game") + fileName;
 				info.GamePath = fileName;
-				UObject* object = LoadObject<UStaticMesh>(nullptr, *fileName);
-				/*FString ps = fileName + TEXT(".AR_HuaPen_181026013");
-				UObject* object = StaticLoadObject(UObject::StaticClass(), NULL, *ps);*/
+//               UObject* object = LoadObject<UStaticMesh>(nullptr, *fileName);
 				
 				/*FStreamableManager StreamableManager;
 				UObject* obj = StreamableManager.LoadSynchronous(FStringAssetReference(ps), true);
 				if (obj)
 				{
 				}*/
-				info.Object = object;
+//                info.Object = object;
 				UE_LOG(LogTemp, Log, TEXT("zhx : pak mount game path : %s"), *fileName);
 			}
 			
 		}
 	}
 
-	//FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;
 }

@@ -35,7 +35,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-//    StartARSession();
+    StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -167,8 +167,16 @@ AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
     {
 		UClass * uclass = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/BP_Hua.BP_Hua_C"), NULL, LOAD_None, NULL);
 
-        /*AActor * actor = GetWorld()->SpawnActor<AActor>(uclass,t);
-		UStaticMesh * mesh = LoadObject<UStaticMesh>(UObject::StaticClass(),)*/
+//        AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0, 0, 10), FRotator(0, 0, 0));
+        //            UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>(this);
+        //            UE_LOG(LogTemp, Log, TEXT("zhx : game path :%s"), *m_PakInfo.GamePath);
+        //            UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_PakInfo.GamePath);
+        //            meshComponent->SetStaticMesh(mesh);
+        //            meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+        //            meshComponent->RegisterComponentWithWorld(GetWorld());
+        
+        AActor * actor = GetWorld()->SpawnActor<AActor>(uclass,t);
+//        UStaticMesh * mesh = LoadObject<UStaticMesh>(UObject::StaticClass(),)
 
 		/*UClass * uclass = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/BP_Hua.BP_Hua_C"), NULL, LOAD_None, NULL);
 		AActor * actor = GetWorld()->SpawnActor<AActor>(uclass,FVector(0,0,10),FRotator(0,0,0));*/

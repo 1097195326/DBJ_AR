@@ -57,6 +57,7 @@ void LoginGameModule::GetSmsCodeToLogin(FString _phoneNum)
 void LoginGameModule::OnGetSmsCode(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : LoginGameModule::OnGetSmsCode : "));
+    
 
 }
 void LoginGameModule::UserLogin(FString _phoneNum, FString _smsCodeNum)

@@ -21,7 +21,7 @@ struct PakInfo
 	FString		FilePath;
 	PakType		Type;
 	UObject *	Object;
-	PakInfo():ID(0),MD5(""),FilePath(""),GamePath(""){}
+//    PakInfo():ID(0),MD5(TEXT("")),FilePath(TEXT("")),GamePath(TEXT("")){}
 
 };
 
