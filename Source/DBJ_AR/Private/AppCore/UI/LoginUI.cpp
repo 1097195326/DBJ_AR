@@ -77,15 +77,30 @@ void ULoginUI::On_Button_Click(int _index)
 void ULoginUI::OnGetSmsCode(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnGetSmsCode : "));
-    
+	int code = *((int*)(_msg->GetMsgContent()));
+	if (code == 200)
+	{
+
+	}
+	else
+	{
+
+	}
 }
 void ULoginUI::OnUserLogin(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnUserLogin : "));
-	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	int code  = *((int *)_msg->GetMsgContent());
 
+	if (code == 200)
+	{
+		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+	}
+	else
+	{
 
-    UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+	}
+   
 
 
 }

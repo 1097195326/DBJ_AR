@@ -1,5 +1,5 @@
 #include "GoodsList_Icon.h"
-
+#include "UserPawn.h"
 #include "UIManager.h"
 
 void UGoodsList_Icon::On_Init()
@@ -49,17 +49,11 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	case 1:
 	{
         m_ParentUI->RemoveFromParent();
-//        m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
-//        if (!m_PakInfo.GamePath.IsEmpty())
-//        {
-//            AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0, 0, 10), FRotator(0, 0, 0));
-//            UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>(this);
-//            UE_LOG(LogTemp, Log, TEXT("zhx : game path :%s"), *m_PakInfo.GamePath);
-//            UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_PakInfo.GamePath);
-//            meshComponent->SetStaticMesh(mesh);
-//            meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-//            meshComponent->RegisterComponentWithWorld(GetWorld());
-//        }
+        m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
+        if (!m_PakInfo.GamePath.IsEmpty())
+        {
+			AUserPawn::GetInstance()->TryCreateARActor(m_PakInfo);
+        }
 	}break;
 	case 2:
 	{

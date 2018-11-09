@@ -13,7 +13,15 @@
 #include "BehaviorTreeGameMode.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
+
+AUserPawn * AUserPawn::m_self = nullptr;
+
+AUserPawn * AUserPawn::GetInstance()
+{
+	return m_self;
+}
 AUserPawn::AUserPawn(const FObjectInitializer& ObjectInitializer)
 {
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
@@ -27,6 +35,7 @@ AUserPawn::AUserPawn(const FObjectInitializer& ObjectInitializer)
     m_SelectActor = nullptr;
     ////控制默认玩家
     AutoPossessPlayer = EAutoReceiveInput::Player0;
+	m_self = this;
 }
 void AUserPawn::On_Init()
 {
@@ -157,7 +166,22 @@ AActor *  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
     }
     return actor;
 }
+AActor * AUserPawn::TryCreateARActor(PakInfo _info)
+{
+	APlayerCameraManager * cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
+	FVector location = cameraManager->GetCameraLocation();
+	FVector forward = cameraManager->GetCameraRotation().Vector();
+	location = location + forward.GetSafeNormal() * 400;
+	AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0,0,10), FRotator(0, 0, 0));
+	UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>();
+	UE_LOG(LogTemp, Log, TEXT("zhx : TryCreateARActor :%s"), *_info.GamePath);
+	UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *_info.GamePath);
+	meshComponent->SetStaticMesh(mesh);
+	meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	meshComponent->RegisterComponentWithWorld(GetWorld());
 
+	return actor;
+}
 AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
 {
     AActor * actor = nullptr;

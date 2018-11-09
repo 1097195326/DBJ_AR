@@ -13,6 +13,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "GFileManager.h"
 #include "UserPawn.generated.h"
 
 
@@ -30,6 +31,9 @@ class DBJ_AR_API AUserPawn : public AGPawn
 public:
     
     AUserPawn(const FObjectInitializer& ObjectInitializer);
+
+
+	static AUserPawn * GetInstance();
 
     virtual void On_Init() override;
 	virtual void On_Start() override;
@@ -61,6 +65,9 @@ public:
         AActor * IsHaveActorInScreenPosition(FVector2D _position);
     UFUNCTION(BlueprintCallable)
         AActor * TryCreateARActor(FVector2D _screenPosition);
+	
+	AActor * TryCreateARActor(PakInfo _info);
+
     UFUNCTION(BlueprintCallable)
         void MoveSelecteARActor();
     UFUNCTION(BlueprintCallable)
@@ -89,4 +96,6 @@ public:
 private:
     AUserController * m_Controller;
     ActionState m_ActionState;
+
+	static AUserPawn * m_self;
 };

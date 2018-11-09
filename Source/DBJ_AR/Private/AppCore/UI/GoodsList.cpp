@@ -39,14 +39,14 @@ void UGoodsList::InitView()
 			GoodsData * data = goods[i];
 			icon->SetData(data);
 			icon->SetParentUI(this);
-			/*if (mIndex % 2 > 0)
+			if (mIndex % 2 > 0)
 			{
-				mTemp->SetPadding(FMargin(20.f, 0.0f, 0.f, 30.f));
+				mGridSlot->SetPadding(FMargin(20.f, 0.0f, 0.f, 30.f));
 			}
 			else
 			{
-				mTemp->SetPadding(FMargin(0.f, 0.0f, 0.f, 30.f));
-			}*/
+				mGridSlot->SetPadding(FMargin(20.f, 0.0f, 0.f, 30.f));
+			}
 			
 		}
 

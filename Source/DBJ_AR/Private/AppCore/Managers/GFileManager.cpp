@@ -65,18 +65,16 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 
 	FPakFile PakFile(m_PakPlatformFile, *_filePath, false);
 
-	//FString MP = PakFile.GetMountPoint();
-	//UE_LOG(LogTemp, Log, TEXT("zhx : pak file mout point : %s"), *MP);
-
-	//int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
-	//FString MP2 = MP.RightChop(pos1 + 9);
-	//MP = FPaths::ProjectContentDir() + MP2;
-
-
 	FString MP = PakFile.GetMountPoint();
 	int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
+	FString MP2 = MP.RightChop(pos1 + 9);
+	MP = FPaths::ProjectContentDir() + MP2;
+
+
+	/*FString MP = PakFile.GetMountPoint();
+	int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
 	FString MP2 = MP.RightChop(pos1);
-	MP = TEXT("../../../DBJ_AR") + MP2;
+	MP = TEXT("../../../DBJ_AR") + MP2;*/
 
 	if (m_PakPlatformFile->Mount(*_filePath, 0, *MP))
 	{

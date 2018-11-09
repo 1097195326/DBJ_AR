@@ -57,8 +57,11 @@ void LoginGameModule::GetSmsCodeToLogin(FString _phoneNum)
 void LoginGameModule::OnGetSmsCode(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : LoginGameModule::OnGetSmsCode : "));
-    
-
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	int code = 0;
+	jsonData->TryGetNumberField(TEXT("code"), code);
+	msg_ptr msg(new LocalMsg(Msg_Local, 2002,&code));
+	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void LoginGameModule::UserLogin(FString _phoneNum, FString _smsCodeNum)
 {
@@ -84,7 +87,10 @@ void LoginGameModule::OnUserLogin(msg_ptr _msg)
 
 	UserInfo::Get()->SaveToLocal(&jsonData);
 
-	msg_ptr msg(new LocalMsg(Msg_Local,2001,jsonData));
+	int code = 0;
+	jsonData->TryGetNumberField(TEXT("code"), code);
+	msg_ptr msg(new LocalMsg(Msg_Local, 2001, &code));
 	MsgCenter::GetInstance()->SendMsg(msg);
+
 
 }
