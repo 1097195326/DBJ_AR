@@ -92,14 +92,15 @@ void ULoginUI::OnUserLogin(msg_ptr _msg)
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnUserLogin : "));
 	int code  = *((int *)_msg->GetMsgContent());
 
-	if (code == 200)
+//    if (code == 200)
 	{
-		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+        UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+//        UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));
 	}
-	else
-	{
-
-	}
+//    else
+//    {
+//
+//    }
    
 
 

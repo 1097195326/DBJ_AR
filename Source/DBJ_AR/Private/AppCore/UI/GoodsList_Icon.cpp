@@ -8,7 +8,6 @@ void UGoodsList_Icon::On_Init()
     {
         m_SelectButton = button;
 		UI_M->RegisterButton(1, m_SelectButton, this, &UGoodsList_Icon::OnButtonClick);
-
     }
 	if (UButton * button = (UButton*)GetWidgetFromName("DownButton"))
 	{
@@ -19,6 +18,15 @@ void UGoodsList_Icon::On_Init()
 	{
 		m_Image = image;	
 	}
+    
+    if (UProgressBar * bar = (UProgressBar*)GetWidgetFromName("downloadingProgress"))
+    {
+        m_downloadingProgress = bar;
+    }
+    if (UImage * image = (UImage*)GetWidgetFromName("DownOKImage"))
+    {
+        m_DownOKImage = image;
+    }
 	if (UNativeWidgetHost * host = (UNativeWidgetHost*)GetWidgetFromName("ImageHost"))
 	{
 		m_ImageHost = host;
@@ -36,12 +44,23 @@ void UGoodsList_Icon::On_Delete()
 	UI_M->UnRegisterButton(m_DownloadButton);
 
 }
+void UGoodsList_Icon::On_Tick(float delta)
+{
+    if(m_IsDowning)
+    {
+        int progess = UFileDownloadManager::Get()->GetDownloadProgress(m_Data->modelId);
+        UE_LOG(LogTemp,Log,TEXT("zhx : pregess : %d"),progess);
+        
+        float pbar = progess / 100.0f;
+        m_downloadingProgress->SetPercent(pbar);
+    }
+}
 void UGoodsList_Icon::OnButtonClick(int index)
 {
-	/*if (m_IsDowning)
-	{
-		return;
-	}*/
+    if (m_IsDowning)
+    {
+        return;
+    }
 
     UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnButtonClick : "));
 	switch (index)
@@ -95,4 +114,6 @@ void UGoodsList_Icon::SetData(GoodsData * _data)
 	//m_Image->SetBrush(*(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->GetBrush()));
 	m_ImageHost->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
 	m_IconName->SetText(FText::FromString(m_Data->name));
+    
+//    GFileManager::GetInstance();
 }

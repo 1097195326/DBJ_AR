@@ -15,6 +15,7 @@ class DBJ_AR_API  UGoodsList_Icon : public UBaseUI
 public:
     virtual void On_Init() override;
 	virtual void On_Delete() override;
+    virtual void On_Tick(float delta);
 
 	void	SetData(GoodsData * _data);
 	void	SetParentUI(UBaseUI * _ui);
@@ -27,9 +28,11 @@ private:
     UButton *	m_SelectButton;
 	UButton	*	m_DownloadButton;
 	UImage	*	m_Image;
+    UImage  *   m_DownOKImage;
 	UTextBlock * m_IconName;
 	UNativeWidgetHost * m_ImageHost;
-
+    UProgressBar * m_downloadingProgress;
+    
 	GoodsData * m_Data;
 	PakInfo		m_PakInfo;
 

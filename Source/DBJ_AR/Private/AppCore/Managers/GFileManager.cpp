@@ -4,6 +4,8 @@
 #include "PlatformFilemanager.h"
 #include "PackageName.h"
 #include "Engine/StreamableManager.h"
+#include "FileDownloadManager.h"
+
 
 GFileManager * GFileManager::GetInstance()
 {
@@ -79,9 +81,9 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 	if (m_PakPlatformFile->Mount(*_filePath, 0, *MP))
 	{
 		/*FString VirtualMountPoint(FString::Printf(TEXT("/Game/%s"), *MP2));
-		FPackageName::RegisterMountPoint(VirtualMountPoint, MP);
-		UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *VirtualMountPoint);*/
-		UE_LOG(LogTemp, Log, TEXT("zhx : pak mount fail : %s"), *_filePath);
+		FPackageName::RegisterMountPoint(VirtualMountPoint, MP);*/
+        UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *MP);
+		UE_LOG(LogTemp, Log, TEXT("zhx : pak mount : %s"), *_filePath);
 	}
 	
 	TArray<FString> files;
@@ -120,13 +122,14 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 		}
 	}
 
-    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+//    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;
 }
 FString GFileManager::GetPakFilePath(int _id, FString _md5)
 {
-	FString pakPath = FString::Printf(TEXT("%sdlc/paks/%d_%s.pak"), *FPaths::ProjectSavedDir(), _id, *_md5);
+    FString iosDir = UFileDownloadManager::Get()->GetIOSDir();
+	FString pakPath = FString::Printf(TEXT("%s%d_%s.pak"), *iosDir, _id, *_md5);
 	return pakPath;
 }
 FString GFileManager::GetPakKey(int _id, FString _md5)

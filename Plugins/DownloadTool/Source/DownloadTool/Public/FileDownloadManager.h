@@ -8,10 +8,11 @@
 #include "Containers/Queue.h"
 #include "WebImageCache.h"
 #include "FileDownloader.h"
+#include <string>
 #include "FileDownloadManager.generated.h"
 
 
-
+using namespace std;
 
 struct FDownloadTask
 {
@@ -58,6 +59,10 @@ public:
     int32 GetPlanProgress(int32& OutPlanId);
     FOnPlanDownloadCompleted& OnPlanDownloadCompleted(){ return PlanDownloadCompletedDelegate;}
     
+    FString ProjectHotloadDownloadDir();
+    string ExtractIOSDir(const string &DirPath);
+    FString ExtractIOSDir(const TCHAR * DirPath);
+    FString GetIOSDir();
 private:
     
       static UFileDownloadManager* FileDownloadManager;

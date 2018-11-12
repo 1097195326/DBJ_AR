@@ -68,6 +68,7 @@ public:
 	
 	AActor * TryCreateARActor(PakInfo _info);
 
+    
     UFUNCTION(BlueprintCallable)
         void MoveSelecteARActor();
     UFUNCTION(BlueprintCallable)
@@ -98,4 +99,6 @@ private:
     ActionState m_ActionState;
 
 	static AUserPawn * m_self;
+    
+    PakInfo m_CurrentInfo;
 };

@@ -157,7 +157,9 @@ void UFileDownloadManager::DownloadFileCompleteCallback(FHttpRequestPtr Request,
         TArray<uint8> pak = Response->GetContent();
         if (CalculateMd5(pak) == DoingTask->DownloadInfo.Md5)
         {
-            FString tmpPath = FString::Printf(TEXT("%sdlc/paks/%d_%s.pak"),*FPaths::ProjectSavedDir(),DoingTask->DownloadInfo.Id,*DoingTask->DownloadInfo.Md5);
+            FString iosDir = GetIOSDir();
+            
+            FString tmpPath = FString::Printf(TEXT("%s%d_%s.pak"),*iosDir,DoingTask->DownloadInfo.Id,*DoingTask->DownloadInfo.Md5);
            
             FArchive* ar = IFileManager::Get().CreateFileWriter(*tmpPath,0);
    
@@ -315,4 +317,53 @@ int32 UFileDownloadManager::GetPlanProgress(int32& OutPlanId)
 {
     OutPlanId = PlanId;
     return PlanProgress;
+}
+
+FString UFileDownloadManager::ExtractIOSDir(const TCHAR * DirPath)
+{
+    string cDirPath = TCHAR_TO_UTF8(DirPath);
+    string cSource = ExtractIOSDir(cDirPath);
+
+    return FString(UTF8_TO_TCHAR(cSource.c_str()));
+}
+string UFileDownloadManager::ExtractIOSDir(const string &DirPath)
+{
+#if PLATFORM_IOS
+    FString rootDir = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(TEXT(""));
+    std::string sRootDir(TCHAR_TO_UTF8(*rootDir));
+    int len = DirPath.length();
+    string folder = DirPath.substr(0, len);
+    if(string::npos != DirPath.find(sRootDir))
+    {
+        int flen = sRootDir.length();
+        folder = DirPath.substr(flen,len);
+    }
+    return folder;
+#else
+    return DirPath;
+#endif
+}
+FString UFileDownloadManager::ProjectHotloadDownloadDir()
+{
+#if PLATFORM_WINDOWS
+    static FString persistentDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir(), TEXT("dlc/paks/"));
+#elif PLATFORM_ANDROID
+    static FString persistentDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectPersistentDownloadDir(), TEXT("dlc/paks/"));
+#else
+    IPlatformFile &  pf = FPlatformFileManager::Get().GetPlatformFile();
+    FString AppendPath = FPaths::Combine(FPaths::ProjectSavedDir(),TEXT("dlc/paks/"));
+    static FString persistentDir = pf.ConvertToAbsolutePathForExternalAppForWrite(*AppendPath);
+#endif
+    UE_LOG(LogTemp,Log,TEXT("zhx : ProjectHotloadDownloadDir : %s"),*persistentDir);
+
+    return persistentDir;
+}
+FString UFileDownloadManager::GetIOSDir()
+{
+    FString downDir = ProjectHotloadDownloadDir();
+    UE_LOG(LogTemp,Log,TEXT("zhx : downDir : %s"),*downDir);
+    FString iosDir = ExtractIOSDir(*downDir);
+    UE_LOG(LogTemp,Log,TEXT("zhx : iosDir : %s"),*iosDir);
+
+    return iosDir;
 }

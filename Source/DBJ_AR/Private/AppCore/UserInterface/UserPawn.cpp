@@ -14,7 +14,7 @@
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "UserActor.h"
 
 AUserPawn * AUserPawn::m_self = nullptr;
 
@@ -101,7 +101,7 @@ void AUserPawn::OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const 
             m_SelectActor = actor;
         }else
         {
-            m_SelectActor = TryCreateARActor(m_ScreenPosition);
+//            m_SelectActor = TryCreateARActor(m_ScreenPosition);
         }
     }
 }
@@ -159,7 +159,8 @@ AActor *  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 {
     AActor * actor = nullptr;
     FHitResult hitResult;
-
+//    TArray<TEnumAsByte<EObjectTypeQuery> > Objects;
+    
     if (m_Controller->GetHitResultAtScreenPosition(_position, ECC_WorldStatic, false, hitResult))
     {
         actor = hitResult.GetActor();
@@ -168,51 +169,50 @@ AActor *  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 }
 AActor * AUserPawn::TryCreateARActor(PakInfo _info)
 {
-	APlayerCameraManager * cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
-	FVector location = cameraManager->GetCameraLocation();
-	FVector forward = cameraManager->GetCameraRotation().Vector();
-	location = location + forward.GetSafeNormal() * 400;
-	AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0,0,10), FRotator(0, 0, 0));
-	UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>();
-	UE_LOG(LogTemp, Log, TEXT("zhx : TryCreateARActor :%s"), *_info.GamePath);
-	UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *_info.GamePath);
-	meshComponent->SetStaticMesh(mesh);
-	meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	meshComponent->RegisterComponentWithWorld(GetWorld());
+    AActor * actor = nullptr;
+    
+    m_CurrentInfo = _info;
+    APlayerCameraManager * cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
+    FVector location = cameraManager->GetCameraLocation();
+    UE_LOG(LogTemp,Log,TEXT("zhx : location :%f,%f,%f"),location.X,location.Y,location.Z);
+    FVector forward = cameraManager->GetCameraRotation().Vector();
+    location = location + forward.GetSafeNormal() * 500;
+    UE_LOG(LogTemp,Log,TEXT("zhx : location :%f,%f,%f"),location.X,location.Y,location.Z);
 
-	return actor;
+    UClass * uclass = LoadClass<AActor>(NULL,TEXT("/Game/Blueprints/BP_UserActor.BP_UserActor_C"),NULL,LOAD_None,NULL);
+    actor = GetWorld()->SpawnActor<AActor>(uclass);
+    actor->SetActorLocation(location);
+    AUserActor * uactor = (AUserActor*)actor;
+    UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentInfo.GamePath);
+    uactor->m_Mesh->SetStaticMesh(mesh);
+    uactor->m_Mesh->RegisterComponent();
+    
+//    m_SelectActor = actor;
+    
+	return nullptr;
 }
 AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
 {
     AActor * actor = nullptr;
 
-    FTransform t;
-    if (GetTrackedGeometryTransform(_screenPosition, t))
+    if (!m_CurrentInfo.GamePath.IsEmpty())
     {
-		UClass * uclass = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/BP_Hua.BP_Hua_C"), NULL, LOAD_None, NULL);
+        FTransform t;
+        if (GetTrackedGeometryTransform(_screenPosition, t))
+        {
+            UClass * uclass = LoadClass<AActor>(NULL,TEXT("/Game/Blueprints/BP_UserActor.BP_UserActor_C"),NULL,LOAD_None,NULL);
+            
+            actor = GetWorld()->SpawnActor<AActor>(uclass,t);
+            
+            AUserActor * uactor = (AUserActor*)actor;
 
-//        AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0, 0, 10), FRotator(0, 0, 0));
-        //            UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>(this);
-        //            UE_LOG(LogTemp, Log, TEXT("zhx : game path :%s"), *m_PakInfo.GamePath);
-        //            UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_PakInfo.GamePath);
-        //            meshComponent->SetStaticMesh(mesh);
-        //            meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-        //            meshComponent->RegisterComponentWithWorld(GetWorld());
-        
-        AActor * actor = GetWorld()->SpawnActor<AActor>(uclass,t);
-//        UStaticMesh * mesh = LoadObject<UStaticMesh>(UObject::StaticClass(),)
+            UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentInfo.GamePath);
 
-		/*UClass * uclass = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/BP_Hua.BP_Hua_C"), NULL, LOAD_None, NULL);
-		AActor * actor = GetWorld()->SpawnActor<AActor>(uclass,FVector(0,0,10),FRotator(0,0,0));*/
-
-		/*UClass * uclass = AActor::StaticClass();
-		AActor * actor = GetWorld()->SpawnActor<AActor>(FVector(0, 0, 10), FRotator(0, 0, 0));
-		UStaticMeshComponent * meshComponent = NewObject<UStaticMeshComponent>(this);
-		UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/TestMesh/HuaA"));
-		meshComponent->SetStaticMesh(mesh);
-		meshComponent->AttachToComponent(actor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-		meshComponent->RegisterComponentWithWorld(GetWorld());*/
+            uactor->m_Mesh->SetStaticMesh(mesh);
+            uactor->m_Mesh->RegisterComponent();
+        }
     }
+   
     return actor;
 }
 void AUserPawn::MoveSelecteARActor()
