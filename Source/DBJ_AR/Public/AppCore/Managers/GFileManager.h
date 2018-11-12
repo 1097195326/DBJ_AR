@@ -37,7 +37,8 @@ public:
 	static GFileManager * GetInstance();
 
 	bool FileIsExist(FString _path);
-
+    bool FileIsExist(int _id, FString _md5);
+    
 	bool PakMount(FString _filePath,PakInfo & info);
 	PakInfo PakMount(int _id, FString _md5);
 

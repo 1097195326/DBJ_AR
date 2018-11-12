@@ -28,6 +28,11 @@ bool GFileManager::FileIsExist(FString _path)
 {
 	return FPaths::FileExists(_path);
 }
+bool GFileManager::FileIsExist(int _id, FString _md5)
+{
+    FString pakPath = GetPakFilePath(_id,_md5);
+    return FileIsExist(pakPath);
+}
 void GFileManager::TestPak()
 {
 	PakMount(9, TEXT("01d222cb4f9f18fd1316328e4bb2a007"));

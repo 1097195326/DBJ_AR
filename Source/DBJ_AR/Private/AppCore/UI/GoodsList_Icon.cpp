@@ -35,7 +35,7 @@ void UGoodsList_Icon::On_Init()
 	{
 		m_IconName = text;
 	}
-
+    
     
 }
 void UGoodsList_Icon::On_Delete()
@@ -111,9 +111,12 @@ void UGoodsList_Icon::SetData(GoodsData * _data)
 {
 	m_Data = _data;
 	
-	//m_Image->SetBrush(*(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->GetBrush()));
 	m_ImageHost->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
 	m_IconName->SetText(FText::FromString(m_Data->name));
     
-//    GFileManager::GetInstance();
+    if(GFileManager::GetInstance()->FileIsExist(m_Data.modelId,m_Data.pakMd5))
+    {
+//        m_DownloadButton->SetVi
+    }
+    
 }
