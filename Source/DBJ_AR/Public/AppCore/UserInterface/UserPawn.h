@@ -47,6 +47,7 @@ public:
 	bool IsCRotate;
     void SelectGoods();
     void RotateGoods();
+	void ChangeGoods();
 	void RotateTick(float delta);
 	// mobile
 	void OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);

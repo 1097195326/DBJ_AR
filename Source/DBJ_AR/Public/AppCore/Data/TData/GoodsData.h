@@ -26,6 +26,10 @@ public:
 	int			externalHeight;// : 80,
 	GoodsData *	matchedProduct;//" : null
 
+	/*FString		GamePath;
+	FString		FilePath;
+	UObject *	Object;*/
+
 public:
     
 	virtual void InitWithJson(const TSharedPtr<FJsonObject> &obj) override;

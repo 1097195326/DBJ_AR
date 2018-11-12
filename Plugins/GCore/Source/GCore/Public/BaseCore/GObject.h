@@ -12,7 +12,7 @@
 #include "CoreMinimal.h"
 #include "ClassReflect.h"
 
-class GCORE_API GObject : public I_Object
+class GCORE_API GObject //: public I_Object
 {
 private:
     int     m_ObjectIndex;

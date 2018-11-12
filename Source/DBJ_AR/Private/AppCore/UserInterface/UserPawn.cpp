@@ -14,6 +14,7 @@
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine.h"
 
 
 AUserPawn * AUserPawn::m_self = nullptr;
@@ -69,6 +70,9 @@ void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 #else
     PlayerInputComponent->BindAction("SelectGoods", EInputEvent::IE_Pressed, this, &AUserPawn::SelectGoods);
     PlayerInputComponent->BindAction("RotateGoods", EInputEvent::IE_Pressed, this, &AUserPawn::RotateGoods);
+	PlayerInputComponent->BindAction("ChangeGoods", EInputEvent::IE_Pressed, this, &AUserPawn::ChangeGoods);
+	
+
 	PlayerInputComponent->BindAxis("RotateTick",this,&AUserPawn::RotateTick);
 
 #endif
@@ -345,5 +349,12 @@ void AUserPawn::RotateTick(float delta)
 	else
 	{
 		MoveSelecteARActor();
+	}
+}
+void AUserPawn::ChangeGoods()
+{
+	if (m_SelectActor)
+	{
+
 	}
 }

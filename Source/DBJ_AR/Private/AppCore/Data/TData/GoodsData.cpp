@@ -30,7 +30,8 @@ void GoodsData::InitWithJson(const TSharedPtr<FJsonObject> &obj)
 		matchedProduct = new GoodsData();
 		matchedProduct->InitWithJson(*m_d);
 	}
-		
+	//Object = nullptr;
+
 }
 GoodsData::~GoodsData()
 {
