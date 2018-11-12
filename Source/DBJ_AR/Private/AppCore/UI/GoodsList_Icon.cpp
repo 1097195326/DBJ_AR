@@ -68,7 +68,7 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	case 1:
 	{
         m_ParentUI->RemoveFromParent();
-        m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
+        
         if (!m_PakInfo.GamePath.IsEmpty())
         {
 			AUserPawn::GetInstance()->TryCreateARActor(m_PakInfo);
@@ -84,6 +84,7 @@ void UGoodsList_Icon::OnButtonClick(int index)
 		if (UFileDownloadManager::Get()->RequestDownloadFile(info))
 		{
 			m_IsDowning = true;
+			m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
 			UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
 		}
 	}break;
@@ -95,10 +96,17 @@ void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnGetPakFinish : "));
 	m_IsDowning = false;
-	if (_finish == 0 && _info.Id == m_Data->modelId)
+	m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
+	if (_finish == 0 && _info.Id == m_Data->modelId && GFileManager::GetInstance()->FileIsExist(m_Data->modelId, m_Data->pakMd5))
 	{
+		m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
+		m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
 		m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
-
+	}
+	else
+	{
+		m_DownloadButton->SetVisibility(ESlateVisibility::Visible);
+		m_DownOKImage->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 
@@ -114,9 +122,18 @@ void UGoodsList_Icon::SetData(GoodsData * _data)
 	m_ImageHost->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
 	m_IconName->SetText(FText::FromString(m_Data->name));
     
-    if(GFileManager::GetInstance()->FileIsExist(m_Data.modelId,m_Data.pakMd5))
+    if(GFileManager::GetInstance()->FileIsExist(m_Data->modelId,m_Data->pakMd5))
     {
-//        m_DownloadButton->SetVi
-    }
+		m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
+		m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
+		m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
+	}
+	else
+	{
+		m_DownloadButton->SetVisibility(ESlateVisibility::Visible);
+		m_DownOKImage->SetVisibility(ESlateVisibility::Hidden);
+	}
+	m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
+
     
 }

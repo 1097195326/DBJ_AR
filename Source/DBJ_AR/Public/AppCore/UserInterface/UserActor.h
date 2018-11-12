@@ -6,6 +6,14 @@
 #include "Components/StaticMeshComponent.h"
 #include "UserActor.generated.h"
 
+UENUM()
+enum UserActorType
+{
+	User_None,
+	User_Hua,
+	User_Pen,
+};
+
 UCLASS()
 class AUserActor : public AActor
 {
@@ -13,11 +21,18 @@ class AUserActor : public AActor
     
 public:
     AUserActor();
+	~AUserActor();
+	virtual void BeginDestroy() override;
     
     
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent * m_Mesh;
-    
-    
+	UPROPERTY(VisibleAnywhere)
+		int m_SoketIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		 TEnumAsByte<UserActorType> m_Type;
+
+
 };
 
