@@ -7,6 +7,26 @@ RuntimeTDataManager * RuntimeTDataManager::GetInstance()
 
     return &m;
 }
+void RuntimeTDataManager::DecodeCategoryList(const TSharedPtr<FJsonObject> _data)
+{
+	const TArray<TSharedPtr<FJsonValue>> dList = _data->GetArrayField("data");
+
+	for (TSharedPtr<FJsonValue> obj : dList)
+	{
+		TSharedPtr<FJsonObject> objD = obj->AsObject();
+
+		GoodsListCategoryData data;
+		objD->TryGetNumberField(TEXT("id"),data.id);
+		objD->TryGetStringField(TEXT("name"),data.name);
+		m_CategoryList.Add(data);
+	}
+	
+}
+TArray<GoodsListCategoryData>	RuntimeTDataManager::GetCategoryList()
+{
+	return m_CategoryList;
+}
+
 void RuntimeTDataManager::DecodeGoodsList(const TSharedPtr<FJsonObject> _data)
 {
 	ClearGoodList();

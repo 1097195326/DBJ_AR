@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseUI.h"
+#include "GoodsListButton.h"
 #include "GoodsList.generated.h"
 
 
@@ -14,11 +15,14 @@ public:
 
 	void InitView();
 
+	void SelectCategoryButton(int _id);
+
     UFUNCTION()
         void OnButtonClick();
 private:
 	UButton * m_ViewButton;
 	UScrollBox * m_IconScrolBox;
 	UGridPanel * m_IconList;
-
+	UVerticalBox * m_CategoryView;
+	TArray<UGoodsListButton*>		m_ListButtons;
 };

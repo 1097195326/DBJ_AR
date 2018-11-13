@@ -6,14 +6,14 @@
 HttpChannel::HttpChannel():m_CanRun(true)
 {
 	m_IsRequesting = false;
-	/*m_Thread = thread(std::bind(&HttpChannel::Update, this));
-	m_Thread.detach();*/
+	m_Thread = thread(std::bind(&HttpChannel::Update, this));
+	m_Thread.detach();
 }
 void HttpChannel::SendMsg(msg_ptr _msg)
 {
 	m_Msg_Queue.push(_msg);
-	m_CurrentMsg = m_Msg_Queue.front();
-	SendMsgToHttp(m_CurrentMsg);
+	/*m_CurrentMsg = m_Msg_Queue.front();
+	SendMsgToHttp(m_CurrentMsg);*/
 }
 void HttpChannel::Update()
 {
