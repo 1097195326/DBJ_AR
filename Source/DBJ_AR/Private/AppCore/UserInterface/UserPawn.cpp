@@ -47,7 +47,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    StartARSession();
+    //StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
