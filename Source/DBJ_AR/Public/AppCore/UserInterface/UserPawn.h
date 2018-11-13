@@ -14,6 +14,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GFileManager.h"
+#include "UserActor.h"
 #include "UserPawn.generated.h"
 
 
@@ -41,9 +42,13 @@ public:
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	//FVector2D  m_PreScreenPosition;
 	//PC
-//    void OneFingerPress();
-//    void oneFingerReleased();
+	bool IsCRotate;
+    void SelectGoods();
+    void RotateGoods();
+	void ChangeGoods();
+	void RotateTick(float delta);
 	// mobile
 	void OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
     void OnFingerTouchMoved(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -68,7 +73,9 @@ public:
 	
 	AActor * TryCreateARActor(PakInfo _info);
 
-    
+	void MergeTwoUserActor(AUserActor * one, AUserActor * two);
+
+
     UFUNCTION(BlueprintCallable)
         void MoveSelecteARActor();
     UFUNCTION(BlueprintCallable)
@@ -101,4 +108,8 @@ private:
 	static AUserPawn * m_self;
     
     PakInfo m_CurrentInfo;
+
+	float	m_RotateSpeed;
+
+	TArray<AUserActor*>		m_AllUserActor;
 };

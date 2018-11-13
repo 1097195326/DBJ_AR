@@ -30,7 +30,8 @@ void GoodsData::InitWithJson(const TSharedPtr<FJsonObject> &obj)
 		matchedProduct = new GoodsData();
 		matchedProduct->InitWithJson(*m_d);
 	}
-		
+	Object = nullptr;
+
 }
 GoodsData::~GoodsData()
 {
@@ -38,4 +39,34 @@ GoodsData::~GoodsData()
 	{
 		delete matchedProduct;
 	}
+}
+void GoodsData::CloneData(GoodsData * data)
+{
+	data->id = id;
+	data->name = name;//" : "zhx1",
+	data->typeId = typeId;// : 2,
+	data->shelf = shelf;// : true,
+	data->categoryIdList = categoryIdList;// : null,
+	data->modelId= modelId;// : 9,
+	data->modelName= modelName;// : null,
+	data->supplyId = supplyId;// : 2,
+	data->supplyName = supplyName;// : "供应商添加测试",
+	data->salePrice = salePrice;// : 30,
+	data->thumbnailUrl = thumbnailUrl;// : "http://test.ali.res.dabanjia.com/res/20181105/AR_BOTANY__1541410677559_4017.png",
+	data->thumbnailMd5 = thumbnailMd5;// : "f1492dae35087a0a54ae4d9d47577b2f",
+	data->pakUrl = pakUrl;// : "http://test.ali.res.dabanjia.com/res/20181105/AR_BOTANY__1541410588562_6936.pak",
+	data->pakMd5 = pakMd5;// : "01d222cb4f9f18fd1316328e4bb2a007",
+	data->pakSize = pakSize;// : 13838704,
+	data->externalLength = externalLength;// : 80,
+	data->externalWidth = externalWidth;// : 80,
+	data->externalHeight = externalHeight;// : 80,
+	if (matchedProduct)
+	{
+		data->matchedProduct = new GoodsData();
+		matchedProduct->CloneData(data->matchedProduct);
+	}
+
+	data->GamePath = GamePath;
+	data->FilePath = FilePath;
+	data->Object = Object;
 }

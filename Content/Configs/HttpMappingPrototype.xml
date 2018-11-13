@@ -21,6 +21,7 @@
 
 
         <mapping msgId="2001" channel="local" uri="mgw/login" />
+        <mapping msgId="2004" channel="local" uri="mgw/categories" />
         <mapping msgId="2002" channel="local" uri="mgw/smsCode/send"/>
         <mapping msgId="2008" channel="local" uri="mgw/products" />
     <httpMapping/>

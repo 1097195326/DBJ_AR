@@ -18,6 +18,7 @@ void EditerARGameModule::On_Init()
     m_CurrentUIController = new EditerARUIController();
     m_CurrentUIController->On_Init();
     
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1004, this, &EditerARGameModule::OnGetCategoryList);
     MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1008, this, &EditerARGameModule::OnGetProductList);
     
 }
@@ -28,12 +29,34 @@ void EditerARGameModule::On_Start()
 }
 void EditerARGameModule::On_Delete()
 {
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1004, this);
     MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1008, this);
     
     if (m_CurrentUIController != nullptr)
     {
         delete m_CurrentUIController;
     }
+}
+void EditerARGameModule::GetCategoryList()
+{
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1004);
+	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1004,httpUrl,TEXT(""),true,cookie,token);
+
+	msg_ptr mMsg(msg);
+
+	MsgCenter::GetInstance()->SendMsg(mMsg);
+}
+void EditerARGameModule::OnGetCategoryList(msg_ptr _msg)
+{
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+
+	RuntimeTDataManager::GetInstance()->DecodeCategoryList(jsonData);
+
+	msg_ptr msg(new LocalMsg(Msg_Local, 2004, nullptr));
+	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::GetProductList()
 {
