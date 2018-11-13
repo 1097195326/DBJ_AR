@@ -14,6 +14,8 @@ struct GoodsListCategoryData
 class DBJ_AR_API RuntimeTDataManager : public GObject
 {
 private:
+	TArray<GoodsData*>		m_ChangeGoodsList;
+
 	TArray<GoodsData*>		m_CurrentGoodsList;
 
 	TArray<GoodsListCategoryData> m_CategoryList;
@@ -27,5 +29,8 @@ public:
 	void	DecodeGoodsList(const TSharedPtr<FJsonObject> _data);
 	void	ClearGoodList();
 	TArray<GoodsData*>	GetCurrentGoodsList();
-
+	// change list
+	void  DecodeChangeList(const TSharedPtr<FJsonObject> _data);
+	void	ClearChangeGoodList();
+	TArray<GoodsData*>	GetChangeGoodsList();
 };

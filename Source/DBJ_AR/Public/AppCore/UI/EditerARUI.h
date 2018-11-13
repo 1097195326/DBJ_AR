@@ -11,7 +11,9 @@ class UEditerARUI : public UBaseUI
     
 public:
     UButton * m_ProductListButton;
-    
+	UButton * m_ChangeButton;
+	UButton * m_DeleteButton;
+
 public:
     virtual void On_Init() override;
     virtual void On_Start() override;

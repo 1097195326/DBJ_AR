@@ -17,12 +17,14 @@
         <mapping msgId="1009" channel="http" uri="mgw/orders" />
         <mapping msgId="1010" channel="http" uri="mgw/orders" />
         <mapping msgId="1011" channel="http" uri="mgw/orders/" />
-        <mapping msgId="1012" channel="http" uri="mgw/versions?" dest="强制更新" />
+        <mapping msgId="1012" channel="http" uri="mgw/versions?" dest="" />
+        <mapping msgId="1013" channel="http" uri="products/listByMatch" dest="change" />
 
 
         <mapping msgId="2001" channel="local" uri="mgw/login" />
         <mapping msgId="2004" channel="local" uri="mgw/categories" />
         <mapping msgId="2002" channel="local" uri="mgw/smsCode/send"/>
         <mapping msgId="2008" channel="local" uri="mgw/products" />
+        <mapping msgId="2013" channel="local" uri="products/listByMatch" />
     <httpMapping/>
 </root>

@@ -7,11 +7,21 @@
 
 void UEditerARUI::On_Init()
 {
-    if (UButton *button = Cast<UButton>(GetWidgetFromName("ProductListButton")))
+    if (UButton *widget = Cast<UButton>(GetWidgetFromName("ProductListButton")))
     {
-        m_ProductListButton = button;
+        m_ProductListButton = widget;
         UI_M->RegisterButton(1, m_ProductListButton, this, &UEditerARUI::On_Button_Click);
     }
+	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ChangeButton")))
+	{
+		m_ChangeButton = widget;
+		UI_M->RegisterButton(2, m_ChangeButton, this, &UEditerARUI::On_Button_Click);
+	}
+	if (UButton *widget = Cast<UButton>(GetWidgetFromName("DeleteButton")))
+	{
+		m_DeleteButton = widget;
+		UI_M->RegisterButton(3, m_DeleteButton, this, &UEditerARUI::On_Button_Click);
+	}
     
 }
 void UEditerARUI::On_Start()
@@ -46,6 +56,11 @@ void UEditerARUI::On_Button_Click(int _index)
             
             break;
         }
+		case 3:
+		{
+
+			break;
+		}
         default:
             break;
     }

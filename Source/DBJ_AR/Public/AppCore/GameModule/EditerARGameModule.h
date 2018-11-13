@@ -17,4 +17,6 @@ public:
 	void	OnGetCategoryList(msg_ptr _msg);
     void    GetProductList();
     void    OnGetProductList(msg_ptr _msg);
+	void	GetChangeList(int productId, int lastId = 0, int exceptProductId = 0, int size = 10);
+	void	OnGetChangeList(msg_ptr _msg);
 };
