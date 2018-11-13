@@ -27,6 +27,9 @@ void UGoodsList::On_Init()
 }
 void UGoodsList::InitView()
 {
+    m_CategoryView->ClearChildren();
+    m_IconList->ClearChildren();
+    
 	int firstButton = 0;
 	TArray<GoodsListCategoryData> CategoryListData = RuntimeTDataManager::GetInstance()->GetCategoryList();
 	
