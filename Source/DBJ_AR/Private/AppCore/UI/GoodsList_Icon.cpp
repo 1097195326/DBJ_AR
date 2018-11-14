@@ -69,9 +69,9 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
         m_ParentUI->RemoveFromParent();
         
-        if (!m_PakInfo.GamePath.IsEmpty())
+        if (!m_Data->GamePath.IsEmpty())
         {
-			AUserPawn::GetInstance()->TryCreateARActor(m_PakInfo);
+			AUserPawn::GetInstance()->TryCreateARActor(m_Data);
         }
 	}break;
 	case 2:
@@ -101,7 +101,7 @@ void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
 	{
 		m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
 		m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
-		m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
+		GFileManager::GetInstance()->PakMount(m_Data);
 	}
 	else
 	{
@@ -126,7 +126,7 @@ void UGoodsList_Icon::SetData(GoodsData * _data)
     {
 		m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
 		m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
-		m_PakInfo = GFileManager::GetInstance()->PakMount(m_Data->modelId, m_Data->pakMd5);
+		GFileManager::GetInstance()->PakMount(m_Data);
 	}
 	else
 	{

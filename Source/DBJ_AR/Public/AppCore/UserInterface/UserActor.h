@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
+#include "GoodsData.h"
 #include "UserActor.generated.h"
 
 UENUM()
@@ -33,6 +34,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		 TEnumAsByte<UserActorType> m_Type;
 
-
+	TArray<GoodsData *> m_GoodsDatas;
 };
 

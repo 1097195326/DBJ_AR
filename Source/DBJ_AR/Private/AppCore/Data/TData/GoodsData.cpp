@@ -60,6 +60,7 @@ void GoodsData::CloneData(GoodsData * data)
 	data->externalLength = externalLength;// : 80,
 	data->externalWidth = externalWidth;// : 80,
 	data->externalHeight = externalHeight;// : 80,
+	
 	if (matchedProduct)
 	{
 		data->matchedProduct = new GoodsData();
@@ -69,4 +70,5 @@ void GoodsData::CloneData(GoodsData * data)
 	data->GamePath = GamePath;
 	data->FilePath = FilePath;
 	data->Object = Object;
+	data->m_Type = m_Type;
 }

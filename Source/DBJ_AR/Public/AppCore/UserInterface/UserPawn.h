@@ -71,7 +71,8 @@ public:
     UFUNCTION(BlueprintCallable)
         AActor * TryCreateARActor(FVector2D _screenPosition);
 	
-	AActor * TryCreateARActor(PakInfo _info);
+	AActor * TryCreateARActor(GoodsData * _goodsData);
+	void	TryDeleteARActor(AUserActor* _actor);
 
 	void MergeTwoUserActor(AUserActor * one, AUserActor * two);
 
@@ -107,7 +108,7 @@ private:
 
 	static AUserPawn * m_self;
     
-    PakInfo m_CurrentInfo;
+    GoodsData* m_CurrentGoodsData;
 
 	float	m_RotateSpeed;
 

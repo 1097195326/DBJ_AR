@@ -35,39 +35,17 @@ bool GFileManager::FileIsExist(int _id, FString _md5)
 }
 void GFileManager::TestPak()
 {
-	PakMount(9, TEXT("01d222cb4f9f18fd1316328e4bb2a007"));
+	//PakMount(9, TEXT("01d222cb4f9f18fd1316328e4bb2a007"));
 
 }
-PakInfo GFileManager::PakMount(int _id, FString _md5)
+bool GFileManager::PakMount(GoodsData* _goodsData)
 {
-	PakInfo info;
-	FString pakKey = GetPakKey(_id, _md5);
-	if (m_LoadPak.Contains(pakKey))
+	FString _filePath = GetPakFilePath(_goodsData->modelId, _goodsData->pakMd5);
+	if (!FileIsExist(_filePath))
 	{
-		info = *m_LoadPak.Find(pakKey);
+		return false;
 	}
-	else
-	{
-		FString filePath = GetPakFilePath(_id, _md5);
 
-		if (FileIsExist(filePath))
-		{
-			if (PakMount(filePath, info))
-			{
-				info.ID = _id;
-				info.MD5 = _md5;
-				info.FilePath = filePath;
-				m_LoadPak.Add(pakKey, info);
-			}
-			
-		}
-	}
-	
-	return info;
-}
-
-bool GFileManager::PakMount(FString _filePath,PakInfo & info)
-{
 	FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);
 
 	FPakFile PakFile(m_PakPlatformFile, *_filePath, false);
@@ -76,7 +54,6 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 	int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
 	FString MP2 = MP.RightChop(pos1 + 9);
 	MP = FPaths::ProjectContentDir() + MP2;
-
 
 	/*FString MP = PakFile.GetMountPoint();
 	int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
@@ -88,7 +65,6 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 		/*FString VirtualMountPoint(FString::Printf(TEXT("/Game/%s"), *MP2));
 		FPackageName::RegisterMountPoint(VirtualMountPoint, MP);*/
         UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *MP);
-		UE_LOG(LogTemp, Log, TEXT("zhx : pak mount : %s"), *_filePath);
 	}
 	
 	TArray<FString> files;
@@ -112,21 +88,12 @@ bool GFileManager::PakMount(FString _filePath,PakInfo & info)
 				int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
 				fileName = fileName.RightChop(pos + 8);
 				fileName = TEXT("/Game") + fileName;
-				info.GamePath = fileName;
-//               UObject* object = LoadObject<UStaticMesh>(nullptr, *fileName);
-				
-				/*FStreamableManager StreamableManager;
-				UObject* obj = StreamableManager.LoadSynchronous(FStringAssetReference(ps), true);
-				if (obj)
-				{
-				}*/
-//                info.Object = object;
+				//info.GamePath = fileName;
+				_goodsData->GamePath = fileName;
 				UE_LOG(LogTemp, Log, TEXT("zhx : pak mount game path : %s"), *fileName);
 			}
-			
 		}
 	}
-
 //    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;

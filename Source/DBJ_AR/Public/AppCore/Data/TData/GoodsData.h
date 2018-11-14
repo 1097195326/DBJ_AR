@@ -2,6 +2,15 @@
 
 #include "DataT.h"
 
+
+enum GoodsDataType
+{
+	P_StaticMesh,
+	P_Material,
+	P_Blueprint,
+
+};
+
 class DBJ_AR_API GoodsData : public DataT
 {
 public:
@@ -30,6 +39,7 @@ public:
 	FString		FilePath;
 	UObject *	Object;
 
+	GoodsDataType m_Type;
 public:
     
 	virtual void InitWithJson(const TSharedPtr<FJsonObject> &obj) override;

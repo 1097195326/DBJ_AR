@@ -15,6 +15,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine.h"
+#include "RuntimeRDataManager.h"
 
 
 AUserPawn * AUserPawn::m_self = nullptr;
@@ -178,11 +179,12 @@ AActor *  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
     }
     return actor;
 }
-AActor * AUserPawn::TryCreateARActor(PakInfo _info)
+AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 {
     AActor * actor = nullptr;
-    
-    m_CurrentInfo = _info;
+
+	m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->AddGoodsToList(_goodsData);
+
     APlayerCameraManager * cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
     FVector location = cameraManager->GetCameraLocation();
     FVector forward = cameraManager->GetCameraRotation().Vector();
@@ -192,20 +194,29 @@ AActor * AUserPawn::TryCreateARActor(PakInfo _info)
     actor = GetWorld()->SpawnActor<AActor>(uclass);
     actor->SetActorLocation(location);
     AUserActor * uactor = (AUserActor*)actor;
-    UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentInfo.GamePath);
+    UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
     uactor->m_Mesh->SetStaticMesh(mesh);
     uactor->m_Mesh->RegisterComponent();
-    
+	uactor->m_GoodsDatas.Add(m_CurrentGoodsData);
 	m_AllUserActor.Add(uactor);
 //    m_SelectActor = actor;
     
 	return nullptr;
 }
+void AUserPawn::TryDeleteARActor(AUserActor * actor)
+{
+	if (m_AllUserActor.Find(actor))
+	{
+		RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
+
+		m_AllUserActor.Remove(actor);
+	}
+}
 AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
 {
     AActor * actor = nullptr;
 
-    if (!m_CurrentInfo.GamePath.IsEmpty())
+    if (!m_CurrentGoodsData->GamePath.IsEmpty())
     {
         FTransform t;
         if (GetTrackedGeometryTransform(_screenPosition, t))
@@ -216,11 +227,11 @@ AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
             
             AUserActor * uactor = (AUserActor*)actor;
 
-            UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentInfo.GamePath);
+            UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
 
             uactor->m_Mesh->SetStaticMesh(mesh);
             uactor->m_Mesh->RegisterComponent();
-
+			uactor->m_GoodsDatas.Add(m_CurrentGoodsData);
 			m_AllUserActor.Add(uactor);
         }
     }
@@ -285,7 +296,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 {
 		if (one->m_Type == User_Hua && two->m_Type == User_Pen)
 		{
-			FString socketName = FString::Printf(TEXT("socket%d"), two->m_SoketIndex + 1);
+			FString socketName = FString::Printf(TEXT("Socket%d"), two->m_SoketIndex + 1);
 			if (two->m_Mesh->GetSocketByName(*socketName))
 			{
 				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(this,TEXT("HuaComponent"));
@@ -293,6 +304,10 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 				UStaticMesh * hua = one->m_Mesh->GetStaticMesh();
 				component->SetStaticMesh(hua);
 				component->RegisterComponent();//WithWorld(GetWorld());
+				for (int i = 0; i < one->m_GoodsDatas.Num(); i++)
+				{
+					two->m_GoodsDatas.Add(one->m_GoodsDatas[i]);
+				}
 				two->m_SoketIndex += 1;
 				m_SelectActor = two;
 				one->Destroy();
@@ -301,7 +316,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 		}
 		else if (one->m_Type == User_Pen && two->m_Type == User_Hua)
 		{
-			FString socketName = FString::Printf(TEXT("socket%d"), one->m_SoketIndex + 1);
+			FString socketName = FString::Printf(TEXT("Socket%d"), one->m_SoketIndex + 1);
 			if (one->m_Mesh->GetSocketByName(*socketName))
 			{
 				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(this,TEXT("PenComponent"));
@@ -309,6 +324,10 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 				UStaticMesh * hua = two->m_Mesh->GetStaticMesh();
 				component->SetStaticMesh(hua);
 				component->RegisterComponent();//WithWorld(GetWorld());
+				for (int i = 0; i < two->m_GoodsDatas.Num(); i++)
+				{
+					one->m_GoodsDatas.Add(one->m_GoodsDatas[i]);
+				}
 				one->m_SoketIndex += 1;
 				m_SelectActor = one;
 				two->Destroy();

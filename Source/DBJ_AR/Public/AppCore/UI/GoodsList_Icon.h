@@ -34,7 +34,6 @@ private:
     UProgressBar * m_downloadingProgress;
     
 	GoodsData * m_Data;
-	PakInfo		m_PakInfo;
 
 	bool m_IsDowning;
 
