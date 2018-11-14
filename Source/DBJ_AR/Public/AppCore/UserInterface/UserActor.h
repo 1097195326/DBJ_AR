@@ -25,7 +25,7 @@ public:
 	virtual void BeginDestroy() override;
     
     
-    UPROPERTY(VisibleAnywhere)
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     UStaticMeshComponent * m_Mesh;
 	UPROPERTY(VisibleAnywhere)
 		int m_SoketIndex;
