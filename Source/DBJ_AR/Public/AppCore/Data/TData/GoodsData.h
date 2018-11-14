@@ -11,20 +11,28 @@ enum GoodsDataType
 
 };
 
+UENUM()
+enum UserActorType
+{
+	User_None,
+	User_Hua,
+	User_Pen,
+};
+
 class DBJ_AR_API GoodsData : public DataT
 {
 public:
 	
-	int			id;//": 5,
-	FString		name;//" : "zhx1",
-	int			typeId;// : 2,
+	int			id;//"产品ID
+	FString		name;//" : "zhx1",请输入产品名称", // 产品名称
+	int			typeId;//// 0其他、1绿植、2花盆
 	bool		shelf;// : true,
 	FString		categoryIdList;// : null,
 	int			modelId;// : 9,
 	FString		modelName;// : null,
-	int			supplyId;// : 2,
-	FString		supplyName;// : "供应商添加测试",
-	int			salePrice;// : 30,
+	int			supplyId;// : 产品所属供应商ID
+	FString		supplyName;// : "供应商名称", // 产品所属供应商名称
+	int			salePrice;// : 30,产品销售价格
 	FString		thumbnailUrl;// : "http://test.ali.res.dabanjia.com/res/20181105/AR_BOTANY__1541410677559_4017.png",
 	FString		thumbnailMd5;// : "f1492dae35087a0a54ae4d9d47577b2f",
 	FString		pakUrl;// : "http://test.ali.res.dabanjia.com/res/20181105/AR_BOTANY__1541410588562_6936.pak",
@@ -39,7 +47,7 @@ public:
 	FString		FilePath;
 	UObject *	Object;
 
-	GoodsDataType m_Type;
+	FString		 m_Type;
 public:
     
 	virtual void InitWithJson(const TSharedPtr<FJsonObject> &obj) override;

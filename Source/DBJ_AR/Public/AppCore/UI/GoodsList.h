@@ -20,7 +20,7 @@ public:
     UFUNCTION()
         void OnButtonClick();
 private:
-	UButton * m_ViewButton;
+	UButton * m_BackButton;
 	UScrollBox * m_IconScrolBox;
 	UGridPanel * m_IconList;
 	UVerticalBox * m_CategoryView;

@@ -5,10 +5,10 @@
 
 void UGoodsList::On_Init()
 {
-    if (UButton * button = (UButton*)GetWidgetFromName("ViewButton"))
+    if (UButton * button = (UButton*)GetWidgetFromName("BackButton"))
     {
-        m_ViewButton = button;
-        m_ViewButton->OnClicked.AddDynamic(this, &UGoodsList::OnButtonClick);
+		m_BackButton = button;
+		m_BackButton->OnClicked.AddDynamic(this, &UGoodsList::OnButtonClick);
     }
 	if (UScrollBox * scrollBox = (UScrollBox*)GetWidgetFromName("IconScrolBox"))
 	{
@@ -24,6 +24,7 @@ void UGoodsList::On_Init()
 	}
 	InitView();
     
+	
 }
 void UGoodsList::InitView()
 {
@@ -96,5 +97,6 @@ void UGoodsList::SelectCategoryButton(int _id)
 void UGoodsList::OnButtonClick()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
+	RemoveFromParent();
 
 }

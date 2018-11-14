@@ -80,15 +80,16 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 			FString fileName(files[FileIndex]);
 			//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *fileName);
 			FString shortName = FPackageName::GetShortName(fileName);
-			//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *shortName);
-			if (shortName.Equals(TEXT("AR_HuaPen_181026013.uasset")))
+			UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *shortName);
+			int32 ind = shortName.Find(TEXT("AR_HuaPen"));
+			UE_LOG(LogTemp, Log, TEXT("zhx : ind : %d"),ind);
+			if (shortName.Equals(_goodsData->modelName))
 			{
 				//拼出UObject的加载路径
 				fileName.RemoveFromEnd(TEXT(".uasset"), ESearchCase::IgnoreCase);
 				int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
 				fileName = fileName.RightChop(pos + 8);
 				fileName = TEXT("/Game") + fileName;
-				//info.GamePath = fileName;
 				_goodsData->GamePath = fileName;
 				UE_LOG(LogTemp, Log, TEXT("zhx : pak mount game path : %s"), *fileName);
 			}

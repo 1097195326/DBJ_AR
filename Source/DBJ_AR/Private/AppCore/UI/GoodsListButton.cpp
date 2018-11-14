@@ -1,12 +1,13 @@
 #include "GoodsListButton.h"
 #include "GoodsList.h"
+#include "UIManager.h"
 
 void UGoodsListButton::On_Init()
 {
     if (UButton * button = (UButton*)GetWidgetFromName("SelectButton"))
     {
         m_ViewButton = button;
-        m_ViewButton->OnClicked.AddDynamic(this, &UGoodsListButton::OnButtonClick);
+		UIManager::GetInstance()->RegisterButton(1, m_ViewButton, this, &UGoodsListButton::OnButtonClick);
     }
 	if (UTextBlock * text = (UTextBlock*)GetWidgetFromName("ButtonText"))
 	{
@@ -14,7 +15,12 @@ void UGoodsListButton::On_Init()
 	}
     
 }
-void UGoodsListButton::OnButtonClick()
+void UGoodsListButton::On_Delete()
+{
+	UIManager::GetInstance()->UnRegisterButton(m_ViewButton);
+
+}
+void UGoodsListButton::OnButtonClick(int index)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
 	UGoodsList * parent = (UGoodsList*)m_Parent;

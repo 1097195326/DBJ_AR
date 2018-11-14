@@ -7,13 +7,7 @@
 #include "GoodsData.h"
 #include "UserActor.generated.h"
 
-UENUM()
-enum UserActorType
-{
-	User_None,
-	User_Hua,
-	User_Pen,
-};
+
 
 UCLASS()
 class AUserActor : public AActor

@@ -12,12 +12,13 @@ class DBJ_AR_API  UGoodsListButton : public UBaseUI
 
 public:
     virtual void On_Init() override;
+	virtual void On_Delete() override;
 
     UButton * m_ViewButton;
 	UTextBlock * m_Text;
 
     UFUNCTION()
-        void OnButtonClick();
+        void OnButtonClick(int index);
 
 	void SetData(int _id, FString _name,UBaseUI * parent);
 
