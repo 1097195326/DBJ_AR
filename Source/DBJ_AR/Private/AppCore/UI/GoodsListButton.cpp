@@ -2,6 +2,7 @@
 #include "GoodsList.h"
 #include "UIManager.h"
 
+
 void UGoodsListButton::On_Init()
 {
     if (UButton * button = (UButton*)GetWidgetFromName("SelectButton"))
@@ -25,7 +26,6 @@ void UGoodsListButton::OnButtonClick(int index)
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
 	UGoodsList * parent = (UGoodsList*)m_Parent;
 	parent->SelectCategoryButton(m_Id);
-    
 }
 void UGoodsListButton::SetData(int _id, FString _name, UBaseUI * _parent)
 {

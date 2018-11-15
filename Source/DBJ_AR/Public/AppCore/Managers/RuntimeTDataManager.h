@@ -25,6 +25,7 @@ public:
 
 	void DecodeCategoryList(const TSharedPtr<FJsonObject> _data);
 	TArray<GoodsListCategoryData>	GetCategoryList();
+	void	ClearCategoryList();
 	//gooods list
 	void	DecodeGoodsList(const TSharedPtr<FJsonObject> _data);
 	void	ClearGoodList();

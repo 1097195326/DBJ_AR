@@ -48,7 +48,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    StartARSession();
+    //StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -194,7 +194,8 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
     actor = GetWorld()->SpawnActor<AActor>(uclass);
     actor->SetActorLocation(location);
     AUserActor * uactor = (AUserActor*)actor;
-    UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
+    //UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/DLC/Goods/AR_HuaPen_181026013/AR_HuaPen_181026013"));
+	UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
     uactor->m_Mesh->SetStaticMesh(mesh);
     uactor->m_Mesh->RegisterComponent();
 	uactor->m_GoodsDatas.Add(m_CurrentGoodsData);

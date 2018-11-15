@@ -27,13 +27,12 @@ void UEditerARUI::On_Init()
 void UEditerARUI::On_Start()
 {
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2004, this, &UEditerARUI::OnGetCategoryList);
-    MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UEditerARUI::OnGetProductList);
+    
 
 }
 void UEditerARUI::On_Delete()
 {
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2004, this);
-    MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2008, this);
     
     if (m_ProductListButton)
     {
@@ -71,13 +70,8 @@ void UEditerARUI::OnGetCategoryList(msg_ptr _msg)
 	//TSharedPtr<FJsonObject> data = _msg->GetJsonObject();
 	//if (data->GetIntegerField(TEXT("code")) == 200)
 	{
-		EditerARGameModule::GetInstance()->GetProductList();
+		
 	}
-	
-}
-void UEditerARUI::OnGetProductList(msg_ptr _msg)
-{
 	UGoodsList * goodsList = (UGoodsList *)UIManager::GetInstance()->OpenUI(TEXT("GoodsList"));
 	goodsList->AddToViewport();
-
 }

@@ -27,6 +27,11 @@ TArray<GoodsListCategoryData>	RuntimeTDataManager::GetCategoryList()
 	return m_CategoryList;
 }
 
+void RuntimeTDataManager::ClearCategoryList()
+{
+	m_CategoryList.Empty();
+
+}
 void RuntimeTDataManager::DecodeGoodsList(const TSharedPtr<FJsonObject> _data)
 {
 	ClearGoodList();

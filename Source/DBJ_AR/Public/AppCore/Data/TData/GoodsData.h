@@ -11,13 +11,6 @@ enum GoodsDataType
 
 };
 
-UENUM()
-enum UserActorType
-{
-	User_None,
-	User_Hua,
-	User_Pen,
-};
 
 class DBJ_AR_API GoodsData : public DataT
 {

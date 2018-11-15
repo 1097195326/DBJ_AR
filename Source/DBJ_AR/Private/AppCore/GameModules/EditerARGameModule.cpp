@@ -60,7 +60,7 @@ void EditerARGameModule::OnGetCategoryList(msg_ptr _msg)
 	msg_ptr msg(new LocalMsg(Msg_Local, 2004, nullptr));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
-void EditerARGameModule::GetProductList()
+void EditerARGameModule::GetProductList(int categoryId, int lastId, int size, int typeId, int materialId, int innerDiameterId)
 {
     /*TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
     
@@ -71,8 +71,8 @@ void EditerARGameModule::GetProductList()
     t_jsonObject->SetNumberField(TEXT("materialId"), 0);
     t_jsonObject->SetNumberField(TEXT("innerDiameterId"), 0);*/
 
-	FString appendUrl = FString::Printf(TEXT("categoryId=%i&lastId=%i&size=%i&typeId=%i&materialId=%i&innerDiameterId=%i"),0, 0, 10, 0, 0, 0);
-
+	//FString appendUrl = FString::Printf(TEXT("categoryId=%i&lastId=%i&size=%i&typeId=%i&materialId=%i&innerDiameterId=%i"),0, 0, 10, 0, 0, 0);
+	FString appendUrl = FString::Printf(TEXT("categoryId=%i&lastId=%i&size=%i&typeId=%i&materialId=%i&innerDiameterId=%i"), categoryId, lastId, size, typeId, materialId, innerDiameterId);
 
 	FString cookie = UserInfo::Get()->GetCookie();
 	FString token = UserInfo::Get()->GetToken();

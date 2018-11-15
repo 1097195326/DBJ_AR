@@ -2,6 +2,7 @@
 
 #include "BaseUI.h"
 #include "GoodsListButton.h"
+#include "MsgCenter.h"
 #include "GoodsList.generated.h"
 
 
@@ -12,8 +13,11 @@ class DBJ_AR_API  UGoodsList : public UBaseUI
 
 public:
     virtual void On_Init() override;
+	virtual void On_Delete() override;
 
 	void InitView();
+
+	void OnGetProductList(msg_ptr _msg);
 
 	void SelectCategoryButton(int _id);
 

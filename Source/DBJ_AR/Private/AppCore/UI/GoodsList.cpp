@@ -2,9 +2,13 @@
 #include "RuntimeTDataManager.h"
 #include "GoodsList_Icon.h"
 #include "UIManager.h"
+#include "EditerARGameModule.h"
+
 
 void UGoodsList::On_Init()
 {
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UGoodsList::OnGetProductList);
+
     if (UButton * button = (UButton*)GetWidgetFromName("BackButton"))
     {
 		m_BackButton = button;
@@ -23,13 +27,15 @@ void UGoodsList::On_Init()
 		m_CategoryView = verticalBox;
 	}
 	InitView();
-    
-	
+
+}
+void UGoodsList::On_Delete()
+{
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2008, this);
 }
 void UGoodsList::InitView()
 {
     m_CategoryView->ClearChildren();
-    m_IconList->ClearChildren();
     
 	int firstButton = 0;
 	TArray<GoodsListCategoryData> CategoryListData = RuntimeTDataManager::GetInstance()->GetCategoryList();
@@ -50,6 +56,10 @@ void UGoodsList::InitView()
 		}
 	}
 	SelectCategoryButton(firstButton);
+}
+void UGoodsList::OnGetProductList(msg_ptr _msg)
+{
+	m_IconList->ClearChildren();
 
 	TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
 	for (int i = 0; i < goods.Num(); i++)
@@ -76,8 +86,6 @@ void UGoodsList::InitView()
 			}
 		}
 	}
-
-
 }
 void UGoodsList::SelectCategoryButton(int _id)
 {
@@ -87,6 +95,8 @@ void UGoodsList::SelectCategoryButton(int _id)
 		if (button->m_Id == _id)
 		{
 			button->SetButtonSelect(true);
+
+			EditerARGameModule::GetInstance()->GetProductList(_id);
 		}
 		else
 		{
