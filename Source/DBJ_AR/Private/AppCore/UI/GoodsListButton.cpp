@@ -25,6 +25,7 @@ void UGoodsListButton::OnButtonClick(int index)
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
 	UGoodsList * parent = (UGoodsList*)m_Parent;
 	parent->SelectCategoryButton(m_Id);
+    
 }
 void UGoodsListButton::SetData(int _id, FString _name, UBaseUI * _parent)
 {
@@ -38,10 +39,11 @@ void UGoodsListButton::SetButtonSelect(bool _select)
 {
 	if (_select)
 	{
-		m_Text->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("65FF83FF"))));
+		m_Text->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("29CF81"))));
+        
 	}
 	else
 	{
-		m_Text->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("000000FF"))));
+		m_Text->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("666666"))));
 	}
 }
