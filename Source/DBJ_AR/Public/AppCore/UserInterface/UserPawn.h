@@ -75,8 +75,11 @@ public:
 	
 	AActor * TryCreateARActor(GoodsData * _goodsData);
 	void	TryDeleteARActor(AUserActor* _actor);
-
+	
 	void MergeTwoUserActor(AUserActor * one, AUserActor * two);
+
+	void	DeleteSelectARActor();
+	void	DeleteAllARActor();
 
 
     UFUNCTION(BlueprintCallable)

@@ -99,14 +99,14 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
 			GoodsData * data = goods[i];
 			icon->SetData(data);
 			icon->SetParentUI(this);
-//            if (mIndex % 2 > 0)
-//            {
-//                mGridSlot->SetPadding(FMargin(10.f, 20.0f, 0.f, 0.f));
-//            }
-//            else
-//            {
-//                mGridSlot->SetPadding(FMargin(0.f, 20.0f, 10.f, 0.f));
-//            }
+            if (mIndex % 2 > 0)
+            {
+                mGridSlot->SetPadding(FMargin(12.f, 24.0f, 0.f, 0.f));
+            }
+            else
+            {
+                mGridSlot->SetPadding(FMargin(0.f, 24.0f, 12.f, 0.f));
+            }
 		}
 	}
 }

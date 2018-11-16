@@ -37,12 +37,17 @@ public:
 
 	int GetMsgId();
 	void * GetMsgContent();
+	template<typename T>
+	T GetMsgContent()
+	{
+		return *static_cast<T*>(m_MsgContent);
+	}
 	TSharedPtr<FJsonObject> GetJsonObject();
 	MsgChanelId      GetMsgChannelId();
 	char *      GetMsgError();
 
 	template<typename T>
-	T * ConvertToT()
+	T * SelfConvertToT()
 	{
 		return (T*)(this);
 	}

@@ -36,7 +36,7 @@ void HttpChannel::Update()
 void HttpChannel::SendMsgToHttp(msg_ptr _msg)
 {
 	m_IsRequesting = true;
-	HttpMsg *mHttpMsg = _msg->ConvertToT<HttpMsg>();
+	HttpMsg *mHttpMsg = _msg->SelfConvertToT<HttpMsg>();
 
 	FHttpModule::Get().SetHttpTimeout(60);
 

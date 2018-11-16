@@ -22,4 +22,5 @@ public:
     void On_Button_Click(int _index);
     
 	void OnGetCategoryList(msg_ptr _msg);
+	void OnSelectActor(msg_ptr _msg);
 };

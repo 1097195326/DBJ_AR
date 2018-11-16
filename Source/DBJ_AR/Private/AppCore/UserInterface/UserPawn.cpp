@@ -250,12 +250,26 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 }
 void AUserPawn::TryDeleteARActor(AUserActor * actor)
 {
-	if (m_AllUserActor.Find(actor))
+	if (m_AllUserActor.Contains(actor))
 	{
 		RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
 
 		m_AllUserActor.Remove(actor);
 	}
+}
+void AUserPawn::DeleteSelectARActor()
+{
+	//TryDeleteARActor(m_SelectActor);
+}
+void AUserPawn::DeleteAllARActor()
+{
+	for (int i = 0;i < m_AllUserActor.Num();i++)
+	{
+		AUserActor * actor = m_AllUserActor[i];
+		RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
+		actor->Destroy();
+	}
+	m_AllUserActor.Empty();
 }
 AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
 {
