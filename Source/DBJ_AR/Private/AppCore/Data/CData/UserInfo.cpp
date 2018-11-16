@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UserInfo.h"
 #include "Misc/SecureHash.h"
@@ -8,14 +8,21 @@
 #include "PlatformFilemanager.h"
 //#include "EncryptDecryptTool.h"
 #include "Serialization/JsonSerializer.h"
+#include "FileDownloadManager.h"
 
 using namespace std;
 UserInfo *UserInfo::instance = nullptr;
 UserInfo::UserInfo()
 {
 	m_SaveName = FString(TEXT("UserData.data"));
-	m_SavePath = FPaths::Combine(FPaths::ProjectDir(), m_SaveName);
-	//m_SavePath = FPaths::ConvertRelativePathToFull(m_SavePath);
+    
+    FString SavePath = UFileDownloadManager::Get()->GetAppPath();
+    
+	m_SavePath = FPaths::Combine(SavePath, m_SaveName);
+	
+    UE_LOG(LogTemp,Log,TEXT("zhx : user info save path : %s"),*m_SavePath);
+    
+    //m_SavePath = FPaths::ConvertRelativePathToFull(m_SavePath);
 	ReadLocalData();
 }
 
@@ -42,6 +49,13 @@ FString UserInfo::GetToken()
 }
 bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj)
 {
+    //for test
+    if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_SavePath))
+    {
+        UE_LOG(LogTemp, Error, TEXT("zhx path: %s user info is exit "), *m_SavePath);
+        return true;
+    }
+    
 	//序列化.
 	FString mJson_Str;
 	TSharedRef<TJsonWriter<>> mWriter = TJsonWriterFactory<>::Create(&mJson_Str);
@@ -53,6 +67,8 @@ bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj)
 	//保存到本地.
 	//mJson_Str = EncryptAndDecryptTool::Encrypt(mJson_Str, EncryptKey);
 
+    UE_LOG(LogTemp,Log,TEXT("zhx : User INFO Write : %s"),*mJson_Str);
+    
 	if (!FFileHelper::SaveStringToFile(mJson_Str, *m_SavePath))
 	{
 		return false;
@@ -67,7 +83,7 @@ bool UserInfo::ReadLocalData()
 	FString mjson_Str;
 	if (!FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_SavePath))
 	{
-		UE_LOG(LogTemp, Error, TEXT("path: %s not extist"), *m_SavePath);
+		UE_LOG(LogTemp, Error, TEXT("zhx path: %s not extist"), *m_SavePath);
 		return false;
 	}
 
@@ -75,6 +91,7 @@ bool UserInfo::ReadLocalData()
 	{
 		return false;
 	}
+    UE_LOG(LogTemp,Log,TEXT("zhx : User INFO read : %s"),*mjson_Str);
 	//mjson_Str = EncryptAndDecryptTool::Decrypt(mjson_Str, EncryptKey);
 	//反序列化.
 	TSharedPtr<FJsonObject> mJsonObj = MakeShareable(new FJsonObject);

@@ -73,5 +73,7 @@ void UEditerARUI::OnGetCategoryList(msg_ptr _msg)
 		
 	}
 	UGoodsList * goodsList = (UGoodsList *)UIManager::GetInstance()->OpenUI(TEXT("GoodsList"));
+    UE_LOG(LogTemp,Log,TEXT("zhx : new goodslist : %lld"),goodsList);
+    
 	goodsList->AddToViewport();
 }

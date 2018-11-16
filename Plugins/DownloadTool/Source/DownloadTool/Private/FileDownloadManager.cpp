@@ -367,3 +367,19 @@ FString UFileDownloadManager::GetIOSDir()
 
     return iosDir;
 }
+FString UFileDownloadManager::GetAppPath(const TCHAR * appPath)
+{
+    IPlatformFile &  pf = FPlatformFileManager::Get().GetPlatformFile();
+    FString AppendPath = FPaths::Combine(FPaths::ProjectDir(),appPath);
+    
+#if PLATFORM_WINDOWS
+    return AppendPath;
+#elif PLATFORM_ANDROID
+    Rp = FPaths::ConvertRelativePathToFull(FPaths::ProjectPersistentDownloadDir(), appPath);
+#else
+    FString iosAbsPath = pf.ConvertToAbsolutePathForExternalAppForWrite(*AppendPath);
+    
+    return ExtractIOSDir(*iosAbsPath);
+#endif
+    
+}

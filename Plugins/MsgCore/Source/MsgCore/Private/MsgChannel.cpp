@@ -27,12 +27,19 @@ void MsgChannel::RemoveMsgHeader(int _msgId,void * _obj)
         list<MsgHeader>::iterator lIter;
         for (lIter = msgList.begin(); lIter != msgList.end(); lIter++)
         {
-            MsgHeader header = *lIter;
+//            MsgHeader * header = *lIter;
             if (lIter->m_Obj == _obj)
             {
                 msgList.erase(lIter);
+                std::printf("zhx : msg remove register msg msgid:%d,obj:%ld\n",_msgId,(long)_obj);
+                std::printf("zhx : msg remove register list num:%d\n",(int)msgList.size());
+                
                 break;
             }
+        }
+        if(msgList.size() == 0)
+        {
+            m_Msg_Header_Map.erase(iter);
         }
     }
 }
@@ -47,4 +54,8 @@ void MsgChannel::SetChannelId(MsgChanelId _channelId)
 void MsgChannel::StopSendMsg()
 {
 	
+}
+void MsgChannel::TickMsg()
+{
+    
 }

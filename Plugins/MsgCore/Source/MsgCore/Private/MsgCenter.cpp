@@ -70,3 +70,10 @@ void MsgCenter::StopSendMsg()
 		channel.second->StopSendMsg();
 	}
 }
+void MsgCenter::TickMsg()
+{
+    for (auto channel : m_Channel_Map)
+    {
+        channel.second->TickMsg();
+    }
+}

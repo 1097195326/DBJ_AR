@@ -48,7 +48,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    //StartARSession();
+    StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -194,6 +194,21 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
     actor = GetWorld()->SpawnActor<AActor>(uclass);
     actor->SetActorLocation(location);
     AUserActor * uactor = (AUserActor*)actor;
+    switch(_goodsData->typeId)
+    {
+        case 0:
+        {
+            uactor->m_Type = User_None;
+        }break;
+        case 1:
+        {
+            uactor->m_Type = User_Hua;
+        }break;
+        case 2:
+        {
+            uactor->m_Type = User_Pen;
+        }break;
+    }
     //UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/DLC/Goods/AR_HuaPen_181026013/AR_HuaPen_181026013"));
 	UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
     uactor->m_Mesh->SetStaticMesh(mesh);
@@ -298,6 +313,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 		if (one->m_Type == User_Hua && two->m_Type == User_Pen)
 		{
 			FString socketName = FString::Printf(TEXT("Socket%d"), two->m_SoketIndex + 1);
+            
 			if (two->m_Mesh->GetSocketByName(*socketName))
 			{
 				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(this,TEXT("HuaComponent"));

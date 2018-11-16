@@ -33,6 +33,8 @@ private:
 
 	FPakPlatformFile *				m_PakPlatformFile;
 	IPlatformFile*					m_LocalPlatformFile;
+    
+    TMap<FString,FString>               m_MountedFiles;
 public:
 	virtual void On_Init() override;
 	static GFileManager * GetInstance();

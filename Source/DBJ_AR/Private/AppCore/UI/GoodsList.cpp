@@ -7,7 +7,8 @@
 
 void UGoodsList::On_Init()
 {
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UGoodsList::OnGetProductList);
+    UE_LOG(LogTemp,Log,TEXT("zhx : goodslist ui init"));
+	
 
     if (UButton * button = (UButton*)GetWidgetFromName("BackButton"))
     {
@@ -26,11 +27,22 @@ void UGoodsList::On_Init()
 	{
 		m_CategoryView = verticalBox;
 	}
-	InitView();
+	
 
+}
+void UGoodsList::On_Start()
+{
+    UE_LOG(LogTemp,Log,TEXT("zhx : goodslist ui start"));
+    MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UGoodsList::OnGetProductList);
+    
+    InitView();
 }
 void UGoodsList::On_Delete()
 {
+    m_IconScrolBox = nullptr;
+    m_IconList = nullptr;
+    
+    UE_LOG(LogTemp,Log,TEXT("zhx : goodslist ui delete"));
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2008, this);
 }
 void UGoodsList::InitView()
@@ -59,15 +71,26 @@ void UGoodsList::InitView()
 }
 void UGoodsList::OnGetProductList(msg_ptr _msg)
 {
+    UE_LOG(LogTemp,Log,TEXT("zhx : get msg: %d"),1);
+    if(m_IconScrolBox == nullptr || m_IconList == nullptr)
+    {
+        return;
+    }
+    m_IconScrolBox->ScrollToStart();
 	m_IconList->ClearChildren();
-
+     UE_LOG(LogTemp,Log,TEXT("zhx : get msg: %d"),2);
 	TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
+    
+    UE_LOG(LogTemp,Log,TEXT("zhx : good num : %d"),goods.Num());
+    
 	for (int i = 0; i < goods.Num(); i++)
 	{
 		UGoodsList_Icon * icon = (UGoodsList_Icon*)UIManager::GetInstance()->OpenUI(TEXT("GoodsListIcon"));
 
 		if (icon->IsValidLowLevel())
 		{
+            UE_LOG(LogTemp,Log,TEXT("zhx goods list add icon %d"),i);
+            
 			UGridSlot * mGridSlot = m_IconList->AddChildToGrid(icon);
 			int mIndex = i;//CurrentNum + j;
 			mGridSlot->SetRow(mIndex / 2);
@@ -76,14 +99,14 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
 			GoodsData * data = goods[i];
 			icon->SetData(data);
 			icon->SetParentUI(this);
-			if (mIndex % 2 > 0)
-			{
-				mGridSlot->SetPadding(FMargin(10.f, 20.0f, 0.f, 0.f));
-			}
-			else
-			{
-				mGridSlot->SetPadding(FMargin(0.f, 20.0f, 10.f, 0.f));
-			}
+//            if (mIndex % 2 > 0)
+//            {
+//                mGridSlot->SetPadding(FMargin(10.f, 20.0f, 0.f, 0.f));
+//            }
+//            else
+//            {
+//                mGridSlot->SetPadding(FMargin(0.f, 20.0f, 10.f, 0.f));
+//            }
 		}
 	}
 }
@@ -106,7 +129,7 @@ void UGoodsList::SelectCategoryButton(int _id)
 }
 void UGoodsList::OnButtonClick()
 {
-    UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
-	RemoveFromParent();
+    UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList::OnButtonClick : "));
+	RemoveFromViewport();
 
 }

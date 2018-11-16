@@ -9,6 +9,8 @@ RuntimeTDataManager * RuntimeTDataManager::GetInstance()
 }
 void RuntimeTDataManager::DecodeCategoryList(const TSharedPtr<FJsonObject> _data)
 {
+    ClearCategoryList();
+    
 	const TArray<TSharedPtr<FJsonValue>> dList = _data->GetArrayField("data");
 
 	for (TSharedPtr<FJsonValue> obj : dList)

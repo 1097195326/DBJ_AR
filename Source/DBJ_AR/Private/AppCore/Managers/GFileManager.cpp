@@ -45,7 +45,12 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 	{
 		return false;
 	}
-
+    FString _fileKey = GetPakKey(_goodsData->modelId, _goodsData->pakMd5);
+    if(m_MountedFiles.Contains(_fileKey))
+    {
+        _goodsData->GamePath = *m_MountedFiles.Find(_fileKey);
+        return true;
+    }
 	FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);
 
 	FPakFile PakFile(m_PakPlatformFile, *_filePath, false);

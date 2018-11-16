@@ -63,6 +63,7 @@ public:
     string ExtractIOSDir(const string &DirPath);
     FString ExtractIOSDir(const TCHAR * DirPath);
     FString GetIOSDir();
+    FString GetAppPath(const TCHAR * appPath = TEXT(""));
 private:
     
       static UFileDownloadManager* FileDownloadManager;

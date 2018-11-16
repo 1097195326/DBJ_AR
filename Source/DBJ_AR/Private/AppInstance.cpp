@@ -16,6 +16,9 @@ void UAppInstance::On_Init()
 
     Data_M->LoadAllXMLData();
 
+    
+    
+    
 }
 void UAppInstance::OpenLevel(const FString & _levelName)
 {

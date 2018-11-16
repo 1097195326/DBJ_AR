@@ -18,7 +18,7 @@ public:
 	
 	int			id;//"产品ID
 	FString		name;//" : "zhx1",请输入产品名称", // 产品名称
-	int			typeId;//// 0其他、1绿植、2花盆
+    int			typeId;//// 0 qita 1: lvzhi, 2: huapen
 	bool		shelf;// : true,
 	FString		categoryIdList;// : null,
 	int			modelId;// : 9,

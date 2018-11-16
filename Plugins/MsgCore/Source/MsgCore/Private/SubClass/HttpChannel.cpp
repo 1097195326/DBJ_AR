@@ -6,8 +6,8 @@
 HttpChannel::HttpChannel():m_CanRun(true)
 {
 	m_IsRequesting = false;
-	m_Thread = thread(std::bind(&HttpChannel::Update, this));
-	m_Thread.detach();
+    m_Thread = thread(std::bind(&HttpChannel::Update, this));
+    m_Thread.detach();
 }
 void HttpChannel::SendMsg(msg_ptr _msg)
 {
@@ -15,9 +15,14 @@ void HttpChannel::SendMsg(msg_ptr _msg)
 	/*m_CurrentMsg = m_Msg_Queue.front();
 	SendMsgToHttp(m_CurrentMsg);*/
 }
+void HttpChannel::TickMsg()
+{
+    Update();
+}
 void HttpChannel::Update()
 {
-	while (m_CanRun)
+    while (m_CanRun)
+//    if(m_CanRun)
 	{
 		m_ThreadMutex.lock();
 		if (!m_IsRequesting && !m_Msg_Queue.empty())
@@ -42,6 +47,8 @@ void HttpChannel::SendMsgToHttp(msg_ptr _msg)
 	HttpRequest->SetHeader(TEXT("token"), mHttpMsg->m_token);
 	HttpRequest->SetHeader(TEXT("Cookie"), mHttpMsg->m_Cookie);
 
+    UE_LOG(LogTemp, Log, TEXT("zhx : token(%s),Cookie:%s"),*mHttpMsg->m_token,*mHttpMsg->m_Cookie);
+    
 	HttpRequest->SetHeader(TEXT("operator"), mHttpMsg->m_operator);
 
 	FString httpUrl;

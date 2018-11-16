@@ -47,5 +47,6 @@ public:
 		return (T*)(this);
 	}
 };
-typedef shared_ptr<MsgStruct> msg_ptr;
+//typedef shared_ptr<MsgStruct> msg_ptr;
 
+typedef TSharedPtr<MsgStruct> msg_ptr;

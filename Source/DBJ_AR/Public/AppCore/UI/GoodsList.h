@@ -13,6 +13,7 @@ class DBJ_AR_API  UGoodsList : public UBaseUI
 
 public:
     virtual void On_Init() override;
+    virtual void On_Start() override;
 	virtual void On_Delete() override;
 
 	void InitView();

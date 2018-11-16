@@ -30,6 +30,7 @@ protected:
 public:
 	HttpChannel();
 	virtual void StopSendMsg() override;
+    virtual void TickMsg() override;
 
 	virtual void SendMsg(msg_ptr _msg);
 

@@ -59,4 +59,6 @@ public:
     void SendMsg(msg_ptr _msg);
     
 	void StopSendMsg();
+    
+    void TickMsg();
 };

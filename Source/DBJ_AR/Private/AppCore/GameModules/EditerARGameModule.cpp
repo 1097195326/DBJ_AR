@@ -91,7 +91,8 @@ void EditerARGameModule::OnGetProductList(msg_ptr _msg)
     
 	RuntimeTDataManager::GetInstance()->DecodeGoodsList(jsonData);
 
-	msg_ptr msg(new LocalMsg(Msg_Local,2008,nullptr));
+    int result = 1;
+	msg_ptr msg(new LocalMsg(Msg_Local,2008,&result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::GetChangeList(int productId, int lastId, int exceptProductId, int size)

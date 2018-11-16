@@ -67,7 +67,7 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
 	case 1:
 	{
-        m_ParentUI->RemoveFromParent();
+        m_ParentUI->RemoveFromViewport();
         
         if (!m_Data->GamePath.IsEmpty())
         {
@@ -118,22 +118,23 @@ void UGoodsList_Icon::SetParentUI(UBaseUI * _ui)
 void UGoodsList_Icon::SetData(GoodsData * _data)
 {
 	m_Data = _data;
-	
+    UE_LOG(LogTemp,Log,TEXT("zhx : set data name : %s,url:%s"),*m_Data->name,*m_Data->thumbnailUrl);
+    
 	m_ImageHost->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
 	m_IconName->SetText(FText::FromString(m_Data->name));
     
     if(GFileManager::GetInstance()->FileIsExist(m_Data->modelId,m_Data->pakMd5))
     {
-		m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
-		m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
-		GFileManager::GetInstance()->PakMount(m_Data);
-	}
-	else
-	{
-		m_DownloadButton->SetVisibility(ESlateVisibility::Visible);
-		m_DownOKImage->SetVisibility(ESlateVisibility::Hidden);
-	}
-	m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
+        m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
+        m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
+        GFileManager::GetInstance()->PakMount(m_Data);
+    }
+    else
+    {
+        m_DownloadButton->SetVisibility(ESlateVisibility::Visible);
+        m_DownOKImage->SetVisibility(ESlateVisibility::Hidden);
+    }
+    m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
 
     
 }

@@ -16,7 +16,7 @@ MsgStruct::MsgStruct(TSharedPtr<FJsonObject> _jsonObject)
 }
 MsgStruct::~MsgStruct()
 {
-    
+    UE_LOG(LogTemp,Log,TEXT("zhx MsgStruct delete"));
 }
 
 int MsgStruct::GetMsgId()
