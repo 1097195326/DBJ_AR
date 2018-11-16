@@ -11,7 +11,7 @@ void LocalChannel::SendMsg(msg_ptr _msg)
 		list<MsgHeader>::iterator lIter;
 		for (lIter = msgList.begin(); lIter != msgList.end(); lIter++)
 		{
-            std::printf("zhx : msg local msgid:%d,obj:%ld\n",(int)_msg->GetMsgId(),(long)lIter->m_Obj);
+            //std::printf("zhx : msg local msgid:%d,obj:%ld\n",(int)_msg->GetMsgId(),(long)lIter->m_Obj);
 //            UE_LOG(LogTemp,Log,TEXT("zhx : zhx : local msgid:%d,obj:%lld"),_msg->GetMsgId(),(long)lIter->m_Obj);
 			lIter->m_Fun_Header(_msg);
 		}

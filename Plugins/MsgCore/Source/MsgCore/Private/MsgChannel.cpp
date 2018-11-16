@@ -31,8 +31,8 @@ void MsgChannel::RemoveMsgHeader(int _msgId,void * _obj)
             if (lIter->m_Obj == _obj)
             {
                 msgList.erase(lIter);
-                std::printf("zhx : msg remove register msg msgid:%d,obj:%ld\n",_msgId,(long)_obj);
-                std::printf("zhx : msg remove register list num:%d\n",(int)msgList.size());
+               /* std::printf("zhx : msg remove register msg msgid:%d,obj:%ld\n",_msgId,(long)_obj);
+                std::printf("zhx : msg remove register list num:%d\n",(int)msgList.size());*/
                 
                 break;
             }

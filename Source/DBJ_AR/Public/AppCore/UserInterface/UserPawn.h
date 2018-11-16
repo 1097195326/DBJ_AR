@@ -45,10 +45,12 @@ public:
 	//FVector2D  m_PreScreenPosition;
 	//PC
 	bool IsCRotate;
+	bool IsCMove;
+
     void SelectGoods();
+	void MoveGoods();
     void RotateGoods();
 	void ChangeGoods();
-	void RotateTick(float delta);
 	// mobile
 	void OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
     void OnFingerTouchMoved(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -67,7 +69,7 @@ public:
     UFUNCTION(BlueprintCallable)
         FVector2D    GetFingerPosition(int _fingerNum);
     UFUNCTION(BlueprintCallable)
-        AActor * IsHaveActorInScreenPosition(FVector2D _position);
+        bool IsHaveActorInScreenPosition(FVector2D _position);
     UFUNCTION(BlueprintCallable)
         AActor * TryCreateARActor(FVector2D _screenPosition);
 	
@@ -98,6 +100,8 @@ public:
         FVector2D m_ScreenPosition;
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
         AActor * m_SelectActor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UStaticMeshComponent * m_SelectComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     TArray<TEnumAsByte<ETouchIndex::Type>>    m_PressedFingers;

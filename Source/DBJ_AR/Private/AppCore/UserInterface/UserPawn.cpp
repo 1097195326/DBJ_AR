@@ -48,7 +48,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    StartARSession();
+    //StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -58,6 +58,16 @@ void AUserPawn::On_Tick(float delta)
     {
         DrawPlnes();
     }
+#if PLATFORM_WINDOWS
+	if (IsCMove)
+	{
+		MoveSelecteARActor();
+	}else if (IsCRotate)
+	{
+		RotateSelectARActor();
+	}
+
+#endif
 
 }
 void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -70,12 +80,10 @@ void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &AUserPawn::OnFingerTouchReleased);
 #else
     PlayerInputComponent->BindAction("SelectGoods", EInputEvent::IE_Pressed, this, &AUserPawn::SelectGoods);
+	PlayerInputComponent->BindAction("MoveGoods", EInputEvent::IE_Pressed, this, &AUserPawn::MoveGoods);
     PlayerInputComponent->BindAction("RotateGoods", EInputEvent::IE_Pressed, this, &AUserPawn::RotateGoods);
 	PlayerInputComponent->BindAction("ChangeGoods", EInputEvent::IE_Pressed, this, &AUserPawn::ChangeGoods);
 	
-
-	PlayerInputComponent->BindAxis("RotateTick",this,&AUserPawn::RotateTick);
-
 #endif
     
 }
@@ -103,10 +111,10 @@ void AUserPawn::OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const 
     if (m_FingerNum == 1)
     {
         m_ScreenPosition = GetFingerPosition(1);
-        AActor * actor = IsHaveActorInScreenPosition(m_ScreenPosition);
-        if (actor)
+        
+        if (IsHaveActorInScreenPosition(m_ScreenPosition))
         {
-            m_SelectActor = actor;
+            
         }else
         {
 //            m_SelectActor = TryCreateARActor(m_ScreenPosition);
@@ -167,17 +175,38 @@ FVector2D AUserPawn::GetFingerPosition(int _fingerNum)
 #endif
     return SPostion;
 }
-AActor *  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
+bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 {
-    AActor * actor = nullptr;
     FHitResult hitResult;
-//    TArray<TEnumAsByte<EObjectTypeQuery> > Objects;
-    
     if (m_Controller->GetHitResultAtScreenPosition(_position, ECC_WorldStatic, false, hitResult))
     {
-        actor = hitResult.GetActor();
-    }
-    return actor;
+		if (Cast<AUserActor>(hitResult.GetActor()))
+		{
+			m_SelectActor = hitResult.GetActor();
+
+			if (m_SelectComponent)
+			{
+				m_SelectComponent->SetRenderCustomDepth(false);
+				m_SelectComponent = nullptr;
+			}
+			m_SelectComponent = Cast<UStaticMeshComponent>(hitResult.GetComponent());
+			m_SelectComponent->SetRenderCustomDepth(true);
+
+			UE_LOG(LogTemp, Log, TEXT("zhx : select actor name :%s,component name : %s"), *m_SelectActor->GetName(), *m_SelectComponent->GetName());
+			return true;
+		}
+	}
+	{
+		if (m_SelectComponent)
+		{
+			m_SelectComponent->SetRenderCustomDepth(false);
+		}
+		m_SelectComponent = nullptr;
+		m_SelectActor = nullptr;
+		UE_LOG(LogTemp, Log, TEXT("zhx : select good fail"));
+	}
+		
+    return false;
 }
 AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 {
@@ -188,7 +217,7 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
     APlayerCameraManager * cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
     FVector location = cameraManager->GetCameraLocation();
     FVector forward = cameraManager->GetCameraRotation().Vector();
-    location = location + forward.GetSafeNormal() * 300;
+    location = location + forward.GetSafeNormal() * 100;
 
     UClass * uclass = LoadClass<AActor>(NULL,TEXT("/Game/Blueprints/BP_UserActor.BP_UserActor_C"),NULL,LOAD_None,NULL);
     actor = GetWorld()->SpawnActor<AActor>(uclass);
@@ -269,7 +298,7 @@ void AUserPawn::MoveSelecteARActor()
 		}
 #else
 		FHitResult HitResult;
-		m_Controller->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), true, HitResult);
+		m_Controller->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, HitResult);
 		FVector HitLoction = HitResult.Location;
 		FVector OldLoction = m_SelectActor->GetActorLocation();
 		FVector NewLoction(HitLoction.X, HitLoction.Y, OldLoction.Z);
@@ -316,7 +345,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
             
 			if (two->m_Mesh->GetSocketByName(*socketName))
 			{
-				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(this,TEXT("HuaComponent"));
+				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(two,TEXT("HuaComponent"));
 				component->AttachToComponent(two->m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
 				UStaticMesh * hua = one->m_Mesh->GetStaticMesh();
 				component->SetStaticMesh(hua);
@@ -336,7 +365,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 			FString socketName = FString::Printf(TEXT("Socket%d"), one->m_SoketIndex + 1);
 			if (one->m_Mesh->GetSocketByName(*socketName))
 			{
-				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(this,TEXT("PenComponent"));
+				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(one,TEXT("PenComponent"));
 				component->AttachToComponent(one->m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
 				UStaticMesh * hua = two->m_Mesh->GetStaticMesh();
 				component->SetStaticMesh(hua);
@@ -354,43 +383,35 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 }
 void AUserPawn::SelectGoods()
 {
+	ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(m_Controller->Player);
 	
-	FHitResult HitResult;
-	if (m_Controller->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult))
+	if (LocalPlayer && LocalPlayer->ViewportClient)
 	{
-		m_SelectActor = nullptr;
-		//m_SelectActor = static_cast HitResult.GetActor();
-		m_SelectActor = HitResult.GetActor();
-		UE_LOG(LogTemp, Log, TEXT("zhx : select good success"));
+		FVector2D MousePosition;
+		if (LocalPlayer->ViewportClient->GetMousePosition(MousePosition))
+		{
+			IsHaveActorInScreenPosition(MousePosition);
+		}
 	}
-	else
-	{
-		m_SelectActor = nullptr;
-		UE_LOG(LogTemp, Log, TEXT("zhx : select good fail"));
-	}
+}
+void AUserPawn::MoveGoods()
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : PC move goods"));
+	IsCMove = !IsCMove;
 }
 void AUserPawn::RotateGoods()
 {
-	UE_LOG(LogTemp, Log, TEXT("zhx : RotateGoods good :"));
+	UE_LOG(LogTemp, Log, TEXT("zhx : PC rotate goods"));
 	IsCRotate = !IsCRotate;
 	
 }
-void AUserPawn::RotateTick(float delta)
-{
-	//UE_LOG(LogTemp, Log, TEXT("zhx : RotateTick good :"));
-	if (IsCRotate)
-	{
-		RotateSelectARActor();
-	}
-	else
-	{
-		MoveSelecteARActor();
-	}
-}
 void AUserPawn::ChangeGoods()
 {
-	if (m_SelectActor)
+	UE_LOG(LogTemp, Log, TEXT("zhx : PC change goods"));
+	if (m_SelectComponent)
 	{
-
+		UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/TestMesh/HuaPanB.HuaPanB"));
+		m_SelectComponent->SetStaticMesh(mesh);
+		m_SelectComponent->RegisterComponent();
 	}
 }
