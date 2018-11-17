@@ -29,10 +29,15 @@ void UGoodsChangeUI::On_Init()
 	{
 		m_GridPanel = widget;
 	}
+
+	m_CurrentGoodsData = nullptr;
+
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2013, this, &UGoodsChangeUI::OnGetChangeList);
 
 	m_ProductId = AUserPawn::GetInstance()->GetChangeProductId();
-	//EditerARGameModule::GetInstance()->GetChangeList(m_ProductId);
+	EditerARGameModule::GetInstance()->GetChangeList(m_ProductId);
+	//test
+	OnGetChangeList(nullptr);
 }
 void UGoodsChangeUI::On_Delete()
 {
@@ -46,14 +51,16 @@ void UGoodsChangeUI::OnButtonClick(int id)
 	{
 	case 1:
 	{
-		AUserPawn::GetInstance()->CancelChangeSelectModel();
-	}break;
-	case 2:
-	{
-		if (!m_CurrentGoodsData->GamePath.IsEmpty())
+		if (m_CurrentGoodsData && !m_CurrentGoodsData->GamePath.IsEmpty())
 		{
 			AUserPawn::GetInstance()->SureChangeSelectModel(m_CurrentGoodsData);
 		}
+		RemoveFromParent();
+	}break;
+	case 2:
+	{
+		AUserPawn::GetInstance()->CancelChangeSelectModel();
+		RemoveFromParent();
 	}break;
 	case 3:
 	{
@@ -72,7 +79,8 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 	}
 	m_ScrollBox->ScrollToStart();
 	m_GridPanel->ClearChildren();
-	TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
+	//TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
+	TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
 
 	for (int i = 0; i < goods.Num(); i++)
 	{
@@ -88,7 +96,7 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 			mGridSlot->SetColumn(mIndex / 2);
 
 			GoodsData * data = goods[i];
-			icon->SetData(data);
+			icon->SetData(data ,true);
 			icon->SetParentUI(this);
 			if (mIndex % 2 > 0)
 			{
@@ -110,7 +118,8 @@ void UGoodsChangeUI::SelectChangeIcon(UGoodsList_Icon * _icon)
 		if (icon == _icon)
 		{
 			icon->ShowSelectIcon(true);
-			AUserPawn::GetInstance()->ChangeSelectModel(icon->GetData()->GamePath);
+			m_CurrentGoodsData = icon->GetData();
+			AUserPawn::GetInstance()->ChangeSelectModel(m_CurrentGoodsData->GamePath);
 		}
 		else
 		{

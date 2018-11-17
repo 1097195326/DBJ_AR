@@ -327,20 +327,19 @@ void AUserPawn::MoveSelecteARActor()
 		FVector HitLoction = HitResult.Location;
 		FVector OldLoction = m_SelectActor->GetActorLocation();
 		FVector NewLoction(HitLoction.X, HitLoction.Y, OldLoction.Z);
-		m_SelectActor->SetActorLocation(NewLoction);
+		m_SelectActor->SetActorLocation(HitLoction);
 #endif
-		TArray<AActor *> allUserActor;
-		UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);
-		for (int i = 0; i < allUserActor.Num(); i++)
+		/*TArray<AActor *> allUserActor;
+		UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);*/
+		for (int i = 0; i < m_AllUserActor.Num(); i++)
 		{
-			AUserActor * actor = Cast<AUserActor>(allUserActor[i]);
+			AUserActor * actor = m_AllUserActor[i];
 			if (m_SelectActor != actor)
 			{
 				if (FVector::Distance(m_SelectActor->GetActorLocation(), actor->GetActorLocation()) <= 80)
 				{
 					UE_LOG(LogTemp, Log, TEXT("zhx : two user actor distance <= 80"));
-					AUserActor *  selectActor = Cast<AUserActor>(m_SelectActor);
-					MergeTwoUserActor(selectActor, actor);
+					MergeTwoUserActor(m_SelectActor, actor);
 				}
 			}
 		}
