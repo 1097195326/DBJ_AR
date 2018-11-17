@@ -1,13 +1,14 @@
 #include "GoodsList_Icon.h"
 #include "UserPawn.h"
 #include "UIManager.h"
+#include "GoodsChangeUI.h"
 
 void UGoodsList_Icon::On_Init()
 {
     if (UButton * button = (UButton*)GetWidgetFromName("IconButton"))
     {
-        m_SelectButton = button;
-		UI_M->RegisterButton(1, m_SelectButton, this, &UGoodsList_Icon::OnButtonClick);
+		m_IconButton = button;
+		UI_M->RegisterButton(1, m_IconButton, this, &UGoodsList_Icon::OnButtonClick);
     }
 	if (UButton * button = (UButton*)GetWidgetFromName("DownButton"))
 	{
@@ -27,6 +28,10 @@ void UGoodsList_Icon::On_Init()
     {
         m_DownOKImage = image;
     }
+	if (UImage * image = (UImage*)GetWidgetFromName("SelectIcon"))
+	{
+		m_SelectIcon = image;
+	}
 	if (UNativeWidgetHost * host = (UNativeWidgetHost*)GetWidgetFromName("ImageHost"))
 	{
 		m_ImageHost = host;
@@ -40,7 +45,7 @@ void UGoodsList_Icon::On_Init()
 }
 void UGoodsList_Icon::On_Delete()
 {
-	UI_M->UnRegisterButton(m_SelectButton);
+	UI_M->UnRegisterButton(m_IconButton);
 	UI_M->UnRegisterButton(m_DownloadButton);
 
 }
@@ -67,11 +72,18 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
 	case 1:
 	{
-        m_ParentUI->RemoveFromViewport();
-        
         if (!m_Data->GamePath.IsEmpty())
         {
-			AUserPawn::GetInstance()->TryCreateARActor(m_Data);
+			if (m_IsChange)
+			{
+				UGoodsChangeUI * changeUI = (UGoodsChangeUI *)m_ParentUI;
+				changeUI->SelectChangeIcon(this);
+			}
+			else
+			{
+				m_ParentUI->RemoveFromViewport();
+				AUserPawn::GetInstance()->TryCreateARActor(m_Data);
+			}
         }
 	}break;
 	case 2:
@@ -115,9 +127,11 @@ void UGoodsList_Icon::SetParentUI(UBaseUI * _ui)
 {
 	m_ParentUI = _ui;
 }
-void UGoodsList_Icon::SetData(GoodsData * _data)
+void UGoodsList_Icon::SetData(GoodsData * _data,bool _isChange)
 {
 	m_Data = _data;
+	m_IsChange = _isChange;
+
     UE_LOG(LogTemp,Log,TEXT("zhx : set data name : %s,url:%s"),*m_Data->name,*m_Data->thumbnailUrl);
     
 	m_ImageHost->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
@@ -135,6 +149,20 @@ void UGoodsList_Icon::SetData(GoodsData * _data)
         m_DownOKImage->SetVisibility(ESlateVisibility::Hidden);
     }
     m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
-
-    
+	if (m_SelectIcon)
+	{
+		m_SelectIcon->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
+void UGoodsList_Icon::ShowSelectIcon(bool _isSelect)
+{
+	if (_isSelect)
+	{
+		m_SelectIcon->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		m_SelectIcon->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+

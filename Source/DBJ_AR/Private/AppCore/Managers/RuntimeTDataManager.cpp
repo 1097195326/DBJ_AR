@@ -63,9 +63,9 @@ TArray<GoodsData*> RuntimeTDataManager::GetCurrentGoodsList()
 }
 void RuntimeTDataManager::DecodeChangeList(const TSharedPtr<FJsonObject> _data)
 {
-	ClearGoodList();
+	ClearChangeGoodList();
 
-	/*const TSharedPtr<FJsonObject> data = _data->GetObjectField("data");
+	const TSharedPtr<FJsonObject> data = _data->GetObjectField("data");
 	const TArray<TSharedPtr<FJsonValue>> dList = data->GetArrayField("list");
 
 	for (TSharedPtr<FJsonValue> obj : dList)
@@ -73,7 +73,7 @@ void RuntimeTDataManager::DecodeChangeList(const TSharedPtr<FJsonObject> _data)
 		GoodsData  * goods = new GoodsData();
 		goods->InitWithJson(obj->AsObject());
 		m_ChangeGoodsList.Add(goods);
-	}*/
+	}
 }
 void RuntimeTDataManager::ClearChangeGoodList()
 {

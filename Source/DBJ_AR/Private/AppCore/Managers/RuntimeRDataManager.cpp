@@ -15,6 +15,23 @@ GoodsData * RuntimeRDataManager::AddGoodsToList(GoodsData* _data)
 	m_RuntimeGoodsList.Add(newData);
 	return newData;
 }
+GoodsData * RuntimeRDataManager::ChangeListGoods(GoodsData* _preData, GoodsData * _changeData)
+{
+	if (m_RuntimeGoodsList.Contains(_preData))
+	{
+		m_RuntimeGoodsList.Remove(_preData);
+		delete _preData;
+		GoodsData * newData = new GoodsData();
+		_changeData->CloneData(newData);
+		m_RuntimeGoodsList.Add(newData);
+		return newData;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("zhx : change list goods fail ,can not find preData"));
+	}
+	return nullptr;
+}
 void RuntimeRDataManager::RemoveGoodsFromList(TArray<GoodsData*> _datas)
 {
 	for (int i = 0; i < _datas.Num(); i++)
@@ -23,6 +40,7 @@ void RuntimeRDataManager::RemoveGoodsFromList(TArray<GoodsData*> _datas)
 		if (data != nullptr && m_RuntimeGoodsList.Find(data))
 		{
 			m_RuntimeGoodsList.Remove(data);
+			delete data;
 		}
 	}
 	

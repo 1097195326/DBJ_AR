@@ -14,6 +14,7 @@ public:
 	static RuntimeRDataManager * GetInstance();
 
 	GoodsData * AddGoodsToList(GoodsData* _data);
+	GoodsData * ChangeListGoods(GoodsData* _preData,GoodsData * _changeData);
 	void RemoveGoodsFromList(TArray<GoodsData*> _datas);
 	TArray<GoodsData*>	GetRuntimeGoodsList();
 

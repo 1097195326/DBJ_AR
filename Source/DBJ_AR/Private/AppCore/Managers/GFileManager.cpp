@@ -22,7 +22,6 @@ void GFileManager::On_Init()
 		m_PakPlatformFile->Initialize(m_LocalPlatformFile, TEXT("PakPlatformFile"));
 		m_PakPlatformFile->InitializeNewAsyncIO();
 	}
-//    FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);
 }
 bool GFileManager::FileIsExist(FString _path)
 {
@@ -99,7 +98,7 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 			}
 		}
 	}
-//    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+    //FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;
 }

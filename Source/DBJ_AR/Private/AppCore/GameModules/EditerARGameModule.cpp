@@ -45,19 +45,20 @@ void EditerARGameModule::GetCategoryList()
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1004);
-	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1004,httpUrl,TEXT(""),true,cookie,token);
-
-	msg_ptr mMsg(msg);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1004,httpUrl,TEXT(""),true,cookie,token));
 
 	MsgCenter::GetInstance()->SendMsg(mMsg);
 }
 void EditerARGameModule::OnGetCategoryList(msg_ptr _msg)
 {
+	int result = 0;
 	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
-
-	RuntimeTDataManager::GetInstance()->DecodeCategoryList(jsonData);
-
-	msg_ptr msg(new LocalMsg(Msg_Local, 2004, nullptr));
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		result = 1;
+		RuntimeTDataManager::GetInstance()->DecodeCategoryList(jsonData);
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2004, &result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::GetProductList(int categoryId, int lastId, int size, int typeId, int materialId, int innerDiameterId)
@@ -78,20 +79,20 @@ void EditerARGameModule::GetProductList(int categoryId, int lastId, int size, in
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1008);
-    HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1008, httpUrl, appendUrl,true,cookie,token);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1008, httpUrl, appendUrl,true,cookie,token));
 
-    msg_ptr mMsg(msg);
-    
     MsgCenter::GetInstance()->SendMsg(mMsg);
 }
 void EditerARGameModule::OnGetProductList(msg_ptr _msg)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : EditerARGameModule::OnGetProductList : "));
-    TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
-    
-	RuntimeTDataManager::GetInstance()->DecodeGoodsList(jsonData);
-
-    int result = 1;
+	int result = 0;
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		result = 1;
+		RuntimeTDataManager::GetInstance()->DecodeGoodsList(jsonData);
+	}
 	msg_ptr msg(new LocalMsg(Msg_Local,2008,&result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
@@ -99,18 +100,23 @@ void EditerARGameModule::GetChangeList(int productId, int lastId, int exceptProd
 {
 	FString appendUrl = FString::Printf(TEXT("productId=%d&exceptProductId=%d&lastId=%d&size=%d"), productId, exceptProductId, lastId, size);
 
-
 	FString cookie = UserInfo::Get()->GetCookie();
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1013);
-	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1013, httpUrl, appendUrl, true, cookie, token);
-
-	msg_ptr mMsg(msg);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1013, httpUrl, appendUrl, true, cookie, token));
 
 	MsgCenter::GetInstance()->SendMsg(mMsg);
 }
 void EditerARGameModule::OnGetChangeList(msg_ptr _msg)
 {
-
+	int result = 0;
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		result = 1;
+		RuntimeTDataManager::GetInstance()->DecodeChangeList(jsonData);
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2013, &result));
+	MsgCenter::GetInstance()->SendMsg(msg);
 }

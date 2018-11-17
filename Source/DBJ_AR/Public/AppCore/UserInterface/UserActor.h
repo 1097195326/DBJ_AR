@@ -3,7 +3,7 @@
 
 
 #include "CoreMinimal.h"
-#include "Components/StaticMeshComponent.h"
+#include "UserComponent.h"
 #include "GoodsData.h"
 #include "UserActor.generated.h"
 
@@ -27,7 +27,7 @@ public:
     
     
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-    UStaticMeshComponent * m_Mesh;
+    UUserComponent * m_Mesh;
 	UPROPERTY(VisibleAnywhere)
 		int m_SoketIndex;
 
@@ -35,5 +35,9 @@ public:
 		 TEnumAsByte<UserActorType> m_Type;
 
 	TArray<GoodsData *> m_GoodsDatas;
+
+	void	RemoveGoodsData(GoodsData * _data);
+	void	AddGoodsData(GoodsData * _data);
+
 };
 

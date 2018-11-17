@@ -81,6 +81,10 @@ public:
 	void	DeleteSelectARActor();
 	void	DeleteAllARActor();
 
+	int		GetChangeProductId();
+	void	ChangeSelectModel(FString _gamePath);
+	void	CancelChangeSelectModel();
+	void	SureChangeSelectModel(GoodsData * _data);
 
     UFUNCTION(BlueprintCallable)
         void MoveSelecteARActor();
@@ -102,17 +106,15 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
         FVector2D m_ScreenPosition;
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-        AActor * m_SelectActor;
+        AUserActor * m_SelectActor;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UStaticMeshComponent * m_SelectComponent;
+		UUserComponent * m_SelectComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     TArray<TEnumAsByte<ETouchIndex::Type>>    m_PressedFingers;
 
 private:
     AUserController * m_Controller;
-    ActionState m_ActionState;
-
 	static AUserPawn * m_self;
     
     GoodsData* m_CurrentGoodsData;

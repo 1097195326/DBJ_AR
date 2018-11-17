@@ -3,7 +3,8 @@
 #include "EditerARGameModule.h"
 #include "AppInstance.h"
 #include "GoodsList.h"
-
+#include "GoodsChangeUI.h"
+#include "UserPawn.h"
 
 void UEditerARUI::On_Init()
 {
@@ -67,12 +68,14 @@ void UEditerARUI::On_Button_Click(int _index)
         }
         case 2:
         {
-            
+			UGoodsChangeUI * changeUI = (UGoodsChangeUI *)UIManager::GetInstance()->OpenUI(TEXT("GoodsChangeUI"));
+
+			changeUI->AddToViewport();
             break;
         }
 		case 3:
 		{
-
+			AUserPawn::GetInstance()->DeleteSelectARActor();
 			break;
 		}
         default:
@@ -105,5 +108,4 @@ void UEditerARUI::OnSelectActor(msg_ptr _msg)
 		m_ChangeButton->SetVisibility(ESlateVisibility::Hidden);
 		m_DeleteButton->SetVisibility(ESlateVisibility::Hidden);
 	}
-
 }

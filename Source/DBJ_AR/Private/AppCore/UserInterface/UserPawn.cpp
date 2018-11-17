@@ -16,7 +16,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine.h"
 #include "RuntimeRDataManager.h"
-
+#include "MsgCenter.h"
 
 AUserPawn * AUserPawn::m_self = nullptr;
 
@@ -177,42 +177,46 @@ FVector2D AUserPawn::GetFingerPosition(int _fingerNum)
 }
 bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 {
+	bool IsSelect = false;
     FHitResult hitResult;
     if (m_Controller->GetHitResultAtScreenPosition(_position, ECC_WorldStatic, false, hitResult))
     {
-		if (Cast<AUserActor>(hitResult.GetActor()))
+		m_SelectActor = Cast<AUserActor>(hitResult.GetActor());
+		if (m_SelectActor)
 		{
-			m_SelectActor = hitResult.GetActor();
+			//m_SelectActor = Cast<AUserActor>(hitResult.GetActor());
 
 			if (m_SelectComponent)
 			{
 				m_SelectComponent->SetRenderCustomDepth(false);
 				m_SelectComponent = nullptr;
 			}
-			m_SelectComponent = Cast<UStaticMeshComponent>(hitResult.GetComponent());
+			m_SelectComponent = Cast<UUserComponent>(hitResult.GetComponent());
 			m_SelectComponent->SetRenderCustomDepth(true);
-
+			// send msg to ui
+			IsSelect = true;
+			msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
+			MsgCenter::GetInstance()->SendMsg(_msg);
 			UE_LOG(LogTemp, Log, TEXT("zhx : select actor name :%s,component name : %s"), *m_SelectActor->GetName(), *m_SelectComponent->GetName());
 			return true;
 		}
 	}
+	
+	if (m_SelectComponent)
 	{
-		if (m_SelectComponent)
-		{
-			m_SelectComponent->SetRenderCustomDepth(false);
-		}
-		m_SelectComponent = nullptr;
-		m_SelectActor = nullptr;
-		UE_LOG(LogTemp, Log, TEXT("zhx : select good fail"));
+		m_SelectComponent->SetRenderCustomDepth(false);
 	}
-		
+	m_SelectComponent = nullptr;
+	m_SelectActor = nullptr;
+	msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
+	MsgCenter::GetInstance()->SendMsg(_msg);
+
+	UE_LOG(LogTemp, Log, TEXT("zhx : select good fail"));
     return false;
 }
 AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 {
     AActor * actor = nullptr;
-
-	m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->AddGoodsToList(_goodsData);
 
     APlayerCameraManager * cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
     FVector location = cameraManager->GetCameraLocation();
@@ -238,10 +242,13 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
             uactor->m_Type = User_Pen;
         }break;
     }
+
+	m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->AddGoodsToList(_goodsData);
     //UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/DLC/Goods/AR_HuaPen_181026013/AR_HuaPen_181026013"));
 	UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
     uactor->m_Mesh->SetStaticMesh(mesh);
     uactor->m_Mesh->RegisterComponent();
+	uactor->m_Mesh->SetGoodsData(m_CurrentGoodsData);
 	uactor->m_GoodsDatas.Add(m_CurrentGoodsData);
 	m_AllUserActor.Add(uactor);
 //    m_SelectActor = actor;
@@ -255,11 +262,15 @@ void AUserPawn::TryDeleteARActor(AUserActor * actor)
 		RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
 
 		m_AllUserActor.Remove(actor);
+		actor->Destroy();
 	}
 }
 void AUserPawn::DeleteSelectARActor()
 {
-	//TryDeleteARActor(m_SelectActor);
+	TryDeleteARActor(m_SelectActor);
+	bool IsSelect = false;
+	msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
+	MsgCenter::GetInstance()->SendMsg(_msg);
 }
 void AUserPawn::DeleteAllARActor()
 {
@@ -290,7 +301,7 @@ AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
 
             uactor->m_Mesh->SetStaticMesh(mesh);
             uactor->m_Mesh->RegisterComponent();
-			uactor->m_GoodsDatas.Add(m_CurrentGoodsData);
+			uactor->AddGoodsData(m_CurrentGoodsData);
 			m_AllUserActor.Add(uactor);
         }
     }
@@ -428,4 +439,40 @@ void AUserPawn::ChangeGoods()
 		m_SelectComponent->SetStaticMesh(mesh);
 		m_SelectComponent->RegisterComponent();
 	}
+}
+int	 AUserPawn::GetChangeProductId()
+{
+	if (m_SelectComponent)
+	{
+		return m_SelectComponent->m_Data->id;
+	}
+	return 0;
+}
+void AUserPawn::ChangeSelectModel(FString _gamePath)
+{
+	if (m_SelectComponent)
+	{
+		UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *_gamePath);
+		if (mesh)
+		{
+			m_SelectComponent->SetStaticMesh(mesh);
+			m_SelectComponent->RegisterComponent();
+		}
+	}
+}
+void AUserPawn::CancelChangeSelectModel()
+{
+	if (m_SelectComponent)
+	{
+		FString gamePath = m_SelectComponent->m_Data->GamePath;
+		ChangeSelectModel(gamePath);
+	}
+}
+void AUserPawn::SureChangeSelectModel(GoodsData * _data)
+{
+	GoodsData * preData = m_SelectComponent->m_Data;
+	m_SelectActor->RemoveGoodsData(preData);
+	m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->ChangeListGoods(preData,_data);
+	m_SelectActor->AddGoodsData(m_CurrentGoodsData);
+	m_SelectComponent->SetGoodsData(m_CurrentGoodsData);
 }

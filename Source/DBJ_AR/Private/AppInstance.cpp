@@ -19,7 +19,7 @@ void UAppInstance::On_Init()
     
     UGameUserSettings* mGameUserSettings = GEngine->GetGameUserSettings();
     FIntPoint mPoint = mGameUserSettings->GetScreenResolution();
-    GEngine->AddOnScreenDebugMessage(-1, 999999, FColor::Red, FString::Printf(TEXT("设备分辨率x=%d,y=%d"), mPoint.X,mPoint.Y));
+    GEngine->AddOnScreenDebugMessage(-1, 999999, FColor::Red, FString::Printf(TEXT("ScreenResolution x=%d,y=%d"), mPoint.X,mPoint.Y));
     
 }
 void UAppInstance::OpenLevel(const FString & _levelName)
