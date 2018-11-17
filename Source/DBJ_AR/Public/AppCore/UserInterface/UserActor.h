@@ -28,6 +28,10 @@ public:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     UUserComponent * m_Mesh;
+    
+    
+    TArray<UUserComponent *> m_HuaList;
+    
 	UPROPERTY(VisibleAnywhere)
 		int m_SoketIndex;
 
@@ -39,5 +43,9 @@ public:
 	void	RemoveGoodsData(GoodsData * _data);
 	void	AddGoodsData(GoodsData * _data);
 
+    void    AddUserComponent(UUserComponent * _userComponent);
+    bool    MergeOtherActor(AUserActor * _otherActor);
+    
+    void    ResetHuaComponent();
 };
 

@@ -48,7 +48,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    //StartARSession();
+    StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -329,11 +329,11 @@ void AUserPawn::MoveSelecteARActor()
 		FVector NewLoction(HitLoction.X, HitLoction.Y, OldLoction.Z);
 		m_SelectActor->SetActorLocation(HitLoction);
 #endif
-		/*TArray<AActor *> allUserActor;
-		UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);*/
-		for (int i = 0; i < m_AllUserActor.Num(); i++)
+        TArray<AActor *> allUserActor;
+        UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);
+		for (int i = 0; i < allUserActor.Num(); i++)
 		{
-			AUserActor * actor = m_AllUserActor[i];
+			AUserActor * actor = (AUserActor *)allUserActor[i];
 			if (m_SelectActor != actor)
 			{
 				if (FVector::Distance(m_SelectActor->GetActorLocation(), actor->GetActorLocation()) <= 80)
@@ -365,79 +365,58 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 {
 		if (one->m_Type == User_Hua && two->m_Type == User_Pen)
 		{
-			FString socketName = FString::Printf(TEXT("Socket%d"), two->m_SoketIndex + 1);
-            
-			if (two->m_Mesh->GetSocketByName(*socketName))
-			{
-				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(two,TEXT("HuaComponent"));
-				component->AttachToComponent(two->m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
-				UStaticMesh * hua = one->m_Mesh->GetStaticMesh();
-				component->SetStaticMesh(hua);
-				component->RegisterComponent();//WithWorld(GetWorld());
-				for (int i = 0; i < one->m_GoodsDatas.Num(); i++)
-				{
-					two->m_GoodsDatas.Add(one->m_GoodsDatas[i]);
-				}
-				two->m_SoketIndex += 1;
-				m_SelectActor = two;
-				one->Destroy();
-				GEngine->ForceGarbageCollection(true);
-			}
+            if(two->MergeOtherActor(one))
+            {
+                m_SelectActor = two;
+            }
+//            FString socketName = FString::Printf(TEXT("Socket%d"), two->m_SoketIndex + 1);
+//
+//            if (two->m_Mesh->GetSocketByName(*socketName))
+//            {
+//                UUserComponent * component = NewObject<UUserComponent>(two,TEXT("HuaComponent"));
+//                component->AttachToComponent(two->m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
+//                UStaticMesh * hua = one->m_Mesh->GetStaticMesh();
+//                component->SetStaticMesh(hua);
+//                component->RegisterComponent();//WithWorld(GetWorld());
+//                component->SetGoodsData(one->m_Mesh->m_Data);
+//                two->AddUserComponent(component);
+//                for (int i = 0; i < one->m_GoodsDatas.Num(); i++)
+//                {
+//                    two->m_GoodsDatas.Add(one->m_GoodsDatas[i]);
+//                }
+//                two->m_SoketIndex += 1;
+//                m_SelectActor = two;
+//                one->Destroy();
+//                GEngine->ForceGarbageCollection(true);
+//            }
 		}
 		else if (one->m_Type == User_Pen && two->m_Type == User_Hua)
 		{
-			FString socketName = FString::Printf(TEXT("Socket%d"), one->m_SoketIndex + 1);
-			if (one->m_Mesh->GetSocketByName(*socketName))
-			{
-				UStaticMeshComponent * component = NewObject<UStaticMeshComponent>(one,TEXT("PenComponent"));
-				component->AttachToComponent(one->m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
-				UStaticMesh * hua = two->m_Mesh->GetStaticMesh();
-				component->SetStaticMesh(hua);
-				component->RegisterComponent();//WithWorld(GetWorld());
-				for (int i = 0; i < two->m_GoodsDatas.Num(); i++)
-				{
-					one->m_GoodsDatas.Add(one->m_GoodsDatas[i]);
-				}
-				one->m_SoketIndex += 1;
-				m_SelectActor = one;
-				two->Destroy();
-				GEngine->ForceGarbageCollection(true);
-			}
+            if(one->MergeOtherActor(two))
+            {
+                m_SelectActor = one;
+            }
+            
+//            FString socketName = FString::Printf(TEXT("Socket%d"), one->m_SoketIndex + 1);
+//            if (one->m_Mesh->GetSocketByName(*socketName))
+//            {
+//                UUserComponent * component = NewObject<UUserComponent>(one,TEXT("HuaComponent"));
+//                component->AttachToComponent(one->m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
+//                UStaticMesh * hua = two->m_Mesh->GetStaticMesh();
+//                component->SetStaticMesh(hua);
+//                component->RegisterComponent();//WithWorld(GetWorld());
+//                component->SetGoodsData(two->m_Mesh->m_Data);
+//                one->AddUserComponent(component);
+//                for (int i = 0; i < two->m_GoodsDatas.Num(); i++)
+//                {
+//                    one->m_GoodsDatas.Add(two->m_GoodsDatas[i]);
+//                }
+//                one->m_SoketIndex += 1;
+//                m_SelectActor = one;
+//                two->Destroy();
+//                GEngine->ForceGarbageCollection(true);
+//            }
 		}
-}
-void AUserPawn::SelectGoods()
-{
-	ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(m_Controller->Player);
-	
-	if (LocalPlayer && LocalPlayer->ViewportClient)
-	{
-		FVector2D MousePosition;
-		if (LocalPlayer->ViewportClient->GetMousePosition(MousePosition))
-		{
-			IsHaveActorInScreenPosition(MousePosition);
-		}
-	}
-}
-void AUserPawn::MoveGoods()
-{
-	UE_LOG(LogTemp, Log, TEXT("zhx : PC move goods"));
-	IsCMove = !IsCMove;
-}
-void AUserPawn::RotateGoods()
-{
-	UE_LOG(LogTemp, Log, TEXT("zhx : PC rotate goods"));
-	IsCRotate = !IsCRotate;
-	
-}
-void AUserPawn::ChangeGoods()
-{
-	UE_LOG(LogTemp, Log, TEXT("zhx : PC change goods"));
-	if (m_SelectComponent)
-	{
-		UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/TestMesh/HuaPanB.HuaPanB"));
-		m_SelectComponent->SetStaticMesh(mesh);
-		m_SelectComponent->RegisterComponent();
-	}
 }
 int	 AUserPawn::GetChangeProductId()
 {
@@ -455,7 +434,7 @@ void AUserPawn::ChangeSelectModel(FString _gamePath)
 		if (mesh)
 		{
 			m_SelectComponent->SetStaticMesh(mesh);
-			m_SelectComponent->RegisterComponent();
+            m_SelectActor->ResetHuaComponent();
 		}
 	}
 }
@@ -474,4 +453,39 @@ void AUserPawn::SureChangeSelectModel(GoodsData * _data)
 	m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->ChangeListGoods(preData,_data);
 	m_SelectActor->AddGoodsData(m_CurrentGoodsData);
 	m_SelectComponent->SetGoodsData(m_CurrentGoodsData);
+}
+// PC TEST
+void AUserPawn::SelectGoods()
+{
+    ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(m_Controller->Player);
+    
+    if (LocalPlayer && LocalPlayer->ViewportClient)
+    {
+        FVector2D MousePosition;
+        if (LocalPlayer->ViewportClient->GetMousePosition(MousePosition))
+        {
+            IsHaveActorInScreenPosition(MousePosition);
+        }
+    }
+}
+void AUserPawn::MoveGoods()
+{
+    UE_LOG(LogTemp, Log, TEXT("zhx : PC move goods"));
+    IsCMove = !IsCMove;
+}
+void AUserPawn::RotateGoods()
+{
+    UE_LOG(LogTemp, Log, TEXT("zhx : PC rotate goods"));
+    IsCRotate = !IsCRotate;
+    
+}
+void AUserPawn::ChangeGoods()
+{
+    UE_LOG(LogTemp, Log, TEXT("zhx : PC change goods"));
+    if (m_SelectComponent)
+    {
+        UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/TestMesh/HuaPanB.HuaPanB"));
+        m_SelectComponent->SetStaticMesh(mesh);
+        m_SelectComponent->RegisterComponent();
+    }
 }

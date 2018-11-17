@@ -14,7 +14,8 @@ class UUserComponent : public UStaticMeshComponent
 
 public:
 	GoodsData *		m_Data;
-
-	void SetGoodsData(GoodsData * _data);
+    FString         m_SocketName;
+    
+	void SetGoodsData(GoodsData * _data,FString  _socketName = TEXT(""));
 	int	GetProductId();
 };

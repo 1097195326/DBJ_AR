@@ -1,5 +1,5 @@
 #include "UserActor.h"
-
+#include "Engine.h"
 
 AUserActor::AUserActor()
 {
@@ -35,4 +35,54 @@ void AUserActor::RemoveGoodsData(GoodsData * _data)
 void AUserActor::AddGoodsData(GoodsData * _data)
 {
 	m_GoodsDatas.Add(_data);
+}
+void AUserActor::AddUserComponent(UUserComponent * _userComponent)
+{
+    if(m_Type == User_Pen)
+    {
+        m_HuaList.Add(_userComponent);
+    }
+}
+bool AUserActor::MergeOtherActor(AUserActor * _otherActor)
+{
+    if(m_Type == User_Pen)
+    {
+        FString socketName = FString::Printf(TEXT("Socket%d"), m_SoketIndex + 1);
+        
+        if (m_Mesh->GetSocketByName(*socketName))
+        {
+            GoodsData * otherData = _otherActor->m_Mesh->m_Data;
+            
+            UUserComponent * component = NewObject<UUserComponent>(this,TEXT("HuaComponent"));
+            component->AttachToComponent(m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
+            UStaticMesh * hua = _otherActor->m_Mesh->GetStaticMesh();
+            component->SetStaticMesh(hua);
+            component->RegisterComponent();//WithWorld(GetWorld());
+            component->SetGoodsData(otherData,socketName);
+            m_HuaList.Add(component);
+            
+            m_GoodsDatas.Add(otherData);
+            
+            m_SoketIndex += 1;
+            _otherActor->Destroy();
+            GEngine->ForceGarbageCollection(true);
+            return true;
+        }
+    }
+    return false;
+}
+void AUserActor::ResetHuaComponent()
+{
+//    m_Mesh->RegisterComponent();
+    for(int i = 0; i< m_HuaList.Num(); i++)
+    {
+        UUserComponent * component = m_HuaList[i];
+        FString socketName = component->m_SocketName;
+        if (m_Mesh->GetSocketByName(*socketName))
+        {
+            UE_LOG(LogTemp,Log,TEXT("zhx : user actor reset hua socket"));
+            component->AttachToComponent(m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
+//            component->RegisterComponent();
+        }
+    }
 }
