@@ -18,7 +18,7 @@ private:
 public:
     static UIManager * GetInstance();
 
-    UBaseUI* OpenUI(const FString & _uiName);
+    UBaseUI* OpenUI(const FString & _uiName,UBaseUI * _ParentUI = nullptr);
 
     template<typename T>
     void RegisterButton(int _bid, UButton * _btn, T * _obj, void(T::*_func)(int))
@@ -27,6 +27,13 @@ public:
 		bs->BindFunctionCall(_bid, _btn, _obj, _func);
 		m_ButtonMap.Add(_btn, bs);
     }
+	template<typename T>
+	void RegisterButton(int _bid, UButton * _btn, T * _obj, void(T::*_func)(int,ButtonAction),ButtonAction _action = b_Click)
+	{
+		UButtonScript * bs = UButtonScript::Create();
+		bs->BindFunctionCall(_bid, _btn, _obj, _func,_action);
+		m_ButtonMap.Add(_btn, bs);
+	}
     void UnRegisterButton(UButton * _btn);
 
 };

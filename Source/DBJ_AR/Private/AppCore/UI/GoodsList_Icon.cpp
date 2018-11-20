@@ -123,10 +123,7 @@ void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
 
 
 }
-void UGoodsList_Icon::SetParentUI(UBaseUI * _ui)
-{
-	m_ParentUI = _ui;
-}
+
 void UGoodsList_Icon::SetData(GoodsData * _data,bool _isChange)
 {
 	m_Data = _data;

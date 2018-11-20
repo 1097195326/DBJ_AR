@@ -8,7 +8,7 @@ UIManager * UIManager::GetInstance()
 
     return &m;
 }
-UBaseUI* UIManager::OpenUI(const FString & _uiName)
+UBaseUI* UIManager::OpenUI(const FString & _uiName, UBaseUI * _ParentUI)
 {
     // Í¨¹ýuiNameÕÒ³öUIPath.
     UIData uiData = Data_M->GetProtoType<UIPrototype>(PrototypeIndex::E_UI_IOS_ID)->GetDataByKey(_uiName);
@@ -24,6 +24,7 @@ UBaseUI* UIManager::OpenUI(const FString & _uiName)
 		{
 			UWorld * mWorld = UAppInstance::GetInstance()->GetWorld();
 			UBaseUI* _sceneObj = (UBaseUI*)CreateWidget<UUserWidget>(mWorld, loadClass);
+			_sceneObj->SetParentUI(_ParentUI);
 			return _sceneObj;
 		}
 		return nullptr;

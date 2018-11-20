@@ -19,7 +19,6 @@ public:
 
 	void	SetData(GoodsData * _data, bool _isChange = false);
 	GoodsData * GetData() { return m_Data; }
-	void	SetParentUI(UBaseUI * _ui);
 	void	ShowSelectIcon(bool _isSelect);
 
 	UFUNCTION()
@@ -40,6 +39,4 @@ private:
 	bool		m_IsChange;
 
 	bool m_IsDowning;
-
-	UBaseUI * m_ParentUI;
 };

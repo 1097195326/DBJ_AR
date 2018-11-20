@@ -8,7 +8,8 @@
 #include "Runtime/UMG/Public/UMGStyle.h"  
 #include "Runtime/UMG/Public/Slate/SObjectWidget.h"  
 #include "Runtime/UMG/Public/IUMGModule.h"
-
+#include "WidgetBlueprintLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "BaseUI.generated.h"
 
 UCLASS()
@@ -16,7 +17,6 @@ class GCORE_API UBaseUI : public UUserWidget, public GObject
 {
 	GENERATED_UCLASS_BODY()
 
-	//
 public:
 
 	virtual bool Initialize() override;
@@ -25,9 +25,11 @@ public:
 	virtual void NativeDestruct() override;
 
 public:
+	void SetParentUI(UBaseUI * _ui);
 	virtual void On_Init() override;
 	virtual void On_Tick(float delta) override;
 	virtual void On_Delete() override;
-
+protected:
+	UBaseUI * m_ParentUI;
 
 };

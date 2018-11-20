@@ -101,11 +101,25 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
 			icon->SetParentUI(this);
             if (mIndex % 2 > 0)
             {
-                mGridSlot->SetPadding(FMargin(12.f, 24.0f, 0.f, 0.f));
+				if (mIndex == 1)
+				{
+					mGridSlot->SetPadding(FMargin(12.f, 42.0f, 42.f, 0.f));
+				}
+				else
+				{
+					mGridSlot->SetPadding(FMargin(12.f, 24.0f, 42.f, 0.f));
+				}
             }
             else
             {
-                mGridSlot->SetPadding(FMargin(0.f, 24.0f, 12.f, 0.f));
+				if (mIndex == 0)
+				{
+					mGridSlot->SetPadding(FMargin(42.f, 42.0f, 12.f, 0.f));
+				}
+				else
+				{
+					mGridSlot->SetPadding(FMargin(42.f, 24.0f, 12.f, 0.f));
+				}
             }
 		}
 	}

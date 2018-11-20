@@ -13,6 +13,7 @@ class DBJ_AR_API  UGoodsChangeUI : public UBaseUI
 
 public:
     virtual void On_Init() override;
+	virtual void On_Start() override;
 	virtual void On_Delete() override;
 
 	UButton *	m_BackButton;

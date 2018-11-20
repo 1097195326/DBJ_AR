@@ -25,7 +25,38 @@ void UEditerARUI::On_Init()
 		m_DeleteButton->SetVisibility(ESlateVisibility::Hidden);
 		UI_M->RegisterButton(3, m_DeleteButton, this, &UEditerARUI::On_Button_Click);
 	}
-    
+    //top button list
+	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ShowListButton")))
+	{
+		m_ShowlistButton = widget;
+		UI_M->RegisterButton(10, m_ShowlistButton, this, &UEditerARUI::On_Button_Click);
+	}
+	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("ShowListPanel")))
+	{
+		m_ShowlistPanel = widget;
+		m_ShowlistPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if (UButton *widget = Cast<UButton>(GetWidgetFromName("CloseListButton")))
+	{
+		m_CloseListButton = widget;
+		UI_M->RegisterButton(11, m_CloseListButton, this, &UEditerARUI::On_Button_Click);
+	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("AcountButton")))
+	{
+		m_AcountButton = widget;
+		UI_M->RegisterButton(12, m_AcountButton, this, &UEditerARUI::On_Button_Click);
+	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("AdressButton")))
+	{
+		m_AddressButton = widget;
+		UI_M->RegisterButton(13, m_AddressButton, this, &UEditerARUI::On_Button_Click);
+	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("OrderListButton")))
+	{
+		m_OrderlistButton = widget;
+		UI_M->RegisterButton(14, m_OrderlistButton, this, &UEditerARUI::On_Button_Click);
+	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("ShareButton")))
+	{
+		m_ShareButton = widget;
+		UI_M->RegisterButton(15, m_ShareButton, this, &UEditerARUI::On_Button_Click);
+	}
 }
 void UEditerARUI::On_Start()
 {
@@ -68,6 +99,7 @@ void UEditerARUI::On_Button_Click(int _index)
         }
         case 2:
         {
+			
 			UGoodsChangeUI * changeUI = (UGoodsChangeUI *)UIManager::GetInstance()->OpenUI(TEXT("GoodsChangeUI"));
 
 			changeUI->AddToViewport();
@@ -78,6 +110,36 @@ void UEditerARUI::On_Button_Click(int _index)
 			AUserPawn::GetInstance()->DeleteSelectARActor();
 			break;
 		}
+		case 10:
+		{
+			m_ShowlistButton->SetVisibility(ESlateVisibility::Hidden);
+			m_ShowlistPanel->SetVisibility(ESlateVisibility::Visible);
+		}break;
+		case 11:
+		{
+			m_ShowlistButton->SetVisibility(ESlateVisibility::Visible);
+			m_ShowlistPanel->SetVisibility(ESlateVisibility::Hidden);
+		}break;
+		case 12:
+		{
+
+		}break;
+		case 13:
+		{
+
+		}break;
+		case 14:
+		{//to order list 
+			//RemoveFromParent();
+			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("MakeOrderUI"));
+			baseUI->AddToViewport();
+			//baseUI->addto
+		}break;
+		case 15:
+		{
+
+			
+		}break;
         default:
             break;
     }

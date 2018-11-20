@@ -49,3 +49,24 @@ TArray<GoodsData*> RuntimeRDataManager::GetRuntimeGoodsList()
 {
 	return m_RuntimeGoodsList;
 }
+TMap<int, OrderInfoData> RuntimeRDataManager::GetOrderDatas()
+{
+	TMap<int, OrderInfoData> orderInfoData;
+
+	for (int i = 0;i < m_RuntimeGoodsList.Num(); i++)
+	{
+		GoodsData * data = m_RuntimeGoodsList[i];
+		if (orderInfoData.Contains(data->id))
+		{
+			orderInfoData[data->id].Num++;
+		}
+		else
+		{
+			OrderInfoData infoData;
+			infoData.Num = 1;
+			infoData.goodsData = data;
+			orderInfoData.Add(data->id, infoData);
+		}
+	}
+	return orderInfoData;
+}

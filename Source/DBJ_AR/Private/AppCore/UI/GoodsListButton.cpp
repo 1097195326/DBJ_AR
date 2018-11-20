@@ -14,6 +14,10 @@ void UGoodsListButton::On_Init()
 	{
 		m_Text = text;
 	}
+	if (UBorder * widget = (UBorder*)GetWidgetFromName("SelectBorder"))
+	{
+		m_Border = widget;
+	}
     
 }
 void UGoodsListButton::On_Delete()
@@ -40,10 +44,11 @@ void UGoodsListButton::SetButtonSelect(bool _select)
 	if (_select)
 	{
 		m_Text->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("29CF81"))));
-        
+		m_Border->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
 		m_Text->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("666666"))));
+		m_Border->SetVisibility(ESlateVisibility::Hidden);
 	}
 }

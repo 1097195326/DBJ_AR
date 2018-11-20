@@ -4,9 +4,9 @@
 //
 //void UGoodsList::On_Init()
 //{
-//    if (UButton * button = (UButton*)GetWidgetFromName("ViewButton"))
+//    if (UButton * widget = (UButton*)GetWidgetFromName("ViewButton"))
 //    {
-//        m_ViewButton = button;
+//        m_ViewButton = widget;
 //        m_ViewButton->OnClicked.AddDynamic(this, &UGoodsList::OnButtonClick);
 //    }
 //    

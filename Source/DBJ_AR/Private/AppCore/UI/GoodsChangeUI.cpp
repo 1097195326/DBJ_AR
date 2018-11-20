@@ -31,7 +31,10 @@ void UGoodsChangeUI::On_Init()
 	}
 
 	m_CurrentGoodsData = nullptr;
-
+	
+}
+void UGoodsChangeUI::On_Start()
+{
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2013, this, &UGoodsChangeUI::OnGetChangeList);
 
 	m_ProductId = AUserPawn::GetInstance()->GetChangeProductId();

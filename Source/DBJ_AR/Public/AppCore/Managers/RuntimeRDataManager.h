@@ -4,6 +4,11 @@
 #include "CoreMinimal.h"
 #include "GoodsData.h"
 
+struct OrderInfoData
+{
+	int Num;
+	GoodsData * goodsData;
+};
 
 class DBJ_AR_API RuntimeRDataManager : public GObject
 {
@@ -18,4 +23,5 @@ public:
 	void RemoveGoodsFromList(TArray<GoodsData*> _datas);
 	TArray<GoodsData*>	GetRuntimeGoodsList();
 
+	TMap<int, OrderInfoData> GetOrderDatas();
 };

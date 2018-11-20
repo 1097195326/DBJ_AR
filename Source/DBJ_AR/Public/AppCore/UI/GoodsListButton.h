@@ -16,6 +16,7 @@ public:
 
     UButton * m_ViewButton;
 	UTextBlock * m_Text;
+	UBorder * m_Border;
 
     UFUNCTION()
         void OnButtonClick(int index);

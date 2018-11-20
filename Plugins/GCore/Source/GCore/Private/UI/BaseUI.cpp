@@ -46,3 +46,7 @@ void UBaseUI::On_Delete()
 {
 
 }
+void UBaseUI::SetParentUI(UBaseUI * _ui)
+{
+	m_ParentUI = _ui;
+}
