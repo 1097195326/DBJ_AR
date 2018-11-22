@@ -28,7 +28,7 @@ public:
 		m_ButtonMap.Add(_btn, bs);
     }
 	template<typename T>
-	void RegisterButton(int _bid, UButton * _btn, T * _obj, void(T::*_func)(int,ButtonAction),ButtonAction _action = b_Click)
+	void RegisterButton(int _bid, UButton * _btn, T * _obj, void(T::*_func)(int,ButtonAction),ButtonAction _action)
 	{
 		UButtonScript * bs = UButtonScript::Create();
 		bs->BindFunctionCall(_bid, _btn, _obj, _func,_action);

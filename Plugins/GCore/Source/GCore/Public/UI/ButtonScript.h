@@ -50,7 +50,7 @@ public:
 		m_Call = BUTTON_CLICK_CALL(std::bind(_func,_obj,std::placeholders::_1));
 	}
 	template<typename T>
-	void BindFunctionCall(int _index, UButton * _btn, T* _obj, void(T::*_func)(int, ButtonAction _action), ButtonAction _action = b_click)
+	void BindFunctionCall(int _index, UButton * _btn, T* _obj, void(T::*_func)(int, ButtonAction _action), ButtonAction _action)
 	{
 		m_Index = _index;
 		m_Button = _btn;
