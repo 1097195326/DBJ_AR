@@ -16,6 +16,9 @@ public:
 	virtual void On_Delete() override;
 
 	void	InitView();
+	void	ReView();
+
+	TArray<UOrderInfoUI*> m_InfoUIList;
 
     UButton * m_BackButton;
 	// user info
@@ -25,7 +28,6 @@ public:
 	UButton * m_ToOrderInfoButton;
 	//main view
 	UScrollBox * m_OrderScroll;
-	UGridPanel * m_OrderGirdePanel;
 	UTextBlock * m_Allprice;
 	UButton * m_SaveOrderButton;
 	UButton * m_CommitOrderButton;

@@ -34,6 +34,8 @@ public:
 	int			externalLength;// : 80,
 	int			externalWidth;// : 80,
 	int			externalHeight;// : 80,
+	int			quantity;
+	int			totalPrice;
 	GoodsData *	matchedProduct;//" : null
 
 	FString		GamePath;

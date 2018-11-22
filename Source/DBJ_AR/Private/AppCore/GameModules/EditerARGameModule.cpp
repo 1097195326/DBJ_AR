@@ -3,6 +3,7 @@
 #include "DataManager.h"
 #include "UserInfo.h"
 #include "RuntimeTDataManager.h"
+#include "RuntimeRDataManager.h"
 
 
 
@@ -15,6 +16,7 @@ EditerARGameModule::EditerARGameModule()
 {
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1004, this, &EditerARGameModule::OnGetCategoryList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1008, this, &EditerARGameModule::OnGetProductList);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1009, this, &EditerARGameModule::OnCommitCurrentOrder);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1013, this, &EditerARGameModule::OnGetChangeList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1014, this, &EditerARGameModule::OnGetAreaList);
 }
@@ -37,6 +39,7 @@ void EditerARGameModule::On_Delete()
 {
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1004, this);
     MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1008, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1009, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1013, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1014, this);
 
@@ -148,4 +151,47 @@ void EditerARGameModule::OnGetAreaList(msg_ptr _msg)
 	msg->m_JsonObject = jsonObject;
 	MsgCenter::GetInstance()->SendMsg(msg);
 	
+}
+void EditerARGameModule::CommitCurrentOrder()
+{
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
+
+	t_jsonObject->SetNumberField(TEXT("id"), order->Id);
+	t_jsonObject->SetNumberField(TEXT("status"), order->Status);
+	t_jsonObject->SetStringField(TEXT("receiverCompanyName"), order->ReceiverCompanyName);
+	t_jsonObject->SetStringField(TEXT("receiverName"), order->ReceiverName);
+	t_jsonObject->SetStringField(TEXT("receiverPhone"), order->ReceiverPhone);
+	t_jsonObject->SetNumberField(TEXT("expectReceiveTime"), order->ExpectReceiveTime);
+	t_jsonObject->SetBoolField(TEXT("morning"), order->Morning);
+	t_jsonObject->SetNumberField(TEXT("deliverType"), order->DeliverType);
+	t_jsonObject->SetNumberField(TEXT("provinceId"), order->ProvinceId);
+	t_jsonObject->SetNumberField(TEXT("cityId"), order->CityId);
+	t_jsonObject->SetNumberField(TEXT("districtId"), order->DistrictId);
+	t_jsonObject->SetStringField(TEXT("address"), order->Address);
+	t_jsonObject->SetStringField(TEXT("remark"), order->Remark);
+
+	TArray<TSharedPtr<FJsonValue>> array;
+	for (int i  = 0; i<order->ProductList.Num(); i++)
+	{
+		TSharedRef<FJsonObject> value = MakeShareable(new FJsonObject);
+		value->SetNumberField(TEXT("id"), order->ProductList[i].goodsData->id);
+		value->SetNumberField(TEXT("quantity"), order->ProductList[i].Num);
+		array.Add(MakeShareable(new FJsonValueObject(value)));
+	}
+
+	t_jsonObject->SetArrayField(TEXT("productList"), array);
+
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1009);
+	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1009, t_jsonObject,httpUrl));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::OnCommitCurrentOrder(msg_ptr _msg)
+{
+	UE_LOG(LogTemp,Log,TEXT("zhx : EditerARGameModule::OnCommitCurrentOrder"));
+
+
 }

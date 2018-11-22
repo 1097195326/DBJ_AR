@@ -28,6 +28,8 @@ public:
 	UButton * m_AddButton;
 
 	void SetData(OrderInfoData _data);
+	OrderInfoData GetData();
+
 	void ResetNum();
 
        void OnButtonClick(int _index);

@@ -1,7 +1,7 @@
 #include "GetStyleUI.h"
 #include "UIManager.h"
 #include "OrderUserInfoUI.h"
-
+#include "RuntimeRDataManager.h"
 
 void UGetStyleUI::On_Init()
 {
@@ -57,13 +57,14 @@ void UGetStyleUI::OnButtonClick(int _index)
 		m_Box1->SetIsChecked(true);
 		m_Box2->SetIsChecked(false);
 		m_String = m_Text1->GetText().ToString();
-		
+		RuntimeRDataManager::GetInstance()->GetCurrentOrder()->DeliverType = 1;
 	}break;
 	case 3:
 	{
 		m_Box1->SetIsChecked(false);
 		m_Box2->SetIsChecked(true);
 		m_String = m_Text2->GetText().ToString();
+		RuntimeRDataManager::GetInstance()->GetCurrentOrder()->DeliverType = 2;
 	}break;
 	default:
 		break;

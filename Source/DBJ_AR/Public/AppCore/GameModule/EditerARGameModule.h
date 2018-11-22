@@ -23,7 +23,10 @@ public:
 	void	GetChangeList(int productId, int lastId = 0, int exceptProductId = 0, int size = 10);
 	void	OnGetChangeList(msg_ptr _msg);
 	//get address
-
 	void	GetAreaList(int parentId,int level);
 	void	OnGetAreaList(msg_ptr _msg);
+	//save and commit current order
+	void	CommitCurrentOrder();
+	void	OnCommitCurrentOrder(msg_ptr _msg);
+
 };

@@ -94,3 +94,10 @@ void UOrderInfoUI::SetData(OrderInfoData _data)
 	
 	ResetNum();
 }
+OrderInfoData UOrderInfoUI::GetData()
+{
+	OrderInfoData data;
+	data = m_Data;
+	data.Num = m_Num;
+	return data;
+}

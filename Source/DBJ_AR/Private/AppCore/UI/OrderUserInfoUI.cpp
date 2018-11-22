@@ -1,6 +1,8 @@
 #include "OrderUserInfoUI.h"
 #include "UIManager.h"
 #include "AddressAndTimeTool.h"
+#include "RuntimeRDataManager.h"
+#include "MakeOrderUI.h"
 
 void UOrderUserInfoUI::On_Init()
 {
@@ -45,7 +47,12 @@ void UOrderUserInfoUI::On_Init()
 void UOrderUserInfoUI::On_Start()
 {
 	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
 
+	/*m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
+	m_UsserPhone->m_EditText->SetText(FText::FromString(order->ReceiverPhone));
+	m_DetailAddress->m_EditText->SetText(FText::FromString(order->Address));
+	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));*/
 }
 void UOrderUserInfoUI::On_Delete()
 {
@@ -58,6 +65,13 @@ void UOrderUserInfoUI::OnButtonClick(int _index)
 	{
 	case 1:
 	{
+		R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+		order->ReceiverCompanyName = m_CompanyName->m_EditText->GetText().ToString();
+		order->ReceiverName = m_UserName->m_EditText->GetText().ToString();
+		order->ReceiverPhone = m_UsserPhone->m_EditText->GetText().ToString();
+		order->Address = m_DetailAddress->m_EditText->GetText().ToString();
+		UMakeOrderUI * parentUI = (UMakeOrderUI*)m_ParentUI;
+		parentUI->ReView();
 		RemoveFromParent();
 	}break;
 	case 2:
@@ -94,4 +108,8 @@ void UOrderUserInfoUI::SetGetStyle(FString _style)
 void UOrderUserInfoUI::SetGetTime(FString _time)
 {
 	m_GetTime->m_ItemContent->SetText(FText::FromString(_time));
+}
+void UOrderUserInfoUI::SetAddress(FString _address)
+{
+	m_Address->m_ItemContent->SetText(FText::FromString(_address));
 }

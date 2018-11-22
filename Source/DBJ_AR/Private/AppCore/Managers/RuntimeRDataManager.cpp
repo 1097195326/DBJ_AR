@@ -1,5 +1,5 @@
 #include "RuntimeRDataManager.h"
-
+#include "UserInfo.h"
 
 RuntimeRDataManager * RuntimeRDataManager::GetInstance()
 {
@@ -69,4 +69,28 @@ TMap<int, OrderInfoData> RuntimeRDataManager::GetOrderDatas()
 		}
 	}
 	return orderInfoData;
+}
+R_Order * RuntimeRDataManager::MakeOrder()
+{
+	FSaveUserData userData = UserInfo::Get()->GetLocalData();
+
+	m_CurrentOrder = new R_Order();
+	m_CurrentOrder->ReceiverCompanyName = userData.companyName;
+	m_CurrentOrder->ReceiverName = userData.renterName;
+	m_CurrentOrder->ReceiverPhone = userData.phone;
+	m_CurrentOrder->Address = userData.detailAddress;
+
+	return m_CurrentOrder;
+}
+R_Order * RuntimeRDataManager::GetCurrentOrder()
+{
+	return m_CurrentOrder;
+}
+void RuntimeRDataManager::ClearOrder()
+{
+	if (m_CurrentOrder)
+	{
+		delete m_CurrentOrder;
+		m_CurrentOrder = nullptr;
+	}
 }

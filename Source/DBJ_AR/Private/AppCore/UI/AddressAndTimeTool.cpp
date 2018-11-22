@@ -2,7 +2,7 @@
 #include "DateTime.h"
 #include "UIManager.h"
 #include "OrderUserInfoUI.h"
-
+#include "RuntimeRDataManager.h"
 
 void UAddressAndTimeTool::On_Init()
 {
@@ -52,6 +52,8 @@ void UAddressAndTimeTool::OnButtonClick(int _index)
 	}break;
 	case 2:
 	{
+		R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+		UOrderUserInfoUI * parentUI = (UOrderUserInfoUI*)m_ParentUI;
 		FString setS;
 		switch (m_type)
 		{
@@ -62,16 +64,26 @@ void UAddressAndTimeTool::OnButtonClick(int _index)
 			FString day = m_Widgets[2]->m_CurrentData.Name;
 			FString halfDay = m_Widgets[3]->m_CurrentData.Name;
 			setS = FString::Printf(TEXT("%s年-%s月-%s日-%s"), *year, *month, *day, *halfDay);
+			parentUI->SetGetTime(setS);
+			FDateTime expTime(m_Widgets[0]->m_CurrentData.Id, m_Widgets[1]->m_CurrentData.Id, m_Widgets[2]->m_CurrentData.Id);
+			order->ExpectReceiveTime = expTime.ToUnixTimestamp();
+			order->Morning = m_Widgets[3]->m_CurrentData.Id == 1 ? true : false;
+
 		}break;
 		case t_Address:
 		{
-
+			FString sheng = m_Widgets[0]->m_CurrentData.Name;
+			FString shi = m_Widgets[1]->m_CurrentData.Name;
+			FString qu = m_Widgets[2]->m_CurrentData.Name;
+			setS = FString::Printf(TEXT("%s%s%s"), *sheng, *shi, *qu);
+			parentUI->SetAddress(setS);
+			order->ProvinceId = m_Widgets[0]->m_CurrentData.Id;
+			order->CityId = m_Widgets[1]->m_CurrentData.Id;
+			order->DistrictId = m_Widgets[2]->m_CurrentData.Id;
 		}break;
 		default:
 			break;
 		}
-		UOrderUserInfoUI * parentUI = (UOrderUserInfoUI*)m_ParentUI;
-		parentUI->SetGetTime(setS);
 		RemoveFromParent();
 	}break;
 	}

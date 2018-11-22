@@ -31,4 +31,5 @@ public:
 
 	void SetGetStyle(FString _style);
 	void SetGetTime(FString _time);
+	void SetAddress(FString _address);
 };

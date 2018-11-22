@@ -3,6 +3,7 @@
 #include "RuntimeRDataManager.h"
 #include "UserInfo.h"
 #include "OrderUserInfoUI.h"
+#include "EditerARGameModule.h"
 
 void UMakeOrderUI::On_Init()
 {
@@ -34,10 +35,6 @@ void UMakeOrderUI::On_Init()
 	{
 		m_OrderScroll = widget;
 	}
-	if (UGridPanel * widget = (UGridPanel*)GetWidgetFromName("OrderGridePanel"))
-	{
-		m_OrderGirdePanel = widget;
-	}
 	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("OrederPrice"))
 	{
 		m_Allprice = widget;
@@ -57,43 +54,8 @@ void UMakeOrderUI::On_Init()
 void UMakeOrderUI::On_Start()
 {
 	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
-
+	RuntimeRDataManager::GetInstance()->MakeOrder();
 	InitView();
-}
-void UMakeOrderUI::InitView()
-{
-	FSaveUserData userData = UserInfo::Get()->GetLocalData();
-	m_CompanyName->SetText(FText::FromString(userData.companyName));
-	FString userInfoS = FString::Printf(TEXT("%s %s"),*userData.renterName,*userData.phone);
-	m_UserInfo->SetText(FText::FromString(userInfoS));
-	FString userAddress = FString::Printf(TEXT("%s%s"), *userData.address, *userData.detailAddress);
-	m_AddressInfo->SetText(FText::FromString(userData.address));
-
-	TMap<int,OrderInfoData> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
-	int index = 0;
-	for (auto & item : datas)
-	{
-		OrderInfoData data = item.Value;
-		UOrderInfoUI * icon = (UOrderInfoUI*)UIManager::GetInstance()->OpenUI(TEXT("OrderInfoUI"),this);
-
-		if (icon->IsValidLowLevel())
-		{
-			UGridSlot * mGridSlot = m_OrderGirdePanel->AddChildToGrid(icon);
-			mGridSlot->SetRow(index);
-			icon->SetData(data);
-			mGridSlot->SetPadding(FMargin(0.f, 24.0f, 0.f, 0.f));
-			allPriceI += data.Num * data.goodsData->salePrice;
-			++index;
-		}
-	}
-	SetPrice(0);
-}
-void UMakeOrderUI::SetPrice(int num)
-{
-	allPriceI += num;
-	UE_LOG(LogTemp, Log, TEXT("zhx  make order ui : %d,%d"), allPriceI, num);
-	FString priceStr = FString::Printf(TEXT("%d"), allPriceI);
-	m_Allprice->SetText(FText::FromString(priceStr));
 }
 void UMakeOrderUI::On_Delete()
 {
@@ -102,7 +64,47 @@ void UMakeOrderUI::On_Delete()
 	UIManager::GetInstance()->UnRegisterButton(m_SaveOrderButton);
 	UIManager::GetInstance()->UnRegisterButton(m_CommitOrderButton);
 
+	RuntimeRDataManager::GetInstance()->ClearOrder();
+
 }
+void UMakeOrderUI::InitView()
+{
+	ReView();
+	TMap<int,OrderInfoData> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
+	
+	for (auto & item : datas)
+	{
+		OrderInfoData data = item.Value;
+		UOrderInfoUI * icon = (UOrderInfoUI*)UIManager::GetInstance()->OpenUI(TEXT("OrderInfoUI"),this);
+
+		if (icon->IsValidLowLevel())
+		{
+			UScrollBoxSlot * scrollSlot = (UScrollBoxSlot*)m_OrderScroll->AddChild(icon);
+			icon->SetData(data);
+			scrollSlot->SetPadding(FMargin(48.f, 0.0f, 48.f, 24.f));
+			allPriceI += data.Num * data.goodsData->salePrice;
+			m_InfoUIList.Add(icon);
+		}
+	}
+	SetPrice(0);
+}
+void UMakeOrderUI::ReView()
+{
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+
+	m_CompanyName->SetText(FText::FromString(order->ReceiverCompanyName));
+	FString userInfoS = FString::Printf(TEXT("%s %s"), *order->ReceiverName, *order->ReceiverPhone);
+	m_UserInfo->SetText(FText::FromString(userInfoS));
+	m_AddressInfo->SetText(FText::FromString(order->Address));
+}
+void UMakeOrderUI::SetPrice(int num)
+{
+	allPriceI += num;
+	UE_LOG(LogTemp, Log, TEXT("zhx  make order ui : %d,%d"), allPriceI, num);
+	FString priceStr = FString::Printf(TEXT("%d"), allPriceI);
+	m_Allprice->SetText(FText::FromString(priceStr));
+}
+
 void UMakeOrderUI::OnButtonClick(int _index)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : UMakeOrderUI::OnButtonClick : "));
@@ -114,16 +116,30 @@ void UMakeOrderUI::OnButtonClick(int _index)
 	}break;
 	case 2:
 	{// to order info button
-		UOrderUserInfoUI * userInfoUI = (UOrderUserInfoUI*)UIManager::GetInstance()->OpenUI(TEXT("OrderUserInfoUI"));
+		UOrderUserInfoUI * userInfoUI = (UOrderUserInfoUI*)UIManager::GetInstance()->OpenUI(TEXT("OrderUserInfoUI"),this);
 		userInfoUI->AddToViewport();
 	}break;
 	case 3:
 	{// save order button
-
+		R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+		order->Status = 1;
+		for (int i = 0;i<m_InfoUIList.Num();i++)
+		{
+			order->ProductList.Add(m_InfoUIList[i]->GetData());
+		}
+		EditerARGameModule::GetInstance()->CommitCurrentOrder();
+		RemoveFromParent();
 	}break;
 	case 4:
 	{// commit order button
-
+		R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+		order->Status = 2;
+		for (int i = 0;i < m_InfoUIList.Num(); i++)
+		{
+			order->ProductList.Add(m_InfoUIList[i]->GetData());
+		}
+		EditerARGameModule::GetInstance()->CommitCurrentOrder();
+		RemoveFromParent();
 	}break;
 	default:
 		break;

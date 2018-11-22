@@ -27,6 +27,7 @@ void UOrderUserInfoItem::On_Start()
 	m_ItemName->SetText(FText::FromString(m_ItemNameS));
 	if (m_IsEdit)
 	{
+		m_EditText->SetHintText(FText::FromString(TEXT("SDFADF")));
 		m_EditText->SetVisibility(ESlateVisibility::Visible);
 		m_ItemContent->SetVisibility(ESlateVisibility::Hidden);
 		m_DoSomethingButton->SetVisibility(ESlateVisibility::Hidden);
