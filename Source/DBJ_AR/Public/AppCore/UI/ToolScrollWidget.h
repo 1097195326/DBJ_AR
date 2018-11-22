@@ -2,6 +2,7 @@
 #include "BaseUI.h"
 #include "DateTime.h"
 #include "ToolButton.h"
+#include "MsgCenter.h"
 #include "ToolScrollWidget.generated.h"
 
 enum ToolScrollType
@@ -21,12 +22,17 @@ class DBJ_AR_API  UToolScrollWidget : public UBaseUI
 
 public:
     virtual void On_Init() override;
+	virtual void On_Delete() override;
 
     UButton * m_ViewButton;
 	UScrollBox * m_ScorllBox;
 
+	int			m_Level;
+
 	ToolScrollType m_Type;
 	int		m_ParentId;
+	IdData  m_CurrentData;
+
 	TArray<UToolButton*>	m_Buttons;
 
 	UToolScrollWidget * m_NextNode;
@@ -34,7 +40,13 @@ public:
 	void	StartRun(int _id = 0);
 	void	SetType(ToolScrollType _type);
 	void	SetParentId(int _id);
+	void	SelectButton(UToolButton * _button);
+
+	FString	GetName();
 
     UFUNCTION()
         void OnButtonClick();
+
+	void OnGetAreasList(msg_ptr _msg);
+
 };

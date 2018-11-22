@@ -22,14 +22,17 @@ public:
 	
 	TMap<ToolScrollType, int>	m_LevelMap;
 
+	TArray<UToolScrollWidget*>	m_Widgets;
+
 	UHorizontalBox * m_ScrollWidgetList;
 
-    UButton * m_ViewButton;
+    UButton * m_CancelButton;
+	UButton * m_SureButton;
+
 
 	AddOrTimeType  m_type;
 
 	void	SetType(AddOrTimeType _type);
 
-    UFUNCTION()
-        void OnButtonClick();
+        void OnButtonClick(int _index);
 };

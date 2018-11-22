@@ -1,6 +1,6 @@
 #include "OrderUserInfoUI.h"
 #include "UIManager.h"
-
+#include "AddressAndTimeTool.h"
 
 void UOrderUserInfoUI::On_Init()
 {
@@ -67,12 +67,17 @@ void UOrderUserInfoUI::OnButtonClick(int _index)
 	}break;
 	case 3:
 	{
-		UBaseUI * timeUI = UIManager::GetInstance()->OpenUI(TEXT("AddressAndTimeTool"), this);
+		UAddressAndTimeTool * timeUI = (UAddressAndTimeTool*)UIManager::GetInstance()->OpenUI(TEXT("AddressAndTimeTool"), this);
+		
 		timeUI->AddToViewport();
+		timeUI->SetType(t_Time);
 	}break;
 	case 4:
 	{
-
+		UAddressAndTimeTool * addressUI = (UAddressAndTimeTool*)UIManager::GetInstance()->OpenUI(TEXT("AddressAndTimeTool"), this);
+		
+		addressUI->AddToViewport();
+		addressUI->SetType(t_Address);
 	}break;
 	case 5:
 	{
@@ -85,4 +90,8 @@ void UOrderUserInfoUI::OnButtonClick(int _index)
 void UOrderUserInfoUI::SetGetStyle(FString _style)
 {
 	m_GetStyle->m_ItemContent->SetText(FText::FromString(_style));
+}
+void UOrderUserInfoUI::SetGetTime(FString _time)
+{
+	m_GetTime->m_ItemContent->SetText(FText::FromString(_time));
 }

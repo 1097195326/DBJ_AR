@@ -9,6 +9,11 @@ LoginGameModule * LoginGameModule::GetInstance()
 	static LoginGameModule m;
 	return &m;
 }
+LoginGameModule::LoginGameModule()
+{
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &LoginGameModule::OnGetSmsCode);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &LoginGameModule::OnUserLogin);
+}
 void LoginGameModule::On_Init()
 {
 	UserInfo::Get()->ReadLocalData();
@@ -16,12 +21,8 @@ void LoginGameModule::On_Init()
 	FString token = UserInfo::Get()->GetLocalData().token;
 	UE_LOG(LogTemp, Log, TEXT("zhx : LoginGameModule::On_Init : token = %s"), *token);
 
-
 	m_CurrentUIController = new LoginUIController();
 	m_CurrentUIController->On_Init();
-
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &LoginGameModule::OnGetSmsCode);
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &LoginGameModule::OnUserLogin);
 
 }
 void LoginGameModule::On_Start()

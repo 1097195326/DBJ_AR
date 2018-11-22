@@ -47,24 +47,19 @@ public:
         mHeader.m_Obj = _obj;
         mHeader.m_Fun_Header = mTemFunc;
         
-        //std::printf("zhx : msg register msg msgid:%d,obj:%ld\n",(int)_msgId,(long)_obj);
-        
         auto iter = m_Msg_Header_Map.find(_msgId);
         if(iter == m_Msg_Header_Map.end()) //
         {
             Msg_Header_List mList;
             mList.push_back(mHeader);
             m_Msg_Header_Map.insert(pair<int, Msg_Header_List>(_msgId,mList));
-            
-            /*std::printf("zhx : msg first register msg msgid:%d,obj:%ld\n",_msgId,(long)_obj);
-            std::printf("zhx : msg first register list num:%d\n",(int)mList.size());*/
         }else
         {
-            Msg_Header_List mTemList = iter->second;
+            Msg_Header_List & mTemList = iter->second;
             mTemList.push_back(mHeader);
-            /*std::printf("zhx : msg again register msg msgid:%d,obj:%ld\n",_msgId,(long)_obj);
-            std::printf("zhx : msg again register list num:%d\n",(int)mTemList.size());*/
         }
+		auto checkI = m_Msg_Header_Map.find(_msgId);
+		UE_LOG(LogTemp, Log, TEXT("zhx : msg  register id : %d, list num : %d"), _msgId, checkI->second.size());
     }
     void RemoveMsgHeader(int _msgId,void * _obj);
     

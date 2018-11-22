@@ -8,6 +8,7 @@ private:
 
 public:
 	static LoginGameModule * GetInstance();
+	LoginGameModule();
 
 	virtual void On_Init();
 	virtual void On_Start();

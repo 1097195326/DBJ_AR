@@ -1,22 +1,28 @@
-#include "AddressAndTimeTool.h"
+﻿#include "AddressAndTimeTool.h"
 #include "DateTime.h"
 #include "UIManager.h"
+#include "OrderUserInfoUI.h"
 
 
 void UAddressAndTimeTool::On_Init()
 {
-    if (UButton * widget = (UButton*)GetWidgetFromName("ViewButton"))
+    if (UButton * widget = (UButton*)GetWidgetFromName("CancelButton"))
     {
-        m_ViewButton = widget;
-        m_ViewButton->OnClicked.AddDynamic(this, &UAddressAndTimeTool::OnButtonClick);
+        m_CancelButton = widget;
+		UIManager::GetInstance()->RegisterButton(1, m_CancelButton, this, &UAddressAndTimeTool::OnButtonClick);
     }
+	if (UButton * widget = (UButton*)GetWidgetFromName("SureButton"))
+	{
+		m_SureButton = widget;
+		UIManager::GetInstance()->RegisterButton(2, m_SureButton, this, &UAddressAndTimeTool::OnButtonClick);
+
+	}
 	if (UHorizontalBox * widget = (UHorizontalBox*)GetWidgetFromName("ScrollWidgetList"))
 	{
 		m_ScrollWidgetList = widget;
 	}
-	FDateTime time = FDateTime::Now();
-	UE_LOG(LogTemp, Log, TEXT("zhx : time Y : %d, M : %d, D : %d"), time.GetYear(),time.GetMonth(),time.GetDay());
 
+	//IdData data1,data2,data3,data4,data5,data6,data7;
 	m_LevelMap.Add(t_Sheng, 0);
 	m_LevelMap.Add(t_Shi, 0);
 	m_LevelMap.Add(t_Qu, 0);
@@ -27,11 +33,58 @@ void UAddressAndTimeTool::On_Init()
 }
 void UAddressAndTimeTool::On_Start()
 {	
+	
+}
+void UAddressAndTimeTool::On_Delete()
+{
+	UIManager::GetInstance()->UnRegisterButton(m_CancelButton);
+	UIManager::GetInstance()->UnRegisterButton(m_SureButton);
+
+}
+void UAddressAndTimeTool::OnButtonClick(int _index)
+{
+    UE_LOG(LogTemp, Log, TEXT("zhx : UAddressAndTimeTool::OnButtonClick : %d"),_index);
+	switch (_index)
+	{
+	case 1:
+	{
+		RemoveFromParent();
+	}break;
+	case 2:
+	{
+		FString setS;
+		switch (m_type)
+		{
+		case t_Time:
+		{
+			FString year = m_Widgets[0]->m_CurrentData.Name;
+			FString month = m_Widgets[1]->m_CurrentData.Name;
+			FString day = m_Widgets[2]->m_CurrentData.Name;
+			FString halfDay = m_Widgets[3]->m_CurrentData.Name;
+			setS = FString::Printf(TEXT("%s年-%s月-%s日-%s"), *year, *month, *day, *halfDay);
+		}break;
+		case t_Address:
+		{
+
+		}break;
+		default:
+			break;
+		}
+		UOrderUserInfoUI * parentUI = (UOrderUserInfoUI*)m_ParentUI;
+		parentUI->SetGetTime(setS);
+		RemoveFromParent();
+	}break;
+	}
+}
+void UAddressAndTimeTool::SetType(AddOrTimeType _type)
+{
+	m_type = _type;
+
 	switch (m_type)
 	{
 	case t_Address:
 	{
-		UToolScrollWidget * qu = (UToolScrollWidget*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollWidget"),this);
+		UToolScrollWidget * qu = (UToolScrollWidget*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollWidget"), this);
 		qu->SetType(t_Qu);
 		UToolScrollWidget * shi = (UToolScrollWidget*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollWidget"), this);
 		shi->m_NextNode = qu;
@@ -43,6 +96,10 @@ void UAddressAndTimeTool::On_Start()
 		m_ScrollWidgetList->AddChild(sheng);
 		m_ScrollWidgetList->AddChild(shi);
 		m_ScrollWidgetList->AddChild(qu);
+
+		m_Widgets.Add(sheng);
+		m_Widgets.Add(shi);
+		m_Widgets.Add(qu);
 
 		sheng->StartRun();
 	}break;
@@ -65,20 +122,12 @@ void UAddressAndTimeTool::On_Start()
 		m_ScrollWidgetList->AddChild(Day);
 		m_ScrollWidgetList->AddChild(halfDay);
 
+		m_Widgets.Add(Year);
+		m_Widgets.Add(Month);
+		m_Widgets.Add(Day);
+		m_Widgets.Add(halfDay);
+
 		Year->StartRun();
 	}break;
 	}
-}
-void UAddressAndTimeTool::On_Delete()
-{
-
-}
-void UAddressAndTimeTool::OnButtonClick()
-{
-    UE_LOG(LogTemp, Log, TEXT("zhx : UAddressAndTimeTool::OnButtonClick : "));
-
-}
-void UAddressAndTimeTool::SetType(AddOrTimeType _type)
-{
-	m_type = _type;
 }

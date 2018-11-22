@@ -17,10 +17,14 @@ public:
     virtual void On_Init() override;
 
     UButton * m_ViewButton;
+	UTextBlock * m_ButtonText;
+	UBorder * m_SelectBorder;
+
 
 	IdData	m_Data;
 
 	void	SetData(IdData _data);
+	void	SelectButton(bool _isSelect);
 
     UFUNCTION()
         void OnButtonClick();

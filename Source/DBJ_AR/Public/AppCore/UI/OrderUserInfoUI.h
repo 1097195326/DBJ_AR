@@ -30,4 +30,5 @@ public:
     void OnButtonClick(int _index);
 
 	void SetGetStyle(FString _style);
+	void SetGetTime(FString _time);
 };

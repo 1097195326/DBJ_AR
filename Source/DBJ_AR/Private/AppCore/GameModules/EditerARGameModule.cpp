@@ -11,6 +11,13 @@ EditerARGameModule * EditerARGameModule::GetInstance()
     static EditerARGameModule m;
     return &m;
 }
+EditerARGameModule::EditerARGameModule()
+{
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1004, this, &EditerARGameModule::OnGetCategoryList);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1008, this, &EditerARGameModule::OnGetProductList);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1013, this, &EditerARGameModule::OnGetChangeList);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1014, this, &EditerARGameModule::OnGetAreaList);
+}
 void EditerARGameModule::On_Init()
 {
 	UserInfo::Get()->ReadLocalData();
@@ -18,9 +25,7 @@ void EditerARGameModule::On_Init()
     m_CurrentUIController = new EditerARUIController();
     m_CurrentUIController->On_Init();
     
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1004, this, &EditerARGameModule::OnGetCategoryList);
-    MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1008, this, &EditerARGameModule::OnGetProductList);
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1013, this, &EditerARGameModule::OnGetChangeList);
+	
 
 }
 void EditerARGameModule::On_Start()
@@ -33,6 +38,8 @@ void EditerARGameModule::On_Delete()
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1004, this);
     MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1008, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1013, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1014, this);
+
 
     if (m_CurrentUIController != nullptr)
     {
@@ -119,4 +126,26 @@ void EditerARGameModule::OnGetChangeList(msg_ptr _msg)
 	}
 	msg_ptr msg(new LocalMsg(Msg_Local, 2013, &result));
 	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::GetAreaList(int parentId,int level)
+{
+	m_GetArea_Level = level;
+
+	FString appendUrl = FString::Printf(TEXT("parentId=%d"), parentId);
+
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1014);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1014, httpUrl, appendUrl, true, cookie, token));
+
+	MsgCenter::GetInstance()->SendMsg(mMsg);
+}
+void EditerARGameModule::OnGetAreaList(msg_ptr _msg)
+{
+	TSharedPtr<FJsonObject> jsonObject = _msg->GetJsonObject();
+	msg_ptr msg(new LocalMsg(Msg_Local, 2014, &m_GetArea_Level));
+	msg->m_JsonObject = jsonObject;
+	MsgCenter::GetInstance()->SendMsg(msg);
+	
 }

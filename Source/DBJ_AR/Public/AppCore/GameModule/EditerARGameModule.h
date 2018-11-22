@@ -5,9 +5,11 @@
 class DBJ_AR_API EditerARGameModule : public GameModule
 {
 private:
+	int		m_GetArea_Level;
 
 public:
 	static EditerARGameModule * GetInstance();
+	EditerARGameModule();
 
 	virtual void On_Init();
 	virtual void On_Start();
@@ -20,5 +22,8 @@ public:
 	// change list
 	void	GetChangeList(int productId, int lastId = 0, int exceptProductId = 0, int size = 10);
 	void	OnGetChangeList(msg_ptr _msg);
-	
+	//get address
+
+	void	GetAreaList(int parentId,int level);
+	void	OnGetAreaList(msg_ptr _msg);
 };
