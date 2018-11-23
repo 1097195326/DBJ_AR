@@ -18,7 +18,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		bool m_IsEdit;
 
-
+	UImage * m_ShowGoImage;
     UButton * m_DoSomethingButton;
 	UTextBlock *  m_ItemName;
 	UEditableText * m_EditText;

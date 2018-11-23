@@ -50,6 +50,7 @@ void UGetStyleUI::OnButtonClick(int _index)
 	{
 		UOrderUserInfoUI * parent = (UOrderUserInfoUI*)m_ParentUI;
 		parent->SetGetStyle(m_String);
+		parent->ReView();
 		RemoveFromParent();
 	}break;
 	case 2:

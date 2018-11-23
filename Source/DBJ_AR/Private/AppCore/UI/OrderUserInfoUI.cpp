@@ -4,13 +4,15 @@
 #include "RuntimeRDataManager.h"
 #include "MakeOrderUI.h"
 
+
 void UOrderUserInfoUI::On_Init()
 {
-    if (UButton * button = (UButton*)GetWidgetFromName("BackButton"))
+    if (UButton * widget = (UButton*)GetWidgetFromName("BackButton"))
     {
-        m_BackButton = button;
+        m_BackButton = widget;
 		UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UOrderUserInfoUI::OnButtonClick);
     }
+
 	if (UOrderUserInfoItem * widget = (UOrderUserInfoItem*)GetWidgetFromName("CompanyName"))
 	{
 		m_CompanyName = widget;
@@ -48,15 +50,29 @@ void UOrderUserInfoUI::On_Start()
 {
 	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
-
-	/*m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
+	
+	m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
 	m_UsserPhone->m_EditText->SetText(FText::FromString(order->ReceiverPhone));
 	m_DetailAddress->m_EditText->SetText(FText::FromString(order->Address));
-	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));*/
+	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
 }
 void UOrderUserInfoUI::On_Delete()
 {
 
+}
+void UOrderUserInfoUI::ReView()
+{
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	if (order->DeliverType == 1)
+	{
+		m_Address->SetVisibility(ESlateVisibility::Visible);
+		m_DetailAddress->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		m_Address->SetVisibility(ESlateVisibility::Hidden);
+		m_DetailAddress->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 void UOrderUserInfoUI::OnButtonClick(int _index)
 {

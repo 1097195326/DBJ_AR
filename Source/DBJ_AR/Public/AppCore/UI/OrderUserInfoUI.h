@@ -17,6 +17,7 @@ public:
 	virtual void On_Delete() override;
 
     UButton * m_BackButton;
+	UVerticalBox * m_ViewBox;
 
 	UOrderUserInfoItem * m_CompanyName;
 	UOrderUserInfoItem * m_GetStyle;
@@ -26,7 +27,7 @@ public:
 	UOrderUserInfoItem * m_Address;
 	UOrderUserInfoItem * m_DetailAddress;
 
-    
+	void ReView();
     void OnButtonClick(int _index);
 
 	void SetGetStyle(FString _style);
