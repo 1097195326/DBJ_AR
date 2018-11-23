@@ -15,7 +15,7 @@ public:
 	UButton * m_DeleteButton;
 	// top button list
 	UButton * m_ShowlistButton;
-	UCanvasPanel *  m_ShowlistPanel;
+	UScrollBox *  m_ShowlistPanel;
 	UButton * m_CloseListButton;
 	UButton * m_AcountButton;
 	UButton * m_AddressButton;

@@ -58,6 +58,10 @@ void UOrderUserInfoUI::On_Start()
 }
 void UOrderUserInfoUI::On_Delete()
 {
+	UIManager::GetInstance()->UnRegisterButton(m_BackButton);
+	UIManager::GetInstance()->UnRegisterButton(m_GetStyle->m_DoSomethingButton);
+	UIManager::GetInstance()->UnRegisterButton(m_GetTime->m_DoSomethingButton);
+	UIManager::GetInstance()->UnRegisterButton(m_Address->m_DoSomethingButton);
 
 }
 void UOrderUserInfoUI::ReView()

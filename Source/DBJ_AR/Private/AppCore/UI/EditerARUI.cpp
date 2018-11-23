@@ -31,7 +31,7 @@ void UEditerARUI::On_Init()
 		m_ShowlistButton = widget;
 		UI_M->RegisterButton(10, m_ShowlistButton, this, &UEditerARUI::On_Button_Click);
 	}
-	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("ShowListPanel")))
+	if (UScrollBox *widget = Cast<UScrollBox>(GetWidgetFromName("ShowListPanel")))
 	{
 		m_ShowlistPanel = widget;
 		m_ShowlistPanel->SetVisibility(ESlateVisibility::Hidden);

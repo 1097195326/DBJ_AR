@@ -186,12 +186,19 @@ void EditerARGameModule::CommitCurrentOrder()
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1009);
-	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1009, t_jsonObject,httpUrl));
+	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1009, t_jsonObject,httpUrl,false,cookie,token));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::OnCommitCurrentOrder(msg_ptr _msg)
 {
 	UE_LOG(LogTemp,Log,TEXT("zhx : EditerARGameModule::OnCommitCurrentOrder"));
-
+	int result = 0;
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		result = 1;
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2009, &result));
+	MsgCenter::GetInstance()->SendMsg(msg);
 
 }
