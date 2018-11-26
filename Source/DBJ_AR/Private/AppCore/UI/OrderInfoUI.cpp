@@ -68,7 +68,7 @@ void UOrderInfoUI::OnButtonClick(int _index)
 		++m_Num;
 	}break;
 	}
-	int price = m_Data.goodsData->salePrice * (m_Num - OldNum);
+	int price = m_Data->salePrice * (m_Num - OldNum);
 
 	UE_LOG(LogTemp, Log, TEXT("zhx : order info ui price : %d"), price);
 	parentUI->SetPrice(price);
@@ -79,25 +79,23 @@ void UOrderInfoUI::ResetNum()
 	FString num = FString::Printf(TEXT("%d"), m_Num);
 	m_GoodsNum->SetText(FText::FromString(num));
 }
-void UOrderInfoUI::SetData(OrderInfoData _data)
+void UOrderInfoUI::SetData(GoodsData * _data)
 {
 	m_Data = _data;
-	m_Num = m_Data.Num;
+	m_Num = m_Data->quantity;
 
-	m_Icon->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data.goodsData->thumbnailUrl)->Attr()));
-	m_GoodsName->SetText(FText::FromString(m_Data.goodsData->name));
-	FString borderSting = FString::Printf(TEXT("%d*%d*%d mm"), m_Data.goodsData->externalHeight, m_Data.goodsData->externalLength, m_Data.goodsData->externalHeight);
+	m_Icon->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
+	m_GoodsName->SetText(FText::FromString(m_Data->name));
+	FString borderSting = FString::Printf(TEXT("%d*%d*%d mm"), m_Data->externalHeight, m_Data->externalLength, m_Data->externalHeight);
 	m_GoodsBorder->SetText(FText::FromString(borderSting));
-	m_CompanyName->SetText(FText::FromString(m_Data.goodsData->supplyName));
-	FString price = FString::Printf(TEXT("%d"), m_Data.goodsData->salePrice);
+	m_CompanyName->SetText(FText::FromString(m_Data->supplyName));
+	FString price = FString::Printf(TEXT("%d"), m_Data->salePrice);
 	m_GoodsPrice->SetText(FText::FromString(price));
 	
 	ResetNum();
 }
-OrderInfoData UOrderInfoUI::GetData()
+GoodsData *  UOrderInfoUI::GetData()
 {
-	OrderInfoData data;
-	data = m_Data;
-	data.Num = m_Num;
-	return data;
+	m_Data->quantity = m_Num;
+	return m_Data;
 }

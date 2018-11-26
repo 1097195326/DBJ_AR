@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseUI.h"
+#include "RuntimeRDataManager.h"
 #include "UserAccountItem.generated.h"
 
 
@@ -21,4 +22,10 @@ public:
 
 	UFUNCTION()
 		void OnButtonClick();
+
+	void		SetOrder(R_Order * order);
+	void		ReView();
+private:
+	R_Order * m_Order;
+
 };

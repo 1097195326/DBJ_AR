@@ -4,7 +4,7 @@
 #include "UserInfo.h"
 #include "RuntimeTDataManager.h"
 #include "RuntimeRDataManager.h"
-
+#include "RuntimeCDataManager.h"
 
 
 EditerARGameModule * EditerARGameModule::GetInstance()
@@ -17,6 +17,7 @@ EditerARGameModule::EditerARGameModule()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1004, this, &EditerARGameModule::OnGetCategoryList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1008, this, &EditerARGameModule::OnGetProductList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1009, this, &EditerARGameModule::OnCommitCurrentOrder);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1010, this, &EditerARGameModule::OnGetAccountOrder);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1013, this, &EditerARGameModule::OnGetChangeList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1014, this, &EditerARGameModule::OnGetAreaList);
 }
@@ -40,6 +41,7 @@ void EditerARGameModule::On_Delete()
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1004, this);
     MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1008, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1009, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1010, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1013, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1014, this);
 
@@ -175,8 +177,8 @@ void EditerARGameModule::CommitCurrentOrder()
 	for (int i  = 0; i<order->ProductList.Num(); i++)
 	{
 		TSharedRef<FJsonObject> value = MakeShareable(new FJsonObject);
-		value->SetNumberField(TEXT("id"), order->ProductList[i].goodsData->id);
-		value->SetNumberField(TEXT("quantity"), order->ProductList[i].Num);
+		value->SetNumberField(TEXT("id"), order->ProductList[i]->id);
+		value->SetNumberField(TEXT("quantity"), order->ProductList[i]->quantity);
 		array.Add(MakeShareable(new FJsonValueObject(value)));
 	}
 
@@ -201,4 +203,28 @@ void EditerARGameModule::OnCommitCurrentOrder(msg_ptr _msg)
 	msg_ptr msg(new LocalMsg(Msg_Local, 2009, &result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 
+}
+void EditerARGameModule::GetAccountOrder(int lastid, int size)
+{
+	FString appendUrl = FString::Printf(TEXT("lastId=%d&size=%d"), lastid,size);
+
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1010);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1010, httpUrl, appendUrl, true, cookie, token));
+
+	MsgCenter::GetInstance()->SendMsg(mMsg);
+}
+void EditerARGameModule::OnGetAccountOrder(msg_ptr _msg)
+{
+	int result = 0;
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		RuntimeCDataManager::GetInstance()->DecodeAccountOrderList(jsonData);
+		result = 1;
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2010, &result));
+	MsgCenter::GetInstance()->SendMsg(msg);
 }

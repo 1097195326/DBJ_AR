@@ -54,7 +54,7 @@ void UMakeOrderUI::On_Init()
 void UMakeOrderUI::On_Start()
 {
 	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
-	RuntimeRDataManager::GetInstance()->MakeOrder();
+	
 	InitView();
 }
 void UMakeOrderUI::On_Delete()
@@ -70,11 +70,11 @@ void UMakeOrderUI::On_Delete()
 void UMakeOrderUI::InitView()
 {
 	ReView();
-	TMap<int,OrderInfoData> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
+	TMap<int,GoodsData*> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
 	
 	for (auto & item : datas)
 	{
-		OrderInfoData data = item.Value;
+		GoodsData * data = item.Value;
 		UOrderInfoUI * icon = (UOrderInfoUI*)UIManager::GetInstance()->OpenUI(TEXT("OrderInfoUI"),this);
 
 		if (icon->IsValidLowLevel())
@@ -82,7 +82,7 @@ void UMakeOrderUI::InitView()
 			UScrollBoxSlot * scrollSlot = (UScrollBoxSlot*)m_OrderScroll->AddChild(icon);
 			icon->SetData(data);
 			scrollSlot->SetPadding(FMargin(48.f, 0.0f, 48.f, 24.f));
-			allPriceI += data.Num * data.goodsData->salePrice;
+			allPriceI += data->quantity * data->salePrice;
 			m_InfoUIList.Add(icon);
 		}
 	}

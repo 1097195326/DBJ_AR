@@ -28,5 +28,8 @@ public:
 	//save and commit current order
 	void	CommitCurrentOrder();
 	void	OnCommitCurrentOrder(msg_ptr _msg);
+	// get user account order
+	void	GetAccountOrder(int lastid = 0, int size = 10);
+	void	OnGetAccountOrder(msg_ptr _msg);
 
 };

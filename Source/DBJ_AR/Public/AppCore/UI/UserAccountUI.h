@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseUI.h"
+#include "MsgCenter.h"
 #include "UserAccountUI.generated.h"
 
 
@@ -24,6 +25,8 @@ public:
 
 	UScrollBox * m_OrderListScroll;
 
-    
-        void OnButtonClick(int _index);
+    void OnButtonClick(int _index);
+
+	void OnGetAccountOrder(msg_ptr _msg);
+
 };

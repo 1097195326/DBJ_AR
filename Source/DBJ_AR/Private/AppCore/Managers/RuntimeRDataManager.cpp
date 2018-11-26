@@ -4,10 +4,14 @@
 RuntimeRDataManager * RuntimeRDataManager::GetInstance()
 {
 	static RuntimeRDataManager m;
-
+	
 	return &m;
 }
-
+RuntimeRDataManager::RuntimeRDataManager()
+{
+	m_CurrentOrder = nullptr;
+	m_EditOrder = nullptr;
+}
 GoodsData * RuntimeRDataManager::AddGoodsToList(GoodsData* _data)
 {
 	GoodsData * newData = new GoodsData();
@@ -49,23 +53,29 @@ TArray<GoodsData*> RuntimeRDataManager::GetRuntimeGoodsList()
 {
 	return m_RuntimeGoodsList;
 }
-TMap<int, OrderInfoData> RuntimeRDataManager::GetOrderDatas()
+TMap<int, GoodsData*> RuntimeRDataManager::GetOrderDatas()
 {
-	TMap<int, OrderInfoData> orderInfoData;
-
+	TMap<int, GoodsData*> orderInfoData;
+	if (m_EditOrder)
+	{
+		for (int i = 0; i < m_EditOrder->ProductList.Num(); i++)
+		{
+			GoodsData * data = m_EditOrder->ProductList[i];
+			orderInfoData.Add(data->id, data);
+		}
+		return orderInfoData;
+	}
 	for (int i = 0;i < m_RuntimeGoodsList.Num(); i++)
 	{
 		GoodsData * data = m_RuntimeGoodsList[i];
 		if (orderInfoData.Contains(data->id))
 		{
-			orderInfoData[data->id].Num++;
+			orderInfoData[data->id]->quantity++;
 		}
 		else
 		{
-			OrderInfoData infoData;
-			infoData.Num = 1;
-			infoData.goodsData = data;
-			orderInfoData.Add(data->id, infoData);
+			data->quantity = 1;
+			orderInfoData.Add(data->id, data);
 		}
 	}
 	return orderInfoData;
@@ -82,9 +92,17 @@ R_Order * RuntimeRDataManager::MakeOrder()
 
 	return m_CurrentOrder;
 }
+void RuntimeRDataManager::EditOrder(R_Order * order)
+{
+	m_EditOrder = order;
+}
 R_Order * RuntimeRDataManager::GetCurrentOrder()
 {
-	return m_CurrentOrder;
+	if (m_CurrentOrder != nullptr)
+	{
+		return m_CurrentOrder;
+	}
+	return m_EditOrder;
 }
 void RuntimeRDataManager::ClearOrder()
 {
@@ -92,5 +110,9 @@ void RuntimeRDataManager::ClearOrder()
 	{
 		delete m_CurrentOrder;
 		m_CurrentOrder = nullptr;
+	}
+	if (m_EditOrder)
+	{
+		m_EditOrder = nullptr;
 	}
 }

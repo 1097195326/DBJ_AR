@@ -22,7 +22,10 @@ void GoodsData::InitWithJson(const TSharedPtr<FJsonObject> &obj)
 	obj->TryGetNumberField("externalLength", externalLength);
 	obj->TryGetNumberField("externalWidth", externalWidth);
 	obj->TryGetNumberField("externalHeight", externalHeight);
-	
+	obj->TryGetNumberField("quantity", quantity);
+	obj->TryGetNumberField("totalPrice", totalPrice);
+
+
 	matchedProduct = nullptr;
 	const TSharedPtr<FJsonObject> * m_d;
 	if (obj->TryGetObjectField("matchedProduct",m_d))

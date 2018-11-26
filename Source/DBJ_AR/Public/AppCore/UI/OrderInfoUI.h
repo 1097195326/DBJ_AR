@@ -12,7 +12,7 @@ class DBJ_AR_API  UOrderInfoUI : public UBaseUI
     GENERATED_BODY()
 
 private:
-	OrderInfoData m_Data;
+	GoodsData * m_Data;
 	int m_Num;
 public:
     virtual void On_Init() override;
@@ -27,8 +27,8 @@ public:
 	UButton * m_SubButton;
 	UButton * m_AddButton;
 
-	void SetData(OrderInfoData _data);
-	OrderInfoData GetData();
+	void SetData(GoodsData * _data);
+	GoodsData * GetData();
 
 	void ResetNum();
 

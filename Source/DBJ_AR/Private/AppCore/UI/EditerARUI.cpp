@@ -5,6 +5,8 @@
 #include "GoodsList.h"
 #include "GoodsChangeUI.h"
 #include "UserPawn.h"
+#include "UserAccountUI.h"
+#include "RuntimeRDataManager.h"
 
 void UEditerARUI::On_Init()
 {
@@ -111,18 +113,19 @@ void UEditerARUI::On_Button_Click(int _index)
 			break;
 		}
 		case 10:
-		{
+		{// show button list
 			m_ShowlistButton->SetVisibility(ESlateVisibility::Hidden);
 			m_ShowlistPanel->SetVisibility(ESlateVisibility::Visible);
 		}break;
 		case 11:
-		{
+		{// close buuton list
 			m_ShowlistButton->SetVisibility(ESlateVisibility::Visible);
 			m_ShowlistPanel->SetVisibility(ESlateVisibility::Hidden);
 		}break;
 		case 12:
-		{
-
+		{// user account 
+			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"));
+			baseUI->AddToViewport();
 		}break;
 		case 13:
 		{
@@ -131,6 +134,7 @@ void UEditerARUI::On_Button_Click(int _index)
 		case 14:
 		{//to order list 
 			//RemoveFromParent();
+			RuntimeRDataManager::GetInstance()->MakeOrder();
 			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("MakeOrderUI"));
 			baseUI->AddToViewport();
 			//baseUI->addto
