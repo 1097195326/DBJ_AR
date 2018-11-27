@@ -14,9 +14,8 @@
         <mapping msgId="1006" channel="http" uri="mgw/materials" />
         <mapping msgId="1007" channel="http" uri="mgw/innerDiameters" />
         <mapping msgId="1008" channel="http" uri="mgw/products" />
-        <mapping msgId="1009" channel="http" uri="mgw/orders" />
-        <mapping msgId="1010" channel="http" uri="mgw/orders" />
-        <mapping msgId="1011" channel="http" uri="mgw/orders/" />
+        <mapping msgId="1009" channel="http" uri="mgw/orders" dest="save order"/>
+        <mapping msgId="1010" channel="http" uri="mgw/orders" dest="get orders"/>
         <mapping msgId="1012" channel="http" uri="mgw/versions?" dest="" />
         <mapping msgId="1013" channel="http" uri="mgw/products/listByMatch" dest="change" />
         <mapping msgId="1014" channel="http" uri="mgw/areas" dest="get areas" />
@@ -26,6 +25,8 @@
         <mapping msgId="2002" channel="local" uri="mgw/smsCode/send"/>
         <mapping msgId="2004" channel="local" uri="mgw/categories" />
         <mapping msgId="2008" channel="local" uri="mgw/products" />
+        <mapping msgId="2009" channel="local" uri="mgw/orders" />
+        <mapping msgId="2010" channel="local" uri="mgw/orders" />
         <mapping msgId="2013" channel="local" uri="products/listByMatch" />
         <mapping msgId="2014" channel="local" uri="mgw/areas" dest="get areas" />
         

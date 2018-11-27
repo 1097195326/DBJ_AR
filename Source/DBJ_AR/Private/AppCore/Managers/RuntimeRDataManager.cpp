@@ -85,6 +85,7 @@ R_Order * RuntimeRDataManager::MakeOrder()
 	FSaveUserData userData = UserInfo::Get()->GetLocalData();
 
 	m_CurrentOrder = new R_Order();
+	m_CurrentOrder->DeliverType = 1;
 	m_CurrentOrder->ReceiverCompanyName = userData.companyName;
 	m_CurrentOrder->ReceiverName = userData.renterName;
 	m_CurrentOrder->ReceiverPhone = userData.phone;
@@ -95,6 +96,14 @@ R_Order * RuntimeRDataManager::MakeOrder()
 void RuntimeRDataManager::EditOrder(R_Order * order)
 {
 	m_EditOrder = order;
+}
+bool RuntimeRDataManager::IsEditOrder()
+{
+	if (m_EditOrder)
+	{
+		return true;
+	}
+	return false;
 }
 R_Order * RuntimeRDataManager::GetCurrentOrder()
 {

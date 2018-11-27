@@ -66,17 +66,20 @@ void UUserAccountUI::OnButtonClick(int _index)
 		RemoveFromParent();
 	}break;
 	case 2:
-	{
-
+	{// setting
+		EditerARGameModule::GetInstance()->GetAccountOrder();
 	}break;
 	case 3:
-	{
-
+	{// to edit user info
+		UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("EditUserInfoUI"));
+		baseUI->AddToViewport();
 	}break;
 	}
 }
 void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 {
+	m_OrderListScroll->ClearChildren();
+	m_OrderListScroll->ScrollToStart();
 	TArray<R_Order*> OrderList = RuntimeCDataManager::GetInstance()->GetAccountOrderList();
 
 	for (int i = 0; i < OrderList.Num(); i++)

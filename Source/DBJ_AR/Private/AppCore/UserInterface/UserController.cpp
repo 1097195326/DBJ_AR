@@ -7,11 +7,19 @@
 //
 
 #include "UserController.h"
+#include "SharingFunctions.h"
+#include "Engine.h"
+#include "Kismet/GameplayStatics.h"
 
+AUserController * AUserController::GetInstance()
+{
+	return Cast<AUserController>(UGameplayStatics::GetPlayerController(GWorld, 0));
+}
 void AUserController::On_Init()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : AUserController::On_Init"));
-    
+	
+
 }
 void AUserController::On_Start()
 {
@@ -44,4 +52,15 @@ bool AUserController::InputTouch(uint32 Handle, ETouchType::Type Type, const FVe
     
     return Super::InputTouch(Handle,Type,TouchLocation,Force,DeviceTimestamp,TouchpadIndex);
     
+}
+
+void AUserController::ScreenShot_Callback(FScreenshotImage Image)
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : user controller make screen shot call back"));
+	USharingFunctions::Share("", "AR", "www.dabanjia.com", Image);
+	
+}
+void AUserController::MakeScreenShot()
+{
+	GEngine->GameViewport->ConsoleCommand(TEXT("Shot"));
 }

@@ -49,7 +49,7 @@ void UMakeOrderUI::On_Init()
 		m_CommitOrderButton = widget;
 		UIManager::GetInstance()->RegisterButton(4, m_CommitOrderButton, this, &UMakeOrderUI::OnButtonClick);
 	}
-
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2009, this, &UMakeOrderUI::OnCommitCurrentOrder);
 }
 void UMakeOrderUI::On_Start()
 {
@@ -59,6 +59,8 @@ void UMakeOrderUI::On_Start()
 }
 void UMakeOrderUI::On_Delete()
 {
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2009, this);
+
 	UIManager::GetInstance()->UnRegisterButton(m_BackButton);
 	UIManager::GetInstance()->UnRegisterButton(m_ToOrderInfoButton);
 	UIManager::GetInstance()->UnRegisterButton(m_SaveOrderButton);
@@ -70,6 +72,15 @@ void UMakeOrderUI::On_Delete()
 void UMakeOrderUI::InitView()
 {
 	ReView();
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	if (order->Status == 1)
+	{
+		m_SaveOrderButton->SetVisibility(ESlateVisibility::Hidden);
+	}else if (order->Status == 2)
+	{
+		m_SaveOrderButton->SetVisibility(ESlateVisibility::Hidden);
+		m_CommitOrderButton->SetIsEnabled(false);
+	}
 	TMap<int,GoodsData*> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
 	
 	for (auto & item : datas)
@@ -128,7 +139,7 @@ void UMakeOrderUI::OnButtonClick(int _index)
 			order->ProductList.Add(m_InfoUIList[i]->GetData());
 		}
 		EditerARGameModule::GetInstance()->CommitCurrentOrder();
-		RemoveFromParent();
+		
 	}break;
 	case 4:
 	{// commit order button
@@ -136,13 +147,26 @@ void UMakeOrderUI::OnButtonClick(int _index)
 		order->Status = 2;
 		for (int i = 0;i < m_InfoUIList.Num(); i++)
 		{
-			order->ProductList.Add(m_InfoUIList[i]->GetData());
+			if (RuntimeRDataManager::GetInstance()->IsEditOrder())
+			{
+				m_InfoUIList[i]->GetData();
+			}
+			else
+			{
+				order->ProductList.Add(m_InfoUIList[i]->GetData());
+			}
 		}
 		EditerARGameModule::GetInstance()->CommitCurrentOrder();
-		RemoveFromParent();
+		
 	}break;
 	default:
 		break;
 	}
 	
+}
+void UMakeOrderUI::OnCommitCurrentOrder(msg_ptr _msg)
+{
+	RemoveFromParent();
+	UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"));
+	baseUI->AddToViewport();
 }

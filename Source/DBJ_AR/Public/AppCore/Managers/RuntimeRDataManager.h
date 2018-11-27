@@ -46,6 +46,8 @@ public:
 
 	R_Order *	MakeOrder();
 	void		EditOrder(R_Order * order);
+	bool		IsEditOrder();
+
 	R_Order	*	GetCurrentOrder();
 	void	ClearOrder();
 

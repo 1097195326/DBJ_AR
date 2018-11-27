@@ -128,8 +128,10 @@ void UEditerARUI::On_Button_Click(int _index)
 			baseUI->AddToViewport();
 		}break;
 		case 13:
-		{
-
+		{// reset AR session
+			AUserPawn::GetInstance()->StopARSession();
+			AUserPawn::GetInstance()->DeleteAllARActor();
+			AUserPawn::GetInstance()->StartARSession();
 		}break;
 		case 14:
 		{//to order list 
@@ -140,9 +142,8 @@ void UEditerARUI::On_Button_Click(int _index)
 			//baseUI->addto
 		}break;
 		case 15:
-		{
-
-			
+		{// share 
+			AUserController::GetInstance()->MakeScreenShot();
 		}break;
         default:
             break;

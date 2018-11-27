@@ -39,7 +39,16 @@ void UGetStyleUI::On_Init()
 }
 void UGetStyleUI::On_Start()
 {
-	OnButtonClick(2);
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	if (order->DeliverType == 1)
+	{
+		OnButtonClick(2);
+	}
+	else
+	{
+		OnButtonClick(3);
+	}
+	
 }
 void UGetStyleUI::OnButtonClick(int _index)
 {

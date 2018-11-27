@@ -2,6 +2,7 @@
 
 #include "BaseUI.h"
 #include "OrderInfoUI.h"
+#include "MsgCenter.h"
 #include "MakeOrderUI.generated.h"
 
 
@@ -36,6 +37,8 @@ public:
         void OnButtonClick(int _index);
 
 	void SetPrice(int num);
+
+	void OnCommitCurrentOrder(msg_ptr _msg);
 
 private:
 	int		allPriceI;

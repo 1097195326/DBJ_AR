@@ -61,6 +61,8 @@ public:
     
     UFUNCTION(BlueprintImplementableEvent)
         void StartARSession();
+	UFUNCTION(BlueprintImplementableEvent)
+		void StopARSession();
     UFUNCTION(BlueprintImplementableEvent)
         void DrawPlnes();
     UFUNCTION(BlueprintImplementableEvent)

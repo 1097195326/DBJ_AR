@@ -30,5 +30,16 @@ void UEditUserInfoUI::On_Init()
 void UEditUserInfoUI::OnButtonClick(int _index)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
+	switch (_index)
+	{
+	case 1:
+	{
+		RemoveFromParent();
+	}break;
+	case 2:
+	{
+
+	}break;
+	}
 
 }

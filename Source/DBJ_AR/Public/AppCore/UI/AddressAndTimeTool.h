@@ -28,7 +28,7 @@ public:
 
     UButton * m_CancelButton;
 	UButton * m_SureButton;
-
+	UTextBlock * m_TitleName;
 
 	AddOrTimeType  m_type;
 

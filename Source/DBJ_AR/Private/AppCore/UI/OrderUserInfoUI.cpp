@@ -1,4 +1,4 @@
-#include "OrderUserInfoUI.h"
+﻿#include "OrderUserInfoUI.h"
 #include "UIManager.h"
 #include "AddressAndTimeTool.h"
 #include "RuntimeRDataManager.h"
@@ -51,10 +51,19 @@ void UOrderUserInfoUI::On_Start()
 	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
 	
+	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
+	if (order->DeliverType == 1)
+	{
+		m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("送货上门")));
+	}else
+	{
+		m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("自取")));
+	}
 	m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
 	m_UsserPhone->m_EditText->SetText(FText::FromString(order->ReceiverPhone));
-	m_DetailAddress->m_EditText->SetText(FText::FromString(order->Address));
-	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
+	m_Address->m_ItemContent->SetText(FText::FromString(order->Address));
+	m_DetailAddress->m_EditText->SetText(FText::FromString(order->DetailAddress));
+	m_GetTime->m_ItemContent->SetText(FText::FromString(order->ReceiveTime));
 }
 void UOrderUserInfoUI::On_Delete()
 {
@@ -127,9 +136,13 @@ void UOrderUserInfoUI::SetGetStyle(FString _style)
 }
 void UOrderUserInfoUI::SetGetTime(FString _time)
 {
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	order->ReceiveTime = _time;
 	m_GetTime->m_ItemContent->SetText(FText::FromString(_time));
 }
 void UOrderUserInfoUI::SetAddress(FString _address)
 {
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	order->Address = _address;
 	m_Address->m_ItemContent->SetText(FText::FromString(_address));
 }

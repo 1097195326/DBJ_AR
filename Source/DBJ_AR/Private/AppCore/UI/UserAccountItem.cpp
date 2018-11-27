@@ -40,6 +40,7 @@ void UUserAccountItem::OnButtonClick()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
 	RuntimeRDataManager::GetInstance()->EditOrder(m_Order);
+	m_ParentUI->RemoveFromParent();
 	UMakeOrderUI * baseUI = (UMakeOrderUI*)UIManager::GetInstance()->OpenUI(TEXT("MakeOrderUI"));
 	baseUI->AddToViewport();
 }

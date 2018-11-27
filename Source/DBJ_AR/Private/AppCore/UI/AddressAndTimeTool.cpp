@@ -21,7 +21,10 @@ void UAddressAndTimeTool::On_Init()
 	{
 		m_ScrollWidgetList = widget;
 	}
-
+	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("TitleName"))
+	{
+		m_TitleName = widget;
+	}
 	//IdData data1,data2,data3,data4,data5,data6,data7;
 	m_LevelMap.Add(t_Sheng, 0);
 	m_LevelMap.Add(t_Shi, 0);
@@ -63,7 +66,7 @@ void UAddressAndTimeTool::OnButtonClick(int _index)
 			FString month = m_Widgets[1]->m_CurrentData.Name;
 			FString day = m_Widgets[2]->m_CurrentData.Name;
 			FString halfDay = m_Widgets[3]->m_CurrentData.Name;
-			setS = FString::Printf(TEXT("%s年-%s月-%s日-%s"), *year, *month, *day, *halfDay);
+			setS = FString::Printf(TEXT("%s-%s-%s-%s"), *year, *month, *day, *halfDay);
 			parentUI->SetGetTime(setS);
 			FDateTime expTime(m_Widgets[0]->m_CurrentData.Id, m_Widgets[1]->m_CurrentData.Id, m_Widgets[2]->m_CurrentData.Id);
 			order->ExpectReceiveTime = expTime.ToUnixTimestamp();
@@ -96,6 +99,8 @@ void UAddressAndTimeTool::SetType(AddOrTimeType _type)
 	{
 	case t_Address:
 	{
+		m_TitleName->SetText(FText::FromString(TEXT("选择地点")));
+
 		UToolScrollWidget * qu = (UToolScrollWidget*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollWidget"), this);
 		qu->SetType(t_Qu);
 		UToolScrollWidget * shi = (UToolScrollWidget*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollWidget"), this);
@@ -117,6 +122,8 @@ void UAddressAndTimeTool::SetType(AddOrTimeType _type)
 	}break;
 	case t_Time:
 	{
+		m_TitleName->SetText(FText::FromString(TEXT("选择日期")));
+
 		UToolScrollWidget * halfDay = (UToolScrollWidget*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollWidget"), this);
 		halfDay->SetType(t_HalfDay);
 		UToolScrollWidget * Day = (UToolScrollWidget*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollWidget"), this);

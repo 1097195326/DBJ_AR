@@ -52,14 +52,15 @@ TArray<R_Order*> RuntimeCDataManager::GetAccountOrderList()
 
 void RuntimeCDataManager::ClearAccountOrderList()
 {
-	for (int j = 0; j< m_OrderList.Num(); j++)
+	for (int j = 0; j< m_OrderList.Num(); )
 	{
-		R_Order * order = m_OrderList[j];
-		for (int i = 0 ; i< order->ProductList.Num() ; i++)
+		R_Order * order = m_OrderList[j++];
+		for (int i = 0 ; i< order->ProductList.Num() ; )
 		{
-			GoodsData * data = order->ProductList[i];
+			GoodsData * data = order->ProductList[i++];
 			delete data;
 		}
+		order->ProductList.Empty();
 		delete order;
 	}
 	m_OrderList.Empty();

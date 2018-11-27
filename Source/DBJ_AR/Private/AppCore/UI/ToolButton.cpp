@@ -35,11 +35,13 @@ void UToolButton::SelectButton(bool _isSelect)
 {
 	if (_isSelect)
 	{
-		m_SelectBorder->SetVisibility(ESlateVisibility::Visible);
+		m_ButtonText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("333333"))));
+		//m_SelectBorder->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
-		m_SelectBorder->SetVisibility(ESlateVisibility::Hidden);
+		m_ButtonText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("999999"))));
+		//m_SelectBorder->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 }

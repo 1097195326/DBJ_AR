@@ -15,7 +15,7 @@ public:
 	virtual void On_Init() override;
 	virtual void OpenLevel(const FString & _levelName) override;
 
-    
+	virtual void Shutdown() override;
     
 	UFUNCTION(Exec)
 		void PakMount();

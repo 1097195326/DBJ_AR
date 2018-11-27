@@ -30,7 +30,12 @@ void UAppInstance::OpenLevel(const FString & _levelName)
 
 	UGameplayStatics::OpenLevel(this, *levelPath);
 }
+void UAppInstance::Shutdown()
+{
+	UE_LOG(LogTemp, Error, TEXT("zhx : app shut down"));
 
+	Super::Shutdown();
+}
 void UAppInstance::PakMount()
 {
 	GFileManager::GetInstance()->TestPak();
