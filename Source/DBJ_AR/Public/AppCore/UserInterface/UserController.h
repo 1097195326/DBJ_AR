@@ -27,7 +27,7 @@ public:
     virtual void On_Tick(float DeltaSeconds) override;
     virtual void On_Delete() override;
     
-    virtual bool InputTouch(uint32 Handle, ETouchType::Type Type, const FVector2D& TouchLocation, float Force, FDateTime DeviceTimestamp, uint32 TouchpadIndex) override;
+    //virtual bool InputTouch(uint32 Handle, ETouchType::Type Type, const FVector2D& TouchLocation, float Force, FDateTime DeviceTimestamp, uint32 TouchpadIndex) override;
     
 	UFUNCTION(BlueprintCallable, Category = "GamePlayerController")
 		void ScreenShot_Callback(FScreenshotImage Image);

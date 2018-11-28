@@ -1,4 +1,4 @@
-#include "MakeOrderUI.h"
+ï»¿#include "MakeOrderUI.h"
 #include "UIManager.h"
 #include "RuntimeRDataManager.h"
 #include "UserInfo.h"
@@ -118,7 +118,7 @@ void UMakeOrderUI::SetPrice(int num)
 {
 	allPriceI += num;
 	UE_LOG(LogTemp, Log, TEXT("zhx  make order ui : %d,%d"), allPriceI, num);
-	FString priceStr = FString::Printf(TEXT("£¤%d"), allPriceI);
+	FString priceStr = FString::Printf(TEXT("ï¿¥%d"), allPriceI);
 	m_Allprice->SetText(FText::FromString(priceStr));
 }
 

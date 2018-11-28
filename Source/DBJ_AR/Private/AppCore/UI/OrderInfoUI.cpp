@@ -1,4 +1,4 @@
-#include "OrderInfoUI.h"
+ï»¿#include "OrderInfoUI.h"
 #include "UIManager.h"
 #include "FileDownloadManager.h"
 #include "MakeOrderUI.h"
@@ -89,7 +89,7 @@ void UOrderInfoUI::SetData(GoodsData * _data)
 	FString borderSting = FString::Printf(TEXT("%d*%d*%d mm"), m_Data->externalHeight, m_Data->externalLength, m_Data->externalHeight);
 	m_GoodsBorder->SetText(FText::FromString(borderSting));
 	m_CompanyName->SetText(FText::FromString(m_Data->supplyName));
-	FString price = FString::Printf(TEXT("£¤%d"), m_Data->salePrice);
+	FString price = FString::Printf(TEXT("ï¿¥%d"), m_Data->salePrice);
 	m_GoodsPrice->SetText(FText::FromString(price));
 	
 	ResetNum();

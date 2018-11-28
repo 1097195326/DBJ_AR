@@ -34,25 +34,25 @@ void AUserController::On_Delete()
 {
     
 }
-bool AUserController::InputTouch(uint32 Handle, ETouchType::Type Type, const FVector2D& TouchLocation, float Force, FDateTime DeviceTimestamp, uint32 TouchpadIndex)
-{
-    //UE_LOG(LogTemp, Log, TEXT("zhx : user controller input touch : "));
-    
-    switch(Type)
-    {
-        case ETouchType::Began:
-            break;
-        case ETouchType::Moved:
-            break;
-        case ETouchType::Stationary:
-            break;
-        case ETouchType::Ended:
-            break;
-    }
-    
-    return Super::InputTouch(Handle,Type,TouchLocation,Force,DeviceTimestamp,TouchpadIndex);
-    
-}
+//bool AUserController::InputTouch(uint32 Handle, ETouchType::Type Type, const FVector2D& TouchLocation, float Force, FDateTime DeviceTimestamp, uint32 TouchpadIndex)
+//{
+//    //UE_LOG(LogTemp, Log, TEXT("zhx : user controller input touch : "));
+//    
+//    switch(Type)
+//    {
+//        case ETouchType::Began:
+//            break;
+//        case ETouchType::Moved:
+//            break;
+//        case ETouchType::Stationary:
+//            break;
+//        case ETouchType::Ended:
+//            break;
+//    }
+//    
+//    return Super::InputTouch(Handle,Type,TouchLocation,Force,DeviceTimestamp,TouchpadIndex);
+//    
+//}
 
 void AUserController::ScreenShot_Callback(FScreenshotImage Image)
 {
