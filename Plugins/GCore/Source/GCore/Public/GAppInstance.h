@@ -14,6 +14,12 @@
 #include "Engine/GameInstance.h"
 #include "GAppInstance.generated.h"
 
+typedef enum {
+	ENotReachable = 0,
+	EReachableViaWiFi,
+	EReachableViaWWAN
+} ENetworkStatus;
+
 UCLASS()
 class GCORE_API UGAppInstance : public UGameInstance, public GObject
 {
@@ -28,6 +34,6 @@ public:
 
     virtual	void OpenLevel(const FString & _levelName);
 
-    
+	ENetworkStatus GetNetworkStatus();
 };
 

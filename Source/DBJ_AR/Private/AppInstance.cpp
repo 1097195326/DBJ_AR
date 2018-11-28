@@ -9,6 +9,9 @@
 UAppInstance::UAppInstance()
 {
 	m_Instance = this;
+	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUObject(this, &UAppInstance::ApplicationWillEnterBackground);
+	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUObject(this, &UAppInstance::ApplicationHasEnteredForeground);
+
 }
 void UAppInstance::On_Init()
 {
@@ -30,13 +33,17 @@ void UAppInstance::OpenLevel(const FString & _levelName)
 
 	UGameplayStatics::OpenLevel(this, *levelPath);
 }
-void UAppInstance::Shutdown()
-{
-	UE_LOG(LogTemp, Error, TEXT("zhx : app shut down"));
-
-	Super::Shutdown();
-}
 void UAppInstance::PakMount()
 {
 	GFileManager::GetInstance()->TestPak();
+}
+void UAppInstance::ApplicationWillEnterBackground()
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : UAppInstance::ApplicationWillEnterBackground"));
+
+}
+void UAppInstance::ApplicationHasEnteredForeground()
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : UAppInstance::ApplicationHasEnteredForeground"));
+
 }

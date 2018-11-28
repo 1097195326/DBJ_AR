@@ -24,6 +24,10 @@ void UOrderUserInfoItem::On_Init()
 	{
 		m_ShowGoImage = widget;
 	}
+	if (UBorder * widget = (UBorder*)GetWidgetFromName("BottomBorder"))
+	{
+		m_BottomBorder = widget;
+	}
 }
 void UOrderUserInfoItem::On_Start()
 {
@@ -41,6 +45,10 @@ void UOrderUserInfoItem::On_Start()
 		m_ItemContent->SetVisibility(ESlateVisibility::Visible);
 		m_DoSomethingButton->SetVisibility(ESlateVisibility::Visible);
 		m_ShowGoImage->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (m_IsHiddenBorder)
+	{
+		m_BottomBorder->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 void UOrderUserInfoItem::On_Delete()

@@ -34,6 +34,8 @@ void UEditUserInfoUI::OnButtonClick(int _index)
 	{
 	case 1:
 	{
+		UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"));
+		baseUI->AddToViewport();
 		RemoveFromParent();
 	}break;
 	case 2:

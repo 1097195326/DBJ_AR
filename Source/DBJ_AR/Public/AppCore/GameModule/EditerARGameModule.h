@@ -31,5 +31,8 @@ public:
 	// get user account order
 	void	GetAccountOrder(int lastid = 0, int size = 10);
 	void	OnGetAccountOrder(msg_ptr _msg);
+	// user logout
+	void	UserLogout();
+	void	OnUserLogout(msg_ptr _msg);
 
 };

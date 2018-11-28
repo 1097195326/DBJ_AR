@@ -129,9 +129,9 @@ void UEditerARUI::On_Button_Click(int _index)
 		}break;
 		case 13:
 		{// reset AR session
-			AUserPawn::GetInstance()->StopARSession();
+			//AUserPawn::GetInstance()->StopARSession();
 			AUserPawn::GetInstance()->DeleteAllARActor();
-			AUserPawn::GetInstance()->StartARSession();
+			//AUserPawn::GetInstance()->StartARSession();
 		}break;
 		case 14:
 		{//to order list 

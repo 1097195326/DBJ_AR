@@ -2,6 +2,7 @@
 
 #include "GAppInstance.h"
 #include "AppCore/Managers/DataManager.h"
+#include "Misc/CoreDelegates.h"
 #include "AppInstance.generated.h"
 
 UCLASS()
@@ -15,8 +16,9 @@ public:
 	virtual void On_Init() override;
 	virtual void OpenLevel(const FString & _levelName) override;
 
-	virtual void Shutdown() override;
-    
+	void ApplicationWillEnterBackground();
+	void ApplicationHasEnteredForeground();
+
 	UFUNCTION(Exec)
 		void PakMount();
 };

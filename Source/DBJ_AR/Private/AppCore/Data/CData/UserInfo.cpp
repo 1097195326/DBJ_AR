@@ -19,11 +19,13 @@ UserInfo::UserInfo()
     FString SavePath = UFileDownloadManager::Get()->GetAppPath();
     
 	m_SavePath = FPaths::Combine(SavePath, m_SaveName);
-	
+	m_LocalDataPath = FPaths::Combine(SavePath, TEXT("LocalUserData.data"));
+
     UE_LOG(LogTemp,Log,TEXT("zhx : user info save path : %s"),*m_SavePath);
     
     //m_SavePath = FPaths::ConvertRelativePathToFull(m_SavePath);
 	ReadLocalData();
+	ReadUserData();
 }
 
 UserInfo::~UserInfo()
@@ -47,7 +49,7 @@ FString UserInfo::GetToken()
 {
 	return m_SaveUserData.token;
 }
-bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj)
+bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> _JsonObj)
 {
     //for test
     if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_SavePath))
@@ -55,11 +57,11 @@ bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj)
         UE_LOG(LogTemp, Error, TEXT("zhx path: %s user info is exit "), *m_SavePath);
         return true;
     }
-    
+	
 	//序列化.
 	FString mJson_Str;
 	TSharedRef<TJsonWriter<>> mWriter = TJsonWriterFactory<>::Create(&mJson_Str);
-	if (!FJsonSerializer::Serialize(_JsonObj->ToSharedRef(), mWriter))
+	if (!FJsonSerializer::Serialize(_JsonObj.ToSharedRef(), mWriter))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Method UserInfo::SaveLocalData Serialize  failed"));
 		return false;
@@ -74,9 +76,9 @@ bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj)
 		return false;
 	}
 	ReadLocalData();
+	
 	return true;
 }
-
 bool UserInfo::ReadLocalData()
 {
 	//
@@ -123,6 +125,7 @@ bool UserInfo::ReadLocalData()
 		}
 	}*/
 	//解析json组装data.
+	m_SaveUserData.Allow4G = mJsonObj->GetIntegerField(TEXT("Allow4G"));
 	TSharedPtr<FJsonObject> data = mJsonObj->GetObjectField(TEXT("data"));
 	m_SaveUserData.token = data->GetStringField(TEXT("token"));
 	TSharedPtr<FJsonObject> mRentVO = data->GetObjectField(TEXT("rentVO"));
@@ -139,7 +142,70 @@ bool UserInfo::ReadLocalData()
 	m_SaveUserData.gmtCreate = mRentVO->GetStringField(TEXT("gmtCreate"));
 	return true;
 }
+bool UserInfo::SaveUserData(FString key, int value)
+{
+	FString mjson_Str;
+	TSharedPtr<FJsonObject> mJsonObj = MakeShareable(new FJsonObject);
+	if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_LocalDataPath))
+	{
+		if (!FFileHelper::LoadFileToString(mjson_Str, *m_LocalDataPath))
+		{
+			return false;
+		}
+		TSharedRef<TJsonReader<>> mReader = TJsonReaderFactory<>::Create(mjson_Str);
+		if (!FJsonSerializer::Deserialize(mReader, mJsonObj))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Method UserInfo::ReadLocalData Deserialize  failed"));
+			return false;
+		}
+	}
+	mJsonObj->SetNumberField(*key, value);
 
+	TSharedRef<TJsonWriter<>> mWriter = TJsonWriterFactory<>::Create(&mjson_Str);
+	if (!FJsonSerializer::Serialize(mJsonObj.ToSharedRef(), mWriter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Method UserInfo::SaveLocalData Serialize  failed"));
+		return false;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("zhx : User INFO Write : %s"), *mjson_Str);
+
+	if (!FFileHelper::SaveStringToFile(mjson_Str, *m_LocalDataPath))
+	{
+		return false;
+	}
+	return true;
+}
+bool UserInfo::ReadUserData()
+{
+	//
+	FString mjson_Str;
+	if (!FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_LocalDataPath))
+	{
+		UE_LOG(LogTemp, Error, TEXT("zhx path: %s not extist"), *m_LocalDataPath);
+		m_SaveUserData.Allow4G = 1;
+		return false;
+	}
+
+	if (!FFileHelper::LoadFileToString(mjson_Str, *m_LocalDataPath))
+	{
+		return false;
+	}
+	UE_LOG(LogTemp, Log, TEXT("zhx : User INFO read : %s"), *mjson_Str);
+	//mjson_Str = EncryptAndDecryptTool::Decrypt(mjson_Str, EncryptKey);
+	//反序列化.
+	TSharedPtr<FJsonObject> mJsonObj = MakeShareable(new FJsonObject);
+	TSharedRef<TJsonReader<>> mReader = TJsonReaderFactory<>::Create(mjson_Str);
+	if (!FJsonSerializer::Deserialize(mReader, mJsonObj))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Method UserInfo::ReadLocalData Deserialize  failed"));
+		return false;
+	}
+	//解析json组装data.
+	m_SaveUserData.Allow4G = mJsonObj->GetIntegerField(TEXT("Allow4G"));
+
+	return true;
+}
 
 
 FString UserInfo::GetSaveName()
@@ -169,4 +235,8 @@ const FSaveUserData& UserInfo::GetLocalData()
 bool UserInfo::IsExistLocalFile()
 {
 	return  FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_SavePath);
+}
+bool UserInfo::IsAllow4G()
+{
+	return m_SaveUserData.Allow4G == 1 ? true : false;
 }

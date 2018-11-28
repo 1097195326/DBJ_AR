@@ -1,6 +1,7 @@
 #include "UIManager.h"
 #include "DataManager.h"
 #include "AppInstance.h"
+#include "TopHintTextUI.h"
 
 UIManager * UIManager::GetInstance()
 {
@@ -41,4 +42,10 @@ void UIManager::UnRegisterButton(UButton * _btn)
 	}
 	
 
+}
+void UIManager::TopHintText(const FString & hintText, float showSecond)
+{
+	UTopHintTextUI * baseUI = (UTopHintTextUI*)OpenUI(TEXT("TopHintTextUI"));
+	baseUI->AddToViewport(999);
+	baseUI->InitText(hintText, showSecond);
 }

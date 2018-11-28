@@ -86,7 +86,7 @@ void LoginGameModule::OnUserLogin(msg_ptr _msg)
 	UE_LOG(LogTemp, Log, TEXT("zhx : LoginGameModule::OnUserLogin : "));
 	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
 
-	UserInfo::Get()->SaveToLocal(&jsonData);
+	UserInfo::Get()->SaveToLocal(jsonData);
 
 	int code = 0;
 	jsonData->TryGetNumberField(TEXT("code"), code);

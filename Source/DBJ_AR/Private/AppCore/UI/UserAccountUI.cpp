@@ -67,12 +67,16 @@ void UUserAccountUI::OnButtonClick(int _index)
 	}break;
 	case 2:
 	{// setting
-		EditerARGameModule::GetInstance()->GetAccountOrder();
+		//EditerARGameModule::GetInstance()->GetAccountOrder();
+		UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("SettingUI"));
+		baseUI->AddToViewport();
+		RemoveFromParent();
 	}break;
 	case 3:
 	{// to edit user info
 		UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("EditUserInfoUI"));
 		baseUI->AddToViewport();
+		RemoveFromParent();
 	}break;
 	}
 }

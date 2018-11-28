@@ -39,6 +39,10 @@ void UMakeOrderUI::On_Init()
 	{
 		m_Allprice = widget;
 	}
+	if (UCanvasPanel * widget = (UCanvasPanel*)GetWidgetFromName("SaveOrderPanel"))
+	{
+		m_SaveOrderPanel = widget;
+	}
 	if (UButton * widget = (UButton*)GetWidgetFromName("SaveOrderButton"))
 	{
 		m_SaveOrderButton = widget;
@@ -75,9 +79,11 @@ void UMakeOrderUI::InitView()
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
 	if (order->Status == 1)
 	{
+		m_SaveOrderPanel->SetVisibility(ESlateVisibility::Hidden);
 		m_SaveOrderButton->SetVisibility(ESlateVisibility::Hidden);
 	}else if (order->Status == 2)
 	{
+		m_SaveOrderPanel->SetVisibility(ESlateVisibility::Hidden);
 		m_SaveOrderButton->SetVisibility(ESlateVisibility::Hidden);
 		m_CommitOrderButton->SetIsEnabled(false);
 	}
@@ -112,7 +118,7 @@ void UMakeOrderUI::SetPrice(int num)
 {
 	allPriceI += num;
 	UE_LOG(LogTemp, Log, TEXT("zhx  make order ui : %d,%d"), allPriceI, num);
-	FString priceStr = FString::Printf(TEXT("%d"), allPriceI);
+	FString priceStr = FString::Printf(TEXT("гд%d"), allPriceI);
 	m_Allprice->SetText(FText::FromString(priceStr));
 }
 

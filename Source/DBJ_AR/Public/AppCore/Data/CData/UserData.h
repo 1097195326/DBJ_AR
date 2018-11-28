@@ -25,7 +25,9 @@ public:
 	FString detailAddress;
 	bool limit;
 	FString gmtCreate;
-	FSaveUserData() {}
+	// user data
+	int32 Allow4G;
+	FSaveUserData() { Allow4G = 1; }
 };
 
 

@@ -17,13 +17,15 @@ public:
 		FString m_ItemNameS;
 	UPROPERTY(EditAnywhere)
 		bool m_IsEdit;
+	UPROPERTY(EditAnywhere)
+		bool m_IsHiddenBorder;
 
 	UImage * m_ShowGoImage;
     UButton * m_DoSomethingButton;
 	UTextBlock *  m_ItemName;
 	UEditableText * m_EditText;
 	UTextBlock *  m_ItemContent;
-
+	UBorder *	m_BottomBorder;
 
 	
 };

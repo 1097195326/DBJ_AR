@@ -22,14 +22,19 @@ private:
 	FSaveUserData m_SaveUserData;
 	FString m_SaveName;
 	FString m_SavePath;
+	FString m_LocalDataPath;
 	FString GetSaveName();
 	FString GetSavePath();
 public:
 	bool ReadLocalData();
 	void ClearLocalData();
-	bool SaveToLocal(TSharedPtr<FJsonObject> *_JsonObj);
+	bool SaveToLocal(TSharedPtr<FJsonObject> _JsonObj);
+	bool SaveUserData(FString key, int value);
+	bool ReadUserData();
 	const FSaveUserData&  GetLocalData();
 	bool IsExistLocalFile();
 	FString GetCookie();
 	FString GetToken();
+
+	bool IsAllow4G();
 };

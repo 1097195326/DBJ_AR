@@ -20,6 +20,9 @@ public:
 
     UBaseUI* OpenUI(const FString & _uiName,UBaseUI * _ParentUI = nullptr);
 
+	void	TopHintText(const FString & hintText, float showSecond);
+
+
     template<typename T>
     void RegisterButton(int _bid, UButton * _btn, T * _obj, void(T::*_func)(int))
     {

@@ -14,6 +14,7 @@ EditerARGameModule * EditerARGameModule::GetInstance()
 }
 EditerARGameModule::EditerARGameModule()
 {
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1003, this, &EditerARGameModule::OnUserLogout);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1004, this, &EditerARGameModule::OnGetCategoryList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1008, this, &EditerARGameModule::OnGetProductList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1009, this, &EditerARGameModule::OnCommitCurrentOrder);
@@ -38,6 +39,7 @@ void EditerARGameModule::On_Start()
 }
 void EditerARGameModule::On_Delete()
 {
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1003, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1004, this);
     MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1008, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1009, this);
@@ -226,5 +228,26 @@ void EditerARGameModule::OnGetAccountOrder(msg_ptr _msg)
 		result = 1;
 	}
 	msg_ptr msg(new LocalMsg(Msg_Local, 2010, &result));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::UserLogout()
+{
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1003);
+	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1003,httpUrl,TEXT(""), false, cookie, token));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::OnUserLogout(msg_ptr _msg)
+{
+	int result = 0;
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		UserInfo::Get()->SaveToLocal(jsonData);
+		result = 1;
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2003, &result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }

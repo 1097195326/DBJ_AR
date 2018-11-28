@@ -30,6 +30,7 @@ public:
 	//main view
 	UScrollBox * m_OrderScroll;
 	UTextBlock * m_Allprice;
+	UCanvasPanel * m_SaveOrderPanel;
 	UButton * m_SaveOrderButton;
 	UButton * m_CommitOrderButton;
 
