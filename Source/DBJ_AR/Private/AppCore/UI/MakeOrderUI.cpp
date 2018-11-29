@@ -1,4 +1,4 @@
-﻿#include "MakeOrderUI.h"
+#include "MakeOrderUI.h"
 #include "UIManager.h"
 #include "RuntimeRDataManager.h"
 #include "UserInfo.h"
@@ -10,7 +10,7 @@ void UMakeOrderUI::On_Init()
 	if (UButton * widget = (UButton*)GetWidgetFromName("BackButton"))
 	{
 		m_BackButton = widget;
-		UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UMakeOrderUI::OnButtonClick);
+		
 	}
 	// user info
 	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("CompanyName"))
@@ -28,7 +28,7 @@ void UMakeOrderUI::On_Init()
 	if (UButton * widget = (UButton*)GetWidgetFromName("ToOrderInfoButton"))
 	{
 		m_ToOrderInfoButton = widget;
-		UIManager::GetInstance()->RegisterButton(2, m_ToOrderInfoButton, this, &UMakeOrderUI::OnButtonClick);
+		
 	}
 	//main view
 	if (UScrollBox * widget = (UScrollBox*)GetWidgetFromName("OrderScroll"))
@@ -46,19 +46,23 @@ void UMakeOrderUI::On_Init()
 	if (UButton * widget = (UButton*)GetWidgetFromName("SaveOrderButton"))
 	{
 		m_SaveOrderButton = widget;
-		UIManager::GetInstance()->RegisterButton(3, m_SaveOrderButton, this, &UMakeOrderUI::OnButtonClick);
+		
 	}
 	if (UButton * widget = (UButton*)GetWidgetFromName("CommitButton"))
 	{
 		m_CommitOrderButton = widget;
-		UIManager::GetInstance()->RegisterButton(4, m_CommitOrderButton, this, &UMakeOrderUI::OnButtonClick);
+		
 	}
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2009, this, &UMakeOrderUI::OnCommitCurrentOrder);
 }
 void UMakeOrderUI::On_Start()
 {
 	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
-	
+    UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UMakeOrderUI::OnButtonClick);
+    UIManager::GetInstance()->RegisterButton(2, m_ToOrderInfoButton, this, &UMakeOrderUI::OnButtonClick);
+    UIManager::GetInstance()->RegisterButton(3, m_SaveOrderButton, this, &UMakeOrderUI::OnButtonClick);
+    UIManager::GetInstance()->RegisterButton(4, m_CommitOrderButton, this, &UMakeOrderUI::OnButtonClick);
+    
 	InitView();
 }
 void UMakeOrderUI::On_Delete()

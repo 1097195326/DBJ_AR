@@ -10,17 +10,17 @@ void UUserAccountUI::On_Init()
     if (UButton * widget = (UButton*)GetWidgetFromName("BackButton"))
     {
 		m_BackButton = widget;
-		UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UUserAccountUI::OnButtonClick);
+		
     }
 	if (UButton * widget = (UButton*)GetWidgetFromName("SettingButton"))
 	{
 		m_SettingButton = widget;
-		UIManager::GetInstance()->RegisterButton(2, m_SettingButton, this, &UUserAccountUI::OnButtonClick);
+		
 	}
 	if (UButton * widget = (UButton*)GetWidgetFromName("ToUserInfoButton"))
 	{
 		m_ToUserInfoButton = widget;
-		UIManager::GetInstance()->RegisterButton(3, m_ToUserInfoButton, this, &UUserAccountUI::OnButtonClick);
+		
 	}
 	if (UNativeWidgetHost * widget = (UNativeWidgetHost*)GetWidgetFromName("UserImage"))
 	{
@@ -42,6 +42,10 @@ void UUserAccountUI::On_Init()
 }
 void UUserAccountUI::On_Start()
 {
+    UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UUserAccountUI::OnButtonClick);
+    UIManager::GetInstance()->RegisterButton(2, m_SettingButton, this, &UUserAccountUI::OnButtonClick);
+    UIManager::GetInstance()->RegisterButton(3, m_ToUserInfoButton, this, &UUserAccountUI::OnButtonClick);
+    
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2010, this, &UUserAccountUI::OnGetAccountOrder);
 
 	FString companyName = UserInfo::Get()->GetLocalData().companyName;
@@ -54,6 +58,10 @@ void UUserAccountUI::On_Start()
 }
 void UUserAccountUI::On_Delete()
 {
+    UIManager::GetInstance()->UnRegisterButton(m_BackButton);
+    UIManager::GetInstance()->UnRegisterButton(m_SettingButton);
+    UIManager::GetInstance()->UnRegisterButton(m_ToUserInfoButton);
+    
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2010, this);
 }
 void UUserAccountUI::OnButtonClick(int _index)

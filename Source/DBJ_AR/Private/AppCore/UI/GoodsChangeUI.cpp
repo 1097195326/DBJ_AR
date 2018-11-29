@@ -82,8 +82,8 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 	}
 	m_ScrollBox->ScrollToStart();
 	m_GridPanel->ClearChildren();
-	TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
-	//TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
+//    TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
+    TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
 
 	for (int i = 0; i < goods.Num(); i++)
 	{

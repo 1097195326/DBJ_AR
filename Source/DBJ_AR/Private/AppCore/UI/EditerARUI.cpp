@@ -13,25 +13,25 @@ void UEditerARUI::On_Init()
     if (UButton *widget = Cast<UButton>(GetWidgetFromName("ProductListButton")))
     {
         m_ProductListButton = widget;
-        UI_M->RegisterButton(1, m_ProductListButton, this, &UEditerARUI::On_Button_Click);
+        
     }
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ChangeButton")))
 	{
 		m_ChangeButton = widget;
 		m_ChangeButton->SetVisibility(ESlateVisibility::Hidden);
-		UI_M->RegisterButton(2, m_ChangeButton, this, &UEditerARUI::On_Button_Click);
+		
 	}
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("DeleteButton")))
 	{
 		m_DeleteButton = widget;
 		m_DeleteButton->SetVisibility(ESlateVisibility::Hidden);
-		UI_M->RegisterButton(3, m_DeleteButton, this, &UEditerARUI::On_Button_Click);
+		
 	}
     //top button list
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ShowListButton")))
 	{
 		m_ShowlistButton = widget;
-		UI_M->RegisterButton(10, m_ShowlistButton, this, &UEditerARUI::On_Button_Click);
+		
 	}
 	if (UScrollBox *widget = Cast<UScrollBox>(GetWidgetFromName("ShowListPanel")))
 	{
@@ -41,23 +41,23 @@ void UEditerARUI::On_Init()
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("CloseListButton")))
 	{
 		m_CloseListButton = widget;
-		UI_M->RegisterButton(11, m_CloseListButton, this, &UEditerARUI::On_Button_Click);
+		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("AcountButton")))
 	{
 		m_AcountButton = widget;
-		UI_M->RegisterButton(12, m_AcountButton, this, &UEditerARUI::On_Button_Click);
+		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("AdressButton")))
 	{
 		m_AddressButton = widget;
-		UI_M->RegisterButton(13, m_AddressButton, this, &UEditerARUI::On_Button_Click);
+		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("OrderListButton")))
 	{
 		m_OrderlistButton = widget;
-		UI_M->RegisterButton(14, m_OrderlistButton, this, &UEditerARUI::On_Button_Click);
+		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("ShareButton")))
 	{
 		m_ShareButton = widget;
-		UI_M->RegisterButton(15, m_ShareButton, this, &UEditerARUI::On_Button_Click);
+		
 	}
 }
 void UEditerARUI::On_Start()
@@ -66,27 +66,31 @@ void UEditerARUI::On_Start()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3001, this, &UEditerARUI::OnSelectActor);
 
 
+    UI_M->RegisterButton(1, m_ProductListButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(2, m_ChangeButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(3, m_DeleteButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(10, m_ShowlistButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(11, m_CloseListButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(12, m_AcountButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(13, m_AddressButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(14, m_OrderlistButton, this, &UEditerARUI::On_Button_Click);
+    UI_M->RegisterButton(15, m_ShareButton, this, &UEditerARUI::On_Button_Click);
 }
 void UEditerARUI::On_Delete()
 {
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2004, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 3001, this);
-
-    if (m_ProductListButton)
-    {
-        UI_M->UnRegisterButton(m_ProductListButton);
-		m_ProductListButton = nullptr;
-    }
-	if (m_ChangeButton)
-	{
-		UI_M->UnRegisterButton(m_ChangeButton);
-		m_ChangeButton = nullptr;
-	}
-	if (m_DeleteButton)
-	{
-		UI_M->UnRegisterButton(m_DeleteButton);
-		m_DeleteButton = nullptr;
-	}
+    
+    UI_M->UnRegisterButton(m_ProductListButton);
+    UI_M->UnRegisterButton(m_ChangeButton);
+    UI_M->UnRegisterButton(m_DeleteButton);
+    
+    UI_M->UnRegisterButton(m_ShowlistButton);
+    UI_M->UnRegisterButton(m_CloseListButton);
+    UI_M->UnRegisterButton(m_AcountButton);
+    UI_M->UnRegisterButton(m_AddressButton);
+    UI_M->UnRegisterButton(m_OrderlistButton);
+    UI_M->UnRegisterButton(m_ShareButton);
 	
 }
 void UEditerARUI::On_Button_Click(int _index)

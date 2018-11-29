@@ -125,7 +125,6 @@ bool UserInfo::ReadLocalData()
 		}
 	}*/
 	//解析json组装data.
-	m_SaveUserData.Allow4G = mJsonObj->GetIntegerField(TEXT("Allow4G"));
 	TSharedPtr<FJsonObject> data = mJsonObj->GetObjectField(TEXT("data"));
 	m_SaveUserData.token = data->GetStringField(TEXT("token"));
 	TSharedPtr<FJsonObject> mRentVO = data->GetObjectField(TEXT("rentVO"));
