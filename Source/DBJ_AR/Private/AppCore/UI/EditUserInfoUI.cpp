@@ -29,7 +29,7 @@ void UEditUserInfoUI::On_Init()
 }
 void UEditUserInfoUI::OnButtonClick(int _index)
 {
-    UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
+    UE_LOG(LogTemp, Log, TEXT("zhx : UEditUserInfoUI::OnButtonClick : "));
 	switch (_index)
 	{
 	case 1:
@@ -40,7 +40,8 @@ void UEditUserInfoUI::OnButtonClick(int _index)
 	}break;
 	case 2:
 	{
-
+        UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("PhotoPage"));
+        baseUI->AddToViewport();
 	}break;
 	}
 
