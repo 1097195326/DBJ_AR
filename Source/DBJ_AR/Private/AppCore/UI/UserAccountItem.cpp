@@ -51,8 +51,8 @@ void UUserAccountItem::SetOrder(R_Order * order)
 }
 void UUserAccountItem::ReView()
 {
-	FString price = FString::Printf(TEXT("合计: %d"), m_Order->totalPrice);
-	FString quantity = FString::Printf(TEXT("共%d个商品"), m_Order->totalQuantity);
+	FString price = FString::Printf(TEXT("合计: ￥%d"), m_Order->totalPrice);
+	FString quantity = FString::Printf(TEXT("共%d件商品"), m_Order->totalQuantity);
 	m_CompanyName->SetText(FText::FromString(m_Order->ReceiverCompanyName));
 	m_AllPrice->SetText(FText::FromString(price));
 	m_AllNum->SetText(FText::FromString(quantity));

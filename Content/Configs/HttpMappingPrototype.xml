@@ -19,6 +19,7 @@
         <mapping msgId="1012" channel="http" uri="mgw/versions?" dest="" />
         <mapping msgId="1013" channel="http" uri="mgw/products/listByMatch" dest="change" />
         <mapping msgId="1014" channel="http" uri="mgw/areas" dest="get areas" />
+        <mapping msgId="1015" channel="http" uri="mgw/users/updateSelf" dest="update self" />
 
 
         <mapping msgId="2001" channel="local" uri="mgw/login" />
@@ -30,7 +31,7 @@
         <mapping msgId="2010" channel="local" uri="mgw/orders" />
         <mapping msgId="2013" channel="local" uri="products/listByMatch" />
         <mapping msgId="2014" channel="local" uri="mgw/areas" dest="get areas" />
-        
+        <mapping msgId="2015" channel="local" uri="mgw/users/updateSelf" dest="update self" />
         
         <mapping msgId="3001" channel="local" uri="" dest = "select actor send msg to UI"/>
 

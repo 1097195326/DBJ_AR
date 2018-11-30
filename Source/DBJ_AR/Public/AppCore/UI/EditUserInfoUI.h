@@ -14,8 +14,11 @@ public:
 	UButton * m_BackButton;
 	UImage * m_UserImage;
     UButton * m_ChangeUserImage;
-	UEditableText * m_EditUserName;
-	UEditableText * m_EditUserPhone;
+	UTextBlock * m_EditUserName;
+	UTextBlock * m_EditUserPhone;
 
     void OnButtonClick(int _index);
+
+	void OnTextChanged(const FText & text);
+
 };

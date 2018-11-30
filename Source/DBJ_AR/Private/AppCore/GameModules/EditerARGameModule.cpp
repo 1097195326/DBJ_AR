@@ -21,6 +21,7 @@ EditerARGameModule::EditerARGameModule()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1010, this, &EditerARGameModule::OnGetAccountOrder);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1013, this, &EditerARGameModule::OnGetChangeList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1014, this, &EditerARGameModule::OnGetAreaList);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1015, this, &EditerARGameModule::OnUpdateSelf);
 }
 void EditerARGameModule::On_Init()
 {
@@ -46,6 +47,7 @@ void EditerARGameModule::On_Delete()
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1010, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1013, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1014, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1015, this);
 
 
     if (m_CurrentUIController != nullptr)
@@ -249,5 +251,31 @@ void EditerARGameModule::OnUserLogout(msg_ptr _msg)
 		result = 1;
 	}
 	msg_ptr msg(new LocalMsg(Msg_Local, 2003, &result));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::UpdateSelf(FString Name)
+{
+	TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
+
+	t_jsonObject->SetStringField(TEXT("renterName"), Name);
+	t_jsonObject->SetStringField(TEXT("phone"), UserInfo::Get()->GetLocalData().phone);
+	t_jsonObject->SetStringField(TEXT("avatarUrl"), TEXT(""));
+
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1015);
+	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1015, t_jsonObject, httpUrl, false, cookie, token));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::OnUpdateSelf(msg_ptr _msg)
+{
+	int result = 0;
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		result = 1;
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2015, &result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }

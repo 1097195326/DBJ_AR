@@ -17,11 +17,12 @@ void UEditUserInfoUI::On_Init()
 	{
 		m_UserImage = widget;
 	}
-	if (UEditableText * widget = (UEditableText*)GetWidgetFromName("EditUserName"))
+	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("EditUserName"))
 	{
 		m_EditUserName = widget;
+
 	}
-	if (UEditableText * widget = (UEditableText*)GetWidgetFromName("EditUserPhone"))
+	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("EditUserPhone"))
 	{
 		m_EditUserPhone = widget;
 	}
@@ -44,5 +45,12 @@ void UEditUserInfoUI::OnButtonClick(int _index)
         baseUI->AddToViewport();
 	}break;
 	}
+
+}
+void UEditUserInfoUI::OnTextChanged(const FText & text)
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : edit user info text changed"));
+
+
 
 }

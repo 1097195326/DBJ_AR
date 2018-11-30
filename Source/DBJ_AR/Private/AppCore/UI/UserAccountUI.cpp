@@ -99,7 +99,7 @@ void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 		UUserAccountItem * item = (UUserAccountItem*)UIManager::GetInstance()->OpenUI(TEXT("UserAccountItem"),this);
 		
 		UScrollBoxSlot * slot = (UScrollBoxSlot*)m_OrderListScroll->AddChild(item);
-		slot->SetPadding(FMargin(0.f,28.f,0.f,0.f));
+		slot->SetPadding(FMargin(0.f,24.f,0.f,0.f));
 		item->SetOrder(OrderList[i]);
 	}
 }

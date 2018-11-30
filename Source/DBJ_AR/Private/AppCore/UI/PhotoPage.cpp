@@ -65,14 +65,16 @@ void UPhotoPage::PhotoPicture(int32 _pid)
 	if (_pid == 1)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
-		this->SetVisibility(ESlateVisibility::Hidden);
+		RemoveFromViewport();
+		//this->SetVisibility(ESlateVisibility::Hidden);
         //IImageMagickModule::Get().OpenCamera(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 		
 	}
 	if (_pid == 2)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
-		this->SetVisibility(ESlateVisibility::Hidden);
+		//this->SetVisibility(ESlateVisibility::Hidden);
+		RemoveFromViewport();
         //IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 		
 	}
