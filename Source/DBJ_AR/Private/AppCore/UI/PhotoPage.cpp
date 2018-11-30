@@ -3,7 +3,7 @@
 #include "PhotoPage.h"
 #include "UIManager.h"
 //#include "OSSModule.h"
-#include "ImageMagick.h"
+//#include "ImageMagick.h"
 
 
 
@@ -66,14 +66,14 @@ void UPhotoPage::PhotoPicture(int32 _pid)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
 		this->SetVisibility(ESlateVisibility::Hidden);
-        IImageMagickModule::Get().OpenCamera(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+        //IImageMagickModule::Get().OpenCamera(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 		
 	}
 	if (_pid == 2)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
 		this->SetVisibility(ESlateVisibility::Hidden);
-        IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+        //IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 		
 	}
 	if (_pid == 3)
@@ -85,7 +85,7 @@ void UPhotoPage::PhotoPicture(int32 _pid)
 
 void UPhotoPage::GetUploadPattern()
 {
-	IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPattern));
+	//IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPattern));
 }
 
 void UPhotoPage::CBOnOpenPattern(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes)
@@ -240,7 +240,7 @@ void UPhotoPage::CBOnOpenPattern(bool isSuccess, FString inIconFilePath, FString
 
 void UPhotoPage::GetUploadPicture()
 {
-	IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+	//IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 }
 
 void UPhotoPage::CBOnOpenPicture(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes)

@@ -12,7 +12,7 @@ public class DBJ_AR : ModuleRules
         "Slate", "SlateCore","UMG","ImageDownload","PakFile"
 });
 
-        PublicDependencyModuleNames.AddRange(new string[] {"GCore",  "GXmlPlugins", "MsgCore", "DownloadTool" ,"ImageMagick"});
+        PublicDependencyModuleNames.AddRange(new string[] {"GCore",  "GXmlPlugins", "MsgCore", "DownloadTool"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
