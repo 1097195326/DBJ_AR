@@ -5,21 +5,37 @@ AUserActor::AUserActor()
 {
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("rootcomponent"));
     
+	m_PlaneRotateComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlaneRotateComponent"));
+	m_PlaneRotateComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	
     m_Mesh = CreateDefaultSubobject<UUserComponent>(TEXT("UserMesh"));
-    
     m_Mesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-    
+	
 	m_SoketIndex = 0;
 }
 AUserActor::~AUserActor()
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : AUserActor::~AUserActor"));
 }
+void AUserActor::BeginPlay()
+{
+	Super::BeginPlay();
+	m_PlaneRotateComponent->SetVisibility(false);
+
+}
 void AUserActor::BeginDestroy()
 {
 	Super::BeginDestroy();
 
 	UE_LOG(LogTemp, Log, TEXT("zhx : AUserActor::BeginDestroy"));
+}
+void AUserActor::ShowPlaneComponent(bool visiable)
+{
+	if (m_PlaneRotateComponent)
+	{
+		m_PlaneRotateComponent->SetVisibility(visiable);
+
+	}
 }
 void AUserActor::RemoveGoodsData(GoodsData * _data)
 {

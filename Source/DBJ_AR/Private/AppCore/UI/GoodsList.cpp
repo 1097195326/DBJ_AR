@@ -35,7 +35,7 @@ void UGoodsList::On_Start()
     UE_LOG(LogTemp,Log,TEXT("zhx : goodslist ui start"));
     MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UGoodsList::OnGetProductList);
     
-    UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
+    //UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
     
     InitView();
 }

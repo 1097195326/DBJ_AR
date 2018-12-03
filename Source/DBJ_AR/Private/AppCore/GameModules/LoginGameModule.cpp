@@ -47,7 +47,7 @@ void LoginGameModule::GetSmsCodeToLogin(FString _phoneNum)
 	t_jsonObject->SetStringField(TEXT("phone"), _phoneNum);
 
 	FString httpUrl = Data_M->GetURL(1002);
-	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1002, t_jsonObject, httpUrl);
+	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1002, t_jsonObject, httpUrl,Http_Post);
 	
 	msg_ptr mMsg(msg); //
 	
@@ -75,7 +75,7 @@ void LoginGameModule::UserLogin(FString _phoneNum, FString _smsCodeNum)
 	t_jsonObject->SetStringField(TEXT("smsCode"), _smsCodeNum);
 
 	FString httpUrl = Data_M->GetURL(1001);
-	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1001, t_jsonObject,httpUrl);
+	HttpMsg * msg = new HttpMsg(Msg_HttpRequest, 1001, t_jsonObject,httpUrl,Http_Post);
 	msg_ptr mMsg(msg); //
 
 					   // 3.通过消息系统发送消息.

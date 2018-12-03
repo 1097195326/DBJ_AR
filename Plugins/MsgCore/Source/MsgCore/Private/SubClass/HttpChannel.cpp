@@ -63,9 +63,23 @@ void HttpChannel::SendMsgToHttp(msg_ptr _msg)
 	httpUrl.RemoveSpacesInline();
 	HttpRequest->SetURL(httpUrl);
 	
-
-	const FString verb = mHttpMsg->m_IsGet ? TEXT("GET") : TEXT("POST");
-	HttpRequest->SetVerb(verb);
+	switch (mHttpMsg->m_RequestType)
+	{
+	case Http_Post:
+	{
+		HttpRequest->SetVerb(TEXT("POST"));
+	}break;
+	case  Http_Get:
+	{
+		HttpRequest->SetVerb(TEXT("GET"));
+	}break;
+	case  Http_Put:
+	{
+		HttpRequest->SetVerb(TEXT("PUT"));
+	}break;
+	}
+	/*const FString verb = mHttpMsg->m_IsGet ? TEXT("GET") : TEXT("POST");
+	HttpRequest->SetVerb(verb);*/
 
 	HttpRequest->SetContentAsString(mHttpMsg->m_httpContent);
 

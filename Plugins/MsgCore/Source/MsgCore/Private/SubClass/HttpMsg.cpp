@@ -7,7 +7,7 @@ HttpMsg::HttpMsg()
 
 }
 //
-HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, TSharedPtr<FJsonObject> & _content, FString _httpUrl, bool _IsGet, FString _cookie, FString _token, FString _operator)
+HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, TSharedPtr<FJsonObject> & _content, FString _httpUrl, EnumHttpRequestType _type, FString _cookie, FString _token, FString _operator)
 {
 	m_MsgChannelId = _channelID;
 	m_MsgId = _unMsgID;
@@ -15,12 +15,12 @@ HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, TSharedPtr<FJsonObject>
 	m_Cookie = _cookie;
 	m_token = _token;
 	m_operator = _operator;
-	m_IsGet = _IsGet;
+	m_RequestType = _type;
 
 	TSharedRef<TJsonWriter<TCHAR>> t_writer = TJsonWriterFactory<>::Create(&m_httpContent);
 	FJsonSerializer::Serialize(_content.ToSharedRef(), t_writer);
 }
-HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, FString _httpUrl, FString _AppendUrl, bool _IsGet, FString _cookie, FString _token, FString _operator)
+HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, FString _httpUrl, FString _AppendUrl, EnumHttpRequestType _type, FString _cookie, FString _token, FString _operator)
 {
 	m_MsgChannelId = _channelID;
 	m_MsgId = _unMsgID;
@@ -28,7 +28,7 @@ HttpMsg::HttpMsg(MsgChanelId _channelID, int32 _unMsgID, FString _httpUrl, FStri
 	m_Cookie = _cookie;
 	m_token = _token;
 	m_operator = _operator;
-	m_IsGet = _IsGet;
+	m_RequestType = _type;
 	m_AppendUrl = _AppendUrl;
 }
 HttpMsg::~HttpMsg()

@@ -239,3 +239,7 @@ bool UserInfo::IsAllow4G()
 {
 	return m_SaveUserData.Allow4G == 1 ? true : false;
 }
+void UserInfo::SetUserName(const FString & _userName)
+{
+	m_SaveUserData.renterName = _userName;
+}

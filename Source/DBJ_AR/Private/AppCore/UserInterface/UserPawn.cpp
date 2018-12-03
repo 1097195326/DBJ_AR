@@ -39,7 +39,7 @@ AUserPawn::AUserPawn(const FObjectInitializer& ObjectInitializer)
     AutoPossessPlayer = EAutoReceiveInput::Player0;
 	m_self = this;
 
-	m_RotateSpeed = 5.f;
+	m_RotateSpeed = 1.f;
 }
 void AUserPawn::On_Init()
 {
@@ -128,7 +128,15 @@ void AUserPawn::OnFingerTouchMoved(const ETouchIndex::Type FingerIndex, const FV
     {
         if (m_FingerNum == 1)
         {
-            MoveSelecteARActor();
+			if (m_WantToRotate)
+			{
+				RotateSelectARActor();
+			}
+			else
+			{
+				MoveSelecteARActor();
+			}
+           
         }else if (m_FingerNum == 2)
         {
 			RotateSelectARActor();
@@ -184,20 +192,32 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 		m_SelectActor = Cast<AUserActor>(hitResult.GetActor());
 		if (m_SelectActor)
 		{
-			//m_SelectActor = Cast<AUserActor>(hitResult.GetActor());
+			m_SelectActor->ShowPlaneComponent(true);
 
-			if (m_SelectComponent)
+			UPrimitiveComponent * selelctComponent = hitResult.GetComponent();
+			if (selelctComponent->GetName().Equals(TEXT("PlaneRotateComponent")))
 			{
-				m_SelectComponent->SetRenderCustomDepth(false);
-				m_SelectComponent = nullptr;
+				UE_LOG(LogTemp, Log, TEXT("zhx : select plane rotate compoent"));
+				m_WantToRotate = true;
+
 			}
-			m_SelectComponent = Cast<UUserComponent>(hitResult.GetComponent());
-			m_SelectComponent->SetRenderCustomDepth(true);
-			// send msg to ui
-			IsSelect = true;
-			msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
-			MsgCenter::GetInstance()->SendMsg(_msg);
-			UE_LOG(LogTemp, Log, TEXT("zhx : select actor name :%s,component name : %s"), *m_SelectActor->GetName(), *m_SelectComponent->GetName());
+			else
+			{
+				m_WantToRotate = false;
+				if (m_SelectComponent)
+				{
+					m_SelectComponent->SetRenderCustomDepth(false);
+					m_SelectComponent = nullptr;
+				}
+				m_SelectComponent = Cast<UUserComponent>(hitResult.GetComponent());
+				m_SelectComponent->SetRenderCustomDepth(true);
+				// send msg to ui
+				IsSelect = true;
+				msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
+				MsgCenter::GetInstance()->SendMsg(_msg);
+				UE_LOG(LogTemp, Log, TEXT("zhx : select actor name :%s,component name : %s"), *m_SelectActor->GetName(), *m_SelectComponent->GetName());
+
+			}
 			return true;
 		}
 	}
@@ -205,6 +225,11 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 	if (m_SelectComponent)
 	{
 		m_SelectComponent->SetRenderCustomDepth(false);
+	}
+	if (m_SelectActor)
+	{
+		m_SelectActor->ShowPlaneComponent(false);
+		m_WantToRotate = false;
 	}
 	m_SelectComponent = nullptr;
 	m_SelectActor = nullptr;
@@ -349,15 +374,31 @@ void AUserPawn::RotateSelectARActor()
 {
 	if (m_SelectActor && m_SelectActor->IsValidLowLevel())
 	{
-		FVector2D _screenPosition = GetFingerPosition(2);
+		FVector2D _screenPosition;
+		bool IsVerse;
+		if (m_WantToRotate)
+		{
+			_screenPosition = GetFingerPosition(1);
+		}
+		else
+		{
+			_screenPosition = GetFingerPosition(2);
+		}
 
 		float spd = _screenPosition.X - m_ScreenPosition.X;
+		
+		IsVerse = spd > 0.f ? true : false;
 
-		FRotator currentRotator = m_SelectActor->GetActorRotation();
+		FRotator currentRotator = m_SelectActor->m_Mesh->GetComponentRotation();
 		currentRotator.Yaw -= (spd * m_RotateSpeed);
+		
+		float yawProcess = (currentRotator.Yaw + 180.f) / 360.f;
+		UE_LOG(LogTemp, Log, TEXT("zhx : current Yaw : %f"), yawProcess);
 
-		m_SelectActor->SetActorRotation(currentRotator);
-
+		m_SelectActor->m_PlaneRotateComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
+			
+		m_SelectActor->m_Mesh->SetRelativeRotation(currentRotator);//->SetActorRotation(currentRotator);
+		
 		m_ScreenPosition = _screenPosition;
 	}
 }

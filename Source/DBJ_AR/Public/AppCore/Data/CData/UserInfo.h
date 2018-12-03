@@ -37,4 +37,6 @@ public:
 	FString GetToken();
 
 	bool IsAllow4G();
+	void	SetUserName(const FString & _userName);
+
 };

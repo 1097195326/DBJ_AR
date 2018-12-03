@@ -35,7 +35,7 @@ public:
 	void	UserLogout();
 	void	OnUserLogout(msg_ptr _msg);
 	// editer user info
-	void	UpdateSelf(FString Name);
+	void	UpdateUserName(const FString & _userName);
 	void	OnUpdateSelf(msg_ptr _msg);
 	
 };

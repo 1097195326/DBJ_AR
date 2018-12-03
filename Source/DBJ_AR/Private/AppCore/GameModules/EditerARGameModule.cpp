@@ -61,7 +61,7 @@ void EditerARGameModule::GetCategoryList()
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1004);
-	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1004,httpUrl,TEXT(""),true,cookie,token));
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1004,httpUrl,TEXT(""),Http_Get,cookie,token));
 
 	MsgCenter::GetInstance()->SendMsg(mMsg);
 }
@@ -95,7 +95,7 @@ void EditerARGameModule::GetProductList(int categoryId, int lastId, int size, in
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1008);
-	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1008, httpUrl, appendUrl,true,cookie,token));
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1008, httpUrl, appendUrl,Http_Get,cookie,token));
 
     MsgCenter::GetInstance()->SendMsg(mMsg);
 }
@@ -120,7 +120,7 @@ void EditerARGameModule::GetChangeList(int productId, int lastId, int exceptProd
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1013);
-	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1013, httpUrl, appendUrl, true, cookie, token));
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1013, httpUrl, appendUrl, Http_Get, cookie, token));
 
 	MsgCenter::GetInstance()->SendMsg(mMsg);
 }
@@ -146,7 +146,7 @@ void EditerARGameModule::GetAreaList(int parentId,int level)
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1014);
-	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1014, httpUrl, appendUrl, true, cookie, token));
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1014, httpUrl, appendUrl, Http_Get, cookie, token));
 
 	MsgCenter::GetInstance()->SendMsg(mMsg);
 }
@@ -192,7 +192,7 @@ void EditerARGameModule::CommitCurrentOrder()
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1009);
-	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1009, t_jsonObject,httpUrl,false,cookie,token));
+	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1009, t_jsonObject,httpUrl,Http_Post,cookie,token));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::OnCommitCurrentOrder(msg_ptr _msg)
@@ -216,7 +216,7 @@ void EditerARGameModule::GetAccountOrder(int lastid, int size)
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1010);
-	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1010, httpUrl, appendUrl, true, cookie, token));
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1010, httpUrl, appendUrl, Http_Get, cookie, token));
 
 	MsgCenter::GetInstance()->SendMsg(mMsg);
 }
@@ -238,7 +238,7 @@ void EditerARGameModule::UserLogout()
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1003);
-	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1003,httpUrl,TEXT(""), false, cookie, token));
+	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1003,httpUrl,TEXT(""), Http_Post, cookie, token));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::OnUserLogout(msg_ptr _msg)
@@ -253,11 +253,11 @@ void EditerARGameModule::OnUserLogout(msg_ptr _msg)
 	msg_ptr msg(new LocalMsg(Msg_Local, 2003, &result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
-void EditerARGameModule::UpdateSelf(FString Name)
+void EditerARGameModule::UpdateUserName(const FString & _userName)
 {
 	TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
 
-	t_jsonObject->SetStringField(TEXT("renterName"), Name);
+	t_jsonObject->SetStringField(TEXT("renterName"), _userName);
 	t_jsonObject->SetStringField(TEXT("phone"), UserInfo::Get()->GetLocalData().phone);
 	t_jsonObject->SetStringField(TEXT("avatarUrl"), TEXT(""));
 
@@ -265,7 +265,7 @@ void EditerARGameModule::UpdateSelf(FString Name)
 	FString token = UserInfo::Get()->GetToken();
 
 	FString httpUrl = Data_M->GetURL(1015);
-	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1015, t_jsonObject, httpUrl, false, cookie, token));
+	msg_ptr msg(new HttpMsg(Msg_HttpRequest, 1015, t_jsonObject, httpUrl, Http_Put, cookie, token));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::OnUpdateSelf(msg_ptr _msg)

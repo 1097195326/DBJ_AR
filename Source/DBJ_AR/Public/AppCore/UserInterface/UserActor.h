@@ -24,11 +24,12 @@ public:
     AUserActor();
 	~AUserActor();
 	virtual void BeginDestroy() override;
-    
+	virtual void BeginPlay() override;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     UUserComponent * m_Mesh;
-    
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent * m_PlaneRotateComponent;
     
     TArray<UUserComponent *> m_HuaList;
     
@@ -47,5 +48,6 @@ public:
     bool    MergeOtherActor(AUserActor * _otherActor);
     
     void    ResetHuaComponent();
+	void	ShowPlaneComponent(bool visiable);
 };
 

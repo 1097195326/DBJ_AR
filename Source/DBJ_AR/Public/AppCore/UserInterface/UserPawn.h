@@ -52,6 +52,7 @@ public:
     void RotateGoods();
 	void ChangeGoods();
 	// mobile
+	bool	m_WantToRotate;
 	void OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
     void OnFingerTouchMoved(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnFingerTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location);

@@ -1,7 +1,8 @@
-#include "GoodsList_Icon.h"
+﻿#include "GoodsList_Icon.h"
 #include "UserPawn.h"
 #include "UIManager.h"
 #include "GoodsChangeUI.h"
+#include "UserInfo.h"
 
 void UGoodsList_Icon::On_Init()
 {
@@ -88,16 +89,23 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	}break;
 	case 2:
 	{
-		FFileInfo info;
-		info.Id = m_Data->modelId;
-		info.FileSize = m_Data->pakSize;
-		info.Url = m_Data->pakUrl;
-		info.Md5 = m_Data->pakMd5;
-		if (UFileDownloadManager::Get()->RequestDownloadFile(info))
+		if (UserInfo::Get()->IsAllow4G())
 		{
-			m_IsDowning = true;
-			m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
-			UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
+			FFileInfo info;
+			info.Id = m_Data->modelId;
+			info.FileSize = m_Data->pakSize;
+			info.Url = m_Data->pakUrl;
+			info.Md5 = m_Data->pakMd5;
+			if (UFileDownloadManager::Get()->RequestDownloadFile(info))
+			{
+				m_IsDowning = true;
+				m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
+				UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
+			}
+		}
+		else
+		{
+			UIManager::GetInstance()->TopHintText(TEXT("请在设置中打开4G下载"));
 		}
 	}break;
 	default:
