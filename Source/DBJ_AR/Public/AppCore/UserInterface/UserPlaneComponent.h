@@ -10,8 +10,8 @@ class UUserPlaneComponent : public UProceduralMeshComponent
 	GENERATED_BODY()
 
 public:
-	/*UserPlaneComponent();
-	~UserPlaneComponent();*/
+	UUserPlaneComponent();
+	/*~UserPlaneComponent();*/
 	/*virtual void BeginDestroy() override;
 	virtual void BeginPlay() override;*/
 

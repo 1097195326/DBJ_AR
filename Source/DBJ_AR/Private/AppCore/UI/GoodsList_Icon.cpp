@@ -4,6 +4,9 @@
 #include "GoodsChangeUI.h"
 #include "UserInfo.h"
 
+
+bool UGoodsList_Icon::CanDownPak = true;
+
 void UGoodsList_Icon::On_Init()
 {
     if (UButton * button = (UButton*)GetWidgetFromName("IconButton"))
@@ -91,16 +94,25 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
 		if (UserInfo::Get()->IsAllow4G())
 		{
-			FFileInfo info;
-			info.Id = m_Data->modelId;
-			info.FileSize = m_Data->pakSize;
-			info.Url = m_Data->pakUrl;
-			info.Md5 = m_Data->pakMd5;
-			if (UFileDownloadManager::Get()->RequestDownloadFile(info))
+			if (CanDownPak)
 			{
-				m_IsDowning = true;
-				m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
-				UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
+				CanDownPak = false;
+
+				FFileInfo info;
+				info.Id = m_Data->modelId;
+				info.FileSize = m_Data->pakSize;
+				info.Url = m_Data->pakUrl;
+				info.Md5 = m_Data->pakMd5;
+				if (UFileDownloadManager::Get()->RequestDownloadFile(info))
+				{
+					m_IsDowning = true;
+					m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
+					m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
+				}
+			}
+			else
+			{
+				UIManager::GetInstance()->TopHintText(TEXT("正在下载中..."));
 			}
 		}
 		else
@@ -116,9 +128,12 @@ void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnGetPakFinish : "));
 	m_IsDowning = false;
+	CanDownPak = true;
+
 	m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
 	if (_finish == 0 && _info.Id == m_Data->modelId && GFileManager::GetInstance()->FileIsExist(m_Data->modelId, m_Data->pakMd5))
 	{
+		UFileDownloadManager::Get()->OnFileDownloadCompleted().Remove(m_DelegateHandle);
 		m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
 		m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
 		GFileManager::GetInstance()->PakMount(m_Data);
@@ -170,4 +185,3 @@ void UGoodsList_Icon::ShowSelectIcon(bool _isSelect)
 		m_SelectIcon->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
-

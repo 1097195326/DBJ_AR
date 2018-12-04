@@ -103,34 +103,13 @@ bool UserInfo::ReadLocalData()
 		UE_LOG(LogTemp, Error, TEXT("Method UserInfo::ReadLocalData Deserialize  failed"));
 		return false;
 	}
-	/*
-		{
-		"code": 200,
-		"msg": "成功",
-		"data": {
-			"token": "e53a4e2adeda4887864c8eaf7c9cd050",
-			"rentVO": {
-				"id": 4,
-				"phone": "17701088634",
-				"renterName": "",
-				"companyName": "",
-				"provinceId": 0,
-				"cityId": 0,
-				"districtId": 0,
-				"address": "",
-				"detailAddress": "",
-				"limit": true,
-				"gmtCreate": "2018-09-19 18:04"
-			}
-		}
-	}*/
 	//解析json组装data.
 	TSharedPtr<FJsonObject> data = mJsonObj->GetObjectField(TEXT("data"));
 	m_SaveUserData.token = data->GetStringField(TEXT("token"));
-	TSharedPtr<FJsonObject> mRentVO = data->GetObjectField(TEXT("rentVO"));
+	TSharedPtr<FJsonObject> mRentVO = data->GetObjectField(TEXT("userRentVO"));
 	m_SaveUserData.id = mRentVO->GetIntegerField(TEXT("id"));
 	m_SaveUserData.phone = mRentVO->GetStringField(TEXT("phone"));
-	m_SaveUserData.renterName = mRentVO->GetStringField(TEXT("renterName"));
+	m_SaveUserData.name = mRentVO->GetStringField(TEXT("name"));
 	m_SaveUserData.companyName = mRentVO->GetStringField(TEXT("companyName"));
 	m_SaveUserData.provinceId = mRentVO->GetIntegerField(TEXT("provinceId"));
 	m_SaveUserData.cityId = mRentVO->GetIntegerField(TEXT("cityId"));
@@ -173,6 +152,7 @@ bool UserInfo::SaveUserData(FString key, int value)
 	{
 		return false;
 	}
+	ReadUserData();
 	return true;
 }
 bool UserInfo::ReadUserData()
@@ -241,5 +221,5 @@ bool UserInfo::IsAllow4G()
 }
 void UserInfo::SetUserName(const FString & _userName)
 {
-	m_SaveUserData.renterName = _userName;
+	m_SaveUserData.name = _userName;
 }

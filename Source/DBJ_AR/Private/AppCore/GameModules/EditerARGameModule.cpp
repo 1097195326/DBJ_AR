@@ -79,16 +79,6 @@ void EditerARGameModule::OnGetCategoryList(msg_ptr _msg)
 }
 void EditerARGameModule::GetProductList(int categoryId, int lastId, int size, int typeId, int materialId, int innerDiameterId)
 {
-    /*TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
-    
-    t_jsonObject->SetNumberField(TEXT("categoryId"), 0);
-    t_jsonObject->SetNumberField(TEXT("lastId"), 0);
-    t_jsonObject->SetNumberField(TEXT("size"), 10);
-    t_jsonObject->SetNumberField(TEXT("typeId"), 0);
-    t_jsonObject->SetNumberField(TEXT("materialId"), 0);
-    t_jsonObject->SetNumberField(TEXT("innerDiameterId"), 0);*/
-
-	//FString appendUrl = FString::Printf(TEXT("categoryId=%i&lastId=%i&size=%i&typeId=%i&materialId=%i&innerDiameterId=%i"),0, 0, 10, 0, 0, 0);
 	FString appendUrl = FString::Printf(TEXT("categoryId=%i&lastId=%i&size=%i&typeId=%i&materialId=%i&innerDiameterId=%i"), categoryId, lastId, size, typeId, materialId, innerDiameterId);
 
 	FString cookie = UserInfo::Get()->GetCookie();
@@ -109,7 +99,7 @@ void EditerARGameModule::OnGetProductList(msg_ptr _msg)
 		result = 1;
 		RuntimeTDataManager::GetInstance()->DecodeGoodsList(jsonData);
 	}
-	msg_ptr msg(new LocalMsg(Msg_Local,2008,&result));
+	msg_ptr msg(new LocalMsg(Msg_Local,2008, jsonData));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::GetChangeList(int productId, int lastId, int exceptProductId, int size)
@@ -133,7 +123,7 @@ void EditerARGameModule::OnGetChangeList(msg_ptr _msg)
 		result = 1;
 		RuntimeTDataManager::GetInstance()->DecodeChangeList(jsonData);
 	}
-	msg_ptr msg(new LocalMsg(Msg_Local, 2013, &result));
+	msg_ptr msg(new LocalMsg(Msg_Local, 2013, jsonData));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::GetAreaList(int parentId,int level)
@@ -229,7 +219,7 @@ void EditerARGameModule::OnGetAccountOrder(msg_ptr _msg)
 		RuntimeCDataManager::GetInstance()->DecodeAccountOrderList(jsonData);
 		result = 1;
 	}
-	msg_ptr msg(new LocalMsg(Msg_Local, 2010, &result));
+	msg_ptr msg(new LocalMsg(Msg_Local, 2010, jsonData));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void EditerARGameModule::UserLogout()
@@ -257,7 +247,7 @@ void EditerARGameModule::UpdateUserName(const FString & _userName)
 {
 	TSharedPtr<FJsonObject> t_jsonObject = MakeShareable(new FJsonObject);
 
-	t_jsonObject->SetStringField(TEXT("renterName"), _userName);
+	t_jsonObject->SetStringField(TEXT("name"), _userName);
 	t_jsonObject->SetStringField(TEXT("phone"), UserInfo::Get()->GetLocalData().phone);
 	t_jsonObject->SetStringField(TEXT("avatarUrl"), TEXT(""));
 

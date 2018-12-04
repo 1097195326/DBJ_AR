@@ -3,6 +3,7 @@
 #include "BaseUI.h"
 #include "GoodsListButton.h"
 #include "MsgCenter.h"
+#include "GoodsList_Icon.h"
 #include "GoodsList.generated.h"
 
 
@@ -14,6 +15,7 @@ class DBJ_AR_API  UGoodsList : public UBaseUI
 public:
     virtual void On_Init() override;
     virtual void On_Start() override;
+	virtual void On_Tick(float delta) override;
 	virtual void On_Delete() override;
 
 	void InitView();
@@ -21,8 +23,10 @@ public:
 	void OnGetProductList(msg_ptr _msg);
 
 	void SelectCategoryButton(int _id);
+	
+	void ReloadData();
 
-    UFUNCTION()
+	UFUNCTION()
         void OnButtonClick();
 private:
 	UButton * m_BackButton;
@@ -30,4 +34,9 @@ private:
 	UGridPanel * m_IconList;
 	UVerticalBox * m_CategoryView;
 	TArray<UGoodsListButton*>		m_ListButtons;
+
+	int			m_CurrentSelectId;
+	int32		m_LastId;
+
+	bool		m_IsRequest;
 };

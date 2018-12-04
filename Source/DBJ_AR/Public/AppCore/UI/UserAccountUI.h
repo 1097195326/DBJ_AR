@@ -13,6 +13,7 @@ class DBJ_AR_API  UUserAccountUI : public UBaseUI
 public:
     virtual void On_Init() override;
 	virtual void On_Start() override;
+	virtual void On_Tick(float delta) override;
 	virtual void On_Delete() override;
 
 
@@ -28,5 +29,12 @@ public:
     void OnButtonClick(int _index);
 
 	void OnGetAccountOrder(msg_ptr _msg);
+
+	void ReloadData();
+
+private:
+	int32		m_LastId;
+	bool		m_IsRequest;
+
 
 };

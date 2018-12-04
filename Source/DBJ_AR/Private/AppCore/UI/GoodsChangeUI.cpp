@@ -31,16 +31,29 @@ void UGoodsChangeUI::On_Init()
 	}
 
 	m_CurrentGoodsData = nullptr;
-	
+	m_LastId = 0;
 }
 void UGoodsChangeUI::On_Start()
 {
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2013, this, &UGoodsChangeUI::OnGetChangeList);
 
 	m_ProductId = AUserPawn::GetInstance()->GetChangeProductId();
-	EditerARGameModule::GetInstance()->GetChangeList(m_ProductId);
+	EditerARGameModule::GetInstance()->GetChangeList(m_ProductId,m_LastId);
 	//test
 	OnGetChangeList(nullptr);
+}
+void UGoodsChangeUI::On_Tick(float delta)
+{
+	if (m_ScrollBox && !m_IsRequest)
+	{
+		float xx = m_ScrollBox->GetScrollOffset();
+		float yy = m_ScrollBox->GetDesiredSize().Y;
+		UCanvasPanelSlot * scrollSlot = (UCanvasPanelSlot*)m_ScrollBox->Slot;
+		if (xx + scrollSlot->GetSize().Y >= yy)
+		{
+			ReloadData();
+		}
+	}
 }
 void UGoodsChangeUI::On_Delete()
 {
@@ -76,10 +89,20 @@ void UGoodsChangeUI::OnButtonClick(int id)
 void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : OnGetChangeList get msg: %d"), 1);
+	TSharedPtr<FJsonObject> jsonObject = _msg->GetJsonObject();
+	if (jsonObject->GetIntegerField(TEXT("code")) != 200)
+	{
+		m_IsRequest = false;
+		return;
+	}
 	if (m_ScrollBox == nullptr || m_GridPanel == nullptr)
 	{
 		return;
 	}
+	const TSharedPtr<FJsonObject> jsonData = jsonObject->GetObjectField("data");
+	m_LastId = jsonData->GetIntegerField(TEXT("lastId"));
+
+
 	m_ScrollBox->ScrollToStart();
 	m_GridPanel->ClearChildren();
 //    TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
@@ -112,6 +135,8 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 			m_GoodsListIcons.Add(icon);
 		}
 	}
+	m_IsRequest = false;
+
 }
 void UGoodsChangeUI::SelectChangeIcon(UGoodsList_Icon * _icon)
 {
@@ -128,6 +153,17 @@ void UGoodsChangeUI::SelectChangeIcon(UGoodsList_Icon * _icon)
 		{
 			icon->ShowSelectIcon(false);
 		}
+
+	}
+}
+void UGoodsChangeUI::ReloadData()
+{
+	if (!m_IsRequest && UGoodsList_Icon::CanDownPak)
+	{
+		m_IsRequest = true;
+		UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsChangeUI reload Data"));
+		EditerARGameModule::GetInstance()->GetChangeList(m_ProductId, m_LastId);
+
 
 	}
 }

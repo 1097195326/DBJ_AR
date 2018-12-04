@@ -11,11 +11,15 @@ class AUserPlaneActor : public AActor
 	GENERATED_BODY()
 
 public:
-	/*UserPlaneActor();
-	~UserPlaneActor();
-	virtual void BeginDestroy() override;
-	virtual void BeginPlay() override;*/
-	virtual void TickActor(float DeltaTime, enum ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
+	AUserPlaneActor();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UUserPlaneComponent * m_PlaneComponent;
+
+	/*~UserPlaneActor();
+	virtual void BeginDestroy() override;*/
+
+	virtual void BeginPlay() override;
 
 };
 

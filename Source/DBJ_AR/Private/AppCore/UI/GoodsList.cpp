@@ -1,6 +1,6 @@
 #include "GoodsList.h"
 #include "RuntimeTDataManager.h"
-#include "GoodsList_Icon.h"
+
 #include "UIManager.h"
 #include "EditerARGameModule.h"
 
@@ -28,6 +28,7 @@ void UGoodsList::On_Init()
 		m_CategoryView = verticalBox;
 	}
 	
+	m_IsRequest = false;
 
 }
 void UGoodsList::On_Start()
@@ -38,6 +39,19 @@ void UGoodsList::On_Start()
     //UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
     
     InitView();
+}
+void UGoodsList::On_Tick(float delta)
+{
+	if (m_IconScrolBox && !m_IsRequest)
+	{
+		float xx = m_IconScrolBox->GetScrollOffset();
+		float yy = m_IconScrolBox->GetDesiredSize().Y;
+		UCanvasPanelSlot * scrollSlot = (UCanvasPanelSlot*)m_IconScrolBox->Slot;
+		if (xx + scrollSlot->GetSize().Y >= yy)
+		{
+			ReloadData();
+		}
+	}
 }
 void UGoodsList::On_Delete()
 {
@@ -74,10 +88,19 @@ void UGoodsList::InitView()
 void UGoodsList::OnGetProductList(msg_ptr _msg)
 {
     UE_LOG(LogTemp,Log,TEXT("zhx : get msg: %d"),1);
+	TSharedPtr<FJsonObject> jsonObject = _msg->GetJsonObject();
+	if (jsonObject->GetIntegerField(TEXT("code")) != 200)
+	{
+		m_IsRequest = false;
+		return;
+	}
     if(m_IconScrolBox == nullptr || m_IconList == nullptr)
     {
         return;
     }
+	const TSharedPtr<FJsonObject> jsonData = jsonObject->GetObjectField("data");
+	m_LastId = jsonData->GetIntegerField(TEXT("lastId"));
+
     m_IconScrolBox->ScrollToStart();
 	m_IconList->ClearChildren();
      UE_LOG(LogTemp,Log,TEXT("zhx : get msg: %d"),2);
@@ -87,7 +110,7 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
     
 	for (int i = 0; i < goods.Num(); i++)
 	{
-		UGoodsList_Icon * icon = (UGoodsList_Icon*)UIManager::GetInstance()->OpenUI(TEXT("GoodsListIcon"));
+		UGoodsList_Icon * icon = (UGoodsList_Icon*)UIManager::GetInstance()->OpenUI(TEXT("GoodsListIcon"),this);
 
 		if (icon->IsValidLowLevel())
 		{
@@ -125,6 +148,8 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
             }
 		}
 	}
+
+	m_IsRequest = false;
 }
 void UGoodsList::SelectCategoryButton(int _id)
 {
@@ -134,13 +159,25 @@ void UGoodsList::SelectCategoryButton(int _id)
 		if (button->m_Id == _id)
 		{
 			button->SetButtonSelect(true);
-
-			EditerARGameModule::GetInstance()->GetProductList(_id);
+			m_CurrentSelectId = _id;
+			m_LastId = 0;
+			m_IsRequest = true;
+			EditerARGameModule::GetInstance()->GetProductList(m_CurrentSelectId,m_LastId);
 		}
 		else
 		{
 			button->SetButtonSelect(false);
 		}
+	}
+}
+void UGoodsList::ReloadData()
+{
+	if (!m_IsRequest && UGoodsList_Icon::CanDownPak)
+	{
+		m_IsRequest = true;
+		UE_LOG(LogTemp, Log, TEXT("zhx : GoodsList reload Data"));
+		EditerARGameModule::GetInstance()->GetProductList(m_CurrentSelectId, m_LastId);
+
 	}
 }
 void UGoodsList::OnButtonClick()

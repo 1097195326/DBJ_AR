@@ -14,6 +14,7 @@ class DBJ_AR_API  UGoodsChangeUI : public UBaseUI
 public:
     virtual void On_Init() override;
 	virtual void On_Start() override;
+	virtual void On_Tick(float delta) override;
 	virtual void On_Delete() override;
 
 	UButton *	m_BackButton;
@@ -28,6 +29,8 @@ public:
 
 	void SelectChangeIcon(UGoodsList_Icon * _icon);
 
+	void ReloadData();
+
 	//void SetData(int _id,FString _path);
 private:
 	TArray<UGoodsList_Icon*>	m_GoodsListIcons;
@@ -36,4 +39,6 @@ private:
 
 	int		m_ProductId;
 	/*FString		m_ModelGamePath;*/
+	int32		m_LastId;
+	bool		m_IsRequest;
 };

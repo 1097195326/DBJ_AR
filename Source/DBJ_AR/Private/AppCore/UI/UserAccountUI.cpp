@@ -38,7 +38,8 @@ void UUserAccountUI::On_Init()
 	{
 		m_OrderListScroll = widget;
 	}
-	
+	m_LastId = 0;
+	m_IsRequest = false;
 }
 void UUserAccountUI::On_Start()
 {
@@ -49,12 +50,26 @@ void UUserAccountUI::On_Start()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2010, this, &UUserAccountUI::OnGetAccountOrder);
 
 	FString companyName = UserInfo::Get()->GetLocalData().companyName;
-	FString userName = UserInfo::Get()->GetLocalData().renterName;
+	FString userName = UserInfo::Get()->GetLocalData().name;
 	FString userPhone = UserInfo::Get()->GetLocalData().phone;
 	m_CompanyName->SetText(FText::FromString(companyName));
 	m_UserName->SetText(FText::FromString(FString::Printf(TEXT("%s %s"),*userName,*userPhone)));
 	
-	EditerARGameModule::GetInstance()->GetAccountOrder();
+	m_IsRequest = true;
+	EditerARGameModule::GetInstance()->GetAccountOrder(m_LastId);
+}
+void UUserAccountUI::On_Tick(float delta)
+{
+	if (m_OrderListScroll && !m_IsRequest)
+	{
+		float xx = m_OrderListScroll->GetScrollOffset();
+		float yy = m_OrderListScroll->GetDesiredSize().Y;
+		UCanvasPanelSlot * scrollSlot = (UCanvasPanelSlot*)m_OrderListScroll->Slot;
+		if (xx + scrollSlot->GetSize().Y >= yy)
+		{
+			ReloadData();
+		}
+	}
 }
 void UUserAccountUI::On_Delete()
 {
@@ -90,6 +105,20 @@ void UUserAccountUI::OnButtonClick(int _index)
 }
 void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 {
+	TSharedPtr<FJsonObject> jsonObject = _msg->GetJsonObject();
+	if (jsonObject->GetIntegerField(TEXT("code")) != 200)
+	{
+		m_IsRequest = false;
+		return;
+	}
+	if (m_OrderListScroll == nullptr)
+	{
+		return;
+	}
+	const TSharedPtr<FJsonObject> jsonData = jsonObject->GetObjectField("data");
+	m_LastId = jsonData->GetIntegerField(TEXT("lastId"));
+
+
 	m_OrderListScroll->ClearChildren();
 	m_OrderListScroll->ScrollToStart();
 	TArray<R_Order*> OrderList = RuntimeCDataManager::GetInstance()->GetAccountOrderList();
@@ -101,5 +130,16 @@ void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 		UScrollBoxSlot * slot = (UScrollBoxSlot*)m_OrderListScroll->AddChild(item);
 		slot->SetPadding(FMargin(0.f,24.f,0.f,0.f));
 		item->SetOrder(OrderList[i]);
+	}
+	m_IsRequest = false;
+}
+void UUserAccountUI::ReloadData()
+{
+	if (!m_IsRequest)
+	{
+		m_IsRequest = true;
+		UE_LOG(LogTemp, Log, TEXT("zhx : GoodsList reload Data"));
+		EditerARGameModule::GetInstance()->GetAccountOrder(m_LastId);
+
 	}
 }

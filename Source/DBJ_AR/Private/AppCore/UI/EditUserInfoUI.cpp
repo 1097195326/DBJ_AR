@@ -42,7 +42,7 @@ void UEditUserInfoUI::On_Start()
 
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2015, this, &UEditUserInfoUI::OnEditString);
 
-	m_UserName->SetText(FText::FromString(UserInfo::Get()->GetLocalData().renterName));
+	m_UserName->SetText(FText::FromString(UserInfo::Get()->GetLocalData().name));
 	m_UserPhone->SetText(FText::FromString(UserInfo::Get()->GetLocalData().phone));
 
 }
@@ -74,7 +74,7 @@ void UEditUserInfoUI::OnButtonClick(int _index)
 	case 3:
 	{
 		UEditStringUI * baseUI = (UEditStringUI*)UIManager::GetInstance()->OpenUI(TEXT("EditStringUI"));
-		baseUI->SetDelegate(this,TEXT("用户名"), UserInfo::Get()->GetLocalData().renterName);
+		baseUI->SetDelegate(this,TEXT("用户名"), UserInfo::Get()->GetLocalData().name);
 		baseUI->AddToViewport();
 	}break;
 	}

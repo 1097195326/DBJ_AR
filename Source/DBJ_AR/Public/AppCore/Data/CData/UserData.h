@@ -16,7 +16,7 @@ public:
 	FString token;
 	int32 id;
 	FString phone;
-	FString renterName;
+	FString name;
 	FString companyName;
 	int32 provinceId;
 	int32 cityId;

@@ -1,16 +1,15 @@
 #include "UserPlaneActor.h"
 
 
-void AUserPlaneActor::TickActor(float DeltaTime, enum ELevelTick TickType, FActorTickFunction& ThisTickFunction)
+AUserPlaneActor::AUserPlaneActor()
 {
-	Super::TickActor(DeltaTime, TickType, ThisTickFunction);
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	m_PlaneComponent = CreateDefaultSubobject<UUserPlaneComponent>(TEXT("PlaneComponent"));
+	m_PlaneComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+}
+void AUserPlaneActor::BeginPlay()
+{
+	Super::BeginPlay();
 
-	/*TArray<UARPlaneGeometry*> planeGeometryArray = UARBlueprintLibrary::GetAllTrackedPlanes();
-	if (planeGeometryArray.Num() > 0)
-	{
-		for (UARPlaneGeometry * planeGeometry : planeGeometryArray)
-		{
-			planeGeometry->getex
-		}
-	}*/
+
 }

@@ -6,7 +6,6 @@
 #include "GFileManager.h"
 #include "GoodsList_Icon.generated.h"
 
-
 UCLASS()
 class DBJ_AR_API  UGoodsList_Icon : public UBaseUI
 {
@@ -25,6 +24,9 @@ public:
 		void OnButtonClick(int index);
 	//UFUNCTION()
 		void OnGetPakFinish(int _finish, FFileInfo _info);
+
+		static bool CanDownPak;
+
 private:
     UButton *	m_IconButton;
 	UButton	*	m_DownloadButton;
@@ -39,4 +41,6 @@ private:
 	bool		m_IsChange;
 
 	bool m_IsDowning;
+	FDelegateHandle m_DelegateHandle;
+
 };
