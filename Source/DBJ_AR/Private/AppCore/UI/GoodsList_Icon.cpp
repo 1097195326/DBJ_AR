@@ -3,6 +3,7 @@
 #include "UIManager.h"
 #include "GoodsChangeUI.h"
 #include "UserInfo.h"
+#include "AppInstance.h"
 
 
 bool UGoodsList_Icon::CanDownPak = true;
@@ -92,32 +93,37 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	}break;
 	case 2:
 	{
-		if (UserInfo::Get()->IsAllow4G())
+		if (UAppInstance::GetInstance()->GetNetworkStatus() == ENotReachable)
 		{
-			if (CanDownPak)
+			UIManager::GetInstance()->TopHintText(TEXT("没有网络"));
+			break;
+		}
+		if (UAppInstance::GetInstance()->GetNetworkStatus() == EReachableViaWWAN)
+		{
+			if (!UserInfo::Get()->IsAllow4G())
+			{
+				UIManager::GetInstance()->TopHintText(TEXT("请在设置中打开4G下载"));
+				break;
+			}
+		}
+		if (CanDownPak)
+		{
+			FFileInfo info;
+			info.Id = m_Data->modelId;
+			info.FileSize = m_Data->pakSize;
+			info.Url = m_Data->pakUrl;
+			info.Md5 = m_Data->pakMd5;
+			if (UFileDownloadManager::Get()->RequestDownloadFile(info))
 			{
 				CanDownPak = false;
-
-				FFileInfo info;
-				info.Id = m_Data->modelId;
-				info.FileSize = m_Data->pakSize;
-				info.Url = m_Data->pakUrl;
-				info.Md5 = m_Data->pakMd5;
-				if (UFileDownloadManager::Get()->RequestDownloadFile(info))
-				{
-					m_IsDowning = true;
-					m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
-					m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
-				}
-			}
-			else
-			{
-				UIManager::GetInstance()->TopHintText(TEXT("正在下载中..."));
+				m_IsDowning = true;
+				m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
+				m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
 			}
 		}
 		else
 		{
-			UIManager::GetInstance()->TopHintText(TEXT("请在设置中打开4G下载"));
+			UIManager::GetInstance()->TopHintText(TEXT("正在下载中..."));
 		}
 	}break;
 	default:
