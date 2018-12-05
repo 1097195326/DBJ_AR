@@ -59,7 +59,7 @@ void UUserAccountUI::On_Start()
 	FString accountTypeS = UserInfo::Get()->GetLocalData().limit ? TEXT("限制账号") : TEXT("正式账号");
 
 	m_CompanyName->SetText(FText::FromString(companyName));
-	m_UserName->SetText(FText::FromString(FString::Printf(TEXT("%s %s"),*userName,*userPhone)));
+	m_UserName->SetText(FText::FromString(FString::Printf(TEXT("%s    %s"),*userName,*userPhone)));
 	m_AccountTypeText->SetText(FText::FromString(accountTypeS));
 
 	m_IsRequest = true;

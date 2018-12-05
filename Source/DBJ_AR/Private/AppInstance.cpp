@@ -3,7 +3,7 @@
 #include "DataManager.h"
 #include "ScenePrototype.h"
 #include "GFileManager.h"
-
+#include "ARBlueprintLibrary.h"
 
 
 UAppInstance::UAppInstance()
@@ -47,7 +47,8 @@ void UAppInstance::On_Delete()
 void UAppInstance::ApplicationWillEnterBackground()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : ---UGAppInstance::ApplicationWillEnterBackground"));
-    
+	UARBlueprintLibrary::StopARSession();
+
 }
 void UAppInstance::ApplicationHasEnteredForeground()
 {
