@@ -22,6 +22,7 @@ public:
 	UNativeWidgetHost * m_UserImage;
 	UTextBlock * m_CompanyName;
 	UTextBlock * m_UserName;
+	UTextBlock * m_AccountTypeText;
 	UButton * m_ToUserInfoButton;
 
 	UScrollBox * m_OrderListScroll;

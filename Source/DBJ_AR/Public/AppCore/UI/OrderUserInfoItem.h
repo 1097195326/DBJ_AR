@@ -18,7 +18,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		bool m_IsEdit;
 	UPROPERTY(EditAnywhere)
-		bool m_IsHiddenBorder;
+		bool m_ShowBorder;
 
 	UImage * m_ShowGoImage;
     UButton * m_DoSomethingButton;

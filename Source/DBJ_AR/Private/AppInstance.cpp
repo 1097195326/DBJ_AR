@@ -9,9 +9,7 @@
 UAppInstance::UAppInstance()
 {
 	m_Instance = this;
-	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUObject(this, &UAppInstance::ApplicationWillEnterBackground);
-	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUObject(this, &UAppInstance::ApplicationHasEnteredForeground);
-
+	
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 110, this, &UAppInstance::OnGloablMsg);
 }
 void UAppInstance::On_Init()
@@ -42,16 +40,7 @@ void UAppInstance::PakMount()
 {
 	GFileManager::GetInstance()->TestPak();
 }
-void UAppInstance::ApplicationWillEnterBackground()
-{
-	UE_LOG(LogTemp, Log, TEXT("zhx : UAppInstance::ApplicationWillEnterBackground"));
 
-}
-void UAppInstance::ApplicationHasEnteredForeground()
-{
-	UE_LOG(LogTemp, Log, TEXT("zhx : UAppInstance::ApplicationHasEnteredForeground"));
-
-}
 void UAppInstance::OnGloablMsg(msg_ptr _msg)
 {
 

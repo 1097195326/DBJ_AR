@@ -46,7 +46,11 @@ void UOrderUserInfoItem::On_Start()
 		m_DoSomethingButton->SetVisibility(ESlateVisibility::Visible);
 		m_ShowGoImage->SetVisibility(ESlateVisibility::Visible);
 	}
-	if (m_IsHiddenBorder)
+	if (m_ShowBorder)
+	{
+		m_BottomBorder->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
 	{
 		m_BottomBorder->SetVisibility(ESlateVisibility::Hidden);
 	}

@@ -1,4 +1,4 @@
-#include "UserAccountUI.h"
+﻿#include "UserAccountUI.h"
 #include "UIManager.h"
 #include "UserInfo.h"
 #include "EditerARGameModule.h"
@@ -34,6 +34,10 @@ void UUserAccountUI::On_Init()
 	{
 		m_UserName = widget;
 	}
+	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("AccountTypeText"))
+	{
+		m_AccountTypeText = widget;
+	}
 	if (UScrollBox * widget = (UScrollBox*)GetWidgetFromName("OrderListScroll"))
 	{
 		m_OrderListScroll = widget;
@@ -52,9 +56,12 @@ void UUserAccountUI::On_Start()
 	FString companyName = UserInfo::Get()->GetLocalData().companyName;
 	FString userName = UserInfo::Get()->GetLocalData().name;
 	FString userPhone = UserInfo::Get()->GetLocalData().phone;
+	FString accountTypeS = UserInfo::Get()->GetLocalData().limit ? TEXT("限制账号") : TEXT("正式账号");
+
 	m_CompanyName->SetText(FText::FromString(companyName));
 	m_UserName->SetText(FText::FromString(FString::Printf(TEXT("%s %s"),*userName,*userPhone)));
-	
+	m_AccountTypeText->SetText(FText::FromString(accountTypeS));
+
 	m_IsRequest = true;
 	EditerARGameModule::GetInstance()->GetAccountOrder(m_LastId);
 }

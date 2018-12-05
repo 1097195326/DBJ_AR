@@ -27,10 +27,16 @@ class GCORE_API UGAppInstance : public UGameInstance, public GObject
 protected:
     static UGAppInstance *  m_Instance;
 public:
+	UGAppInstance();
+
     static UGAppInstance * GetInstance();
     
     virtual void Init() override;
     
+	UFUNCTION()
+		void ApplicationWillEnterBackground();
+	UFUNCTION()
+		void ApplicationHasEnteredForeground();
 
     virtual	void OpenLevel(const FString & _levelName);
 
