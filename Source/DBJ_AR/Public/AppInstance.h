@@ -19,7 +19,9 @@ public:
 
 	virtual void OpenLevel(const FString & _levelName) override;
 
+    UFUNCTION()
 	void ApplicationWillEnterBackground();
+    UFUNCTION()
 	void ApplicationHasEnteredForeground();
 
 	void OnGloablMsg(msg_ptr _msg);

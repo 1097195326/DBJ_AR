@@ -238,7 +238,6 @@ void EditerARGameModule::OnUserLogout(msg_ptr _msg)
 	if (jsonData->GetIntegerField(TEXT("code")) == 200)
 	{
 		TSharedPtr<FJsonObject> jsonObj = jsonData->GetObjectField(TEXT("data"));
-		jsonObj->SetStringField(TEXT("token"), UserInfo::Get()->GetToken());
 		UserInfo::Get()->SaveToLocal(jsonObj);
 		result = 1;
 	}
