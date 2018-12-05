@@ -51,7 +51,6 @@ FString UserInfo::GetToken()
 }
 bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> _JsonObj)
 {
-	
 	//序列化.
 	FString mJson_Str;
 	TSharedRef<TJsonWriter<>> mWriter = TJsonWriterFactory<>::Create(&mJson_Str);
@@ -98,20 +97,20 @@ bool UserInfo::ReadLocalData()
 		return false;
 	}
 	//解析json组装data.
-	TSharedPtr<FJsonObject> data = mJsonObj->GetObjectField(TEXT("data"));
-	m_SaveUserData.token = data->GetStringField(TEXT("token"));
-	TSharedPtr<FJsonObject> mRentVO = data->GetObjectField(TEXT("userRentVO"));
-	m_SaveUserData.id = mRentVO->GetIntegerField(TEXT("id"));
-	m_SaveUserData.phone = mRentVO->GetStringField(TEXT("phone"));
-	m_SaveUserData.name = mRentVO->GetStringField(TEXT("name"));
-	m_SaveUserData.companyName = mRentVO->GetStringField(TEXT("companyName"));
-	m_SaveUserData.provinceId = mRentVO->GetIntegerField(TEXT("provinceId"));
-	m_SaveUserData.cityId = mRentVO->GetIntegerField(TEXT("cityId"));
-	m_SaveUserData.districtId = mRentVO->GetIntegerField(TEXT("districtId"));
-	m_SaveUserData.address = mRentVO->GetStringField(TEXT("address"));
-	m_SaveUserData.detailAddress = mRentVO->GetStringField(TEXT("detailAddress"));
-	m_SaveUserData.limit = mRentVO->GetBoolField(TEXT("limit"));
-	m_SaveUserData.gmtCreate = mRentVO->GetStringField(TEXT("gmtCreate"));
+	//TSharedPtr<FJsonObject> data = mJsonObj->GetObjectField(TEXT("data"));
+	m_SaveUserData.token = mJsonObj->GetStringField(TEXT("token"));
+	//TSharedPtr<FJsonObject> mRentVO = data->GetObjectField(TEXT("userRentVO"));
+	m_SaveUserData.id = mJsonObj->GetIntegerField(TEXT("id"));
+	m_SaveUserData.phone = mJsonObj->GetStringField(TEXT("phone"));
+	m_SaveUserData.name = mJsonObj->GetStringField(TEXT("name"));
+	m_SaveUserData.companyName = mJsonObj->GetStringField(TEXT("companyName"));
+	m_SaveUserData.provinceId = mJsonObj->GetIntegerField(TEXT("provinceId"));
+	m_SaveUserData.cityId = mJsonObj->GetIntegerField(TEXT("cityId"));
+	m_SaveUserData.districtId = mJsonObj->GetIntegerField(TEXT("districtId"));
+	m_SaveUserData.address = mJsonObj->GetStringField(TEXT("address"));
+	m_SaveUserData.detailAddress = mJsonObj->GetStringField(TEXT("detailAddress"));
+	m_SaveUserData.limit = mJsonObj->GetBoolField(TEXT("limit"));
+	m_SaveUserData.gmtCreate = mJsonObj->GetStringField(TEXT("gmtCreate"));
 	return true;
 }
 bool UserInfo::SaveUserData(FString key, int value)
