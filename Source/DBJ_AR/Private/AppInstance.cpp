@@ -12,6 +12,22 @@ UAppInstance::UAppInstance()
 	
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 110, this, &UAppInstance::OnGloablMsg);
 }
+void UAppInstance::PostInitProperties()
+{
+    Super::PostInitProperties();
+    UE_LOG(LogTemp, Log, TEXT("zhx : ---UAppInstance::PostInitProperties"));
+    
+    FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUObject(this, &UAppInstance::ApplicationWillEnterBackground);
+    FCoreDelegates::ApplicationHasEnteredForegroundDelegate.AddUObject(this, &UAppInstance::ApplicationHasEnteredForeground);
+}
+void UAppInstance::BeginDestroy()
+{
+    FCoreDelegates::ApplicationWillEnterBackgroundDelegate.RemoveAll(this);
+    FCoreDelegates::ApplicationHasEnteredForegroundDelegate.RemoveAll(this);
+    
+    Super::BeginDestroy();
+}
+
 void UAppInstance::On_Init()
 {
 	GFileManager::GetInstance()->On_Init();
@@ -27,6 +43,16 @@ void UAppInstance::On_Init()
 void UAppInstance::On_Delete()
 {
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 110, this);
+}
+void UAppInstance::ApplicationWillEnterBackground()
+{
+    UE_LOG(LogTemp, Log, TEXT("zhx : ---UGAppInstance::ApplicationWillEnterBackground"));
+    
+}
+void UAppInstance::ApplicationHasEnteredForeground()
+{
+    UE_LOG(LogTemp, Log, TEXT("zhx : ---UGAppInstance::ApplicationHasEnteredForeground"));
+    
 }
 void UAppInstance::OpenLevel(const FString & _levelName)
 {

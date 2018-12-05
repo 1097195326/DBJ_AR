@@ -14,6 +14,15 @@ class DBJ_AR_API UAppInstance : public UGAppInstance
 public:
 	UAppInstance();
 
+    virtual void PostInitProperties() override;
+    virtual void BeginDestroy() override;
+    
+    
+    //    UFUNCTION()
+    virtual    void ApplicationWillEnterBackground();
+    //    UFUNCTION()
+    virtual    void ApplicationHasEnteredForeground();
+    
 	virtual void On_Init() override;
 	virtual void On_Delete() override;
 

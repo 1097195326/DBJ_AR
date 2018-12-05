@@ -1,4 +1,4 @@
-﻿#include "ToolScrollWidget.h"
+#include "ToolScrollWidget.h"
 #include "UIManager.h"
 #include "AddressAndTimeTool.h"
 #include "EditerARGameModule.h"
@@ -71,7 +71,7 @@ void UToolScrollWidget::SetParentId(int _id)
 			{
 				IdData data;
 				data.Id = i;
-				data.Name = FString::Printf(TEXT("%d"), i);
+				data.Name = FString::Printf(TEXT("%d月"), i);
 				
 				UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"),this);
 				button->SetData(data);
@@ -99,7 +99,7 @@ void UToolScrollWidget::SetParentId(int _id)
 			{
 				IdData data;
 				data.Id = i;
-				data.Name = FString::Printf(TEXT("%d"), i);
+				data.Name = FString::Printf(TEXT("%d日"), i);
 				
 				UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"),this);
 				button->SetData(data);
@@ -159,7 +159,7 @@ void UToolScrollWidget::StartRun(int _id)
 		{
 			IdData data;
 			data.Id = nowYear + i;
-			data.Name = FString::Printf(TEXT("%d"),nowYear+i);
+			data.Name = FString::Printf(TEXT("%d年"),nowYear+i);
 			
 			UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"),this);
 			button->SetData(data);

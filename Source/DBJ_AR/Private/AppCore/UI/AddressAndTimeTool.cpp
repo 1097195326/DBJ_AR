@@ -1,4 +1,4 @@
-﻿#include "AddressAndTimeTool.h"
+#include "AddressAndTimeTool.h"
 #include "DateTime.h"
 #include "UIManager.h"
 #include "OrderUserInfoUI.h"
@@ -66,7 +66,7 @@ void UAddressAndTimeTool::OnButtonClick(int _index)
 			FString month = m_Widgets[1]->m_CurrentData.Name;
 			FString day = m_Widgets[2]->m_CurrentData.Name;
 			FString halfDay = m_Widgets[3]->m_CurrentData.Name;
-			setS = FString::Printf(TEXT("%s-%s-%s-%s"), *year, *month, *day, *halfDay);
+			setS = FString::Printf(TEXT("%s%s%s%s"), *year, *month, *day, *halfDay);
 			parentUI->SetGetTime(setS);
 			FDateTime expTime(m_Widgets[0]->m_CurrentData.Id, m_Widgets[1]->m_CurrentData.Id, m_Widgets[2]->m_CurrentData.Id);
 			order->ExpectReceiveTime = expTime.ToUnixTimestamp();

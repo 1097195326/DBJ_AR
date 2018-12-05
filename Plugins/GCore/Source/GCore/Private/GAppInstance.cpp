@@ -16,12 +16,6 @@ UGAppInstance * UGAppInstance::GetInstance()
 {
     return m_Instance;
 }
-UGAppInstance::UGAppInstance()
-{
-	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUObject(this, &UGAppInstance::ApplicationWillEnterBackground);
-	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUObject(this, &UGAppInstance::ApplicationHasEnteredForeground);
-
-}
 void UGAppInstance::Init()
 {
     Super::Init();
@@ -31,16 +25,6 @@ void UGAppInstance::Init()
 void UGAppInstance::OpenLevel(const FString & _levelName)
 {
 	
-}
-void UGAppInstance::ApplicationWillEnterBackground()
-{
-	UE_LOG(LogTemp, Log, TEXT("zhx : UGAppInstance::ApplicationWillEnterBackground"));
-
-}
-void UGAppInstance::ApplicationHasEnteredForeground()
-{
-	UE_LOG(LogTemp, Log, TEXT("zhx : UGAppInstance::ApplicationHasEnteredForeground"));
-
 }
 ENetworkStatus UGAppInstance::GetNetworkStatus()
 {
