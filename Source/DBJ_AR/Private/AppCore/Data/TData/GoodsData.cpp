@@ -75,3 +75,26 @@ void GoodsData::CloneData(GoodsData * data)
 	data->Object = Object;
 	data->m_Type = m_Type;
 }
+UStaticMesh * GoodsData::LoadMesh()
+{
+	UStaticMesh * mesh = nullptr;
+
+	for (FString fileName : m_FilePathList)
+	{
+		if (fileName.EndsWith(TEXT(".uasset")))
+		{
+			//拼出UObject的加载路径
+			fileName.RemoveFromEnd(TEXT(".uasset"), ESearchCase::IgnoreCase);
+			int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
+			fileName = fileName.RightChop(pos + 8);
+			fileName = TEXT("/Game") + fileName;
+			
+			mesh = LoadObject<UStaticMesh>(nullptr, *fileName);
+			if (mesh)
+			{
+				return mesh;
+			}
+		}
+	}
+	return mesh;
+}

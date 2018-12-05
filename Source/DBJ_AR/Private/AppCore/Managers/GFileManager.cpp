@@ -72,32 +72,32 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 	}
 	
 	TArray<FString> files;
-	PakFile.FindFilesAtPath(files, *PakFile.GetMountPoint(), true, false, true);
+	PakFile.FindFilesAtPath(_goodsData->m_FilePathList, *PakFile.GetMountPoint(), true, false, true);
 	
 	//FStreamableManager streamableManager;
 
-	for (int32 FileIndex = 0; FileIndex < files.Num(); FileIndex++)
-	{
-		//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *files[FileIndex]);
-		if (files[FileIndex].EndsWith(TEXT(".uasset")))
-		{
-			FString fileName(files[FileIndex]);
-			//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *fileName);
-			FString shortName = FPackageName::GetShortName(fileName);
-			//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *shortName);
-			//if (shortName.Equals(_goodsData->modelName))
-			if (shortName.Equals(FString::Printf(TEXT("%s.uasset"),*_goodsData->modelName)))
-			{
-				//拼出UObject的加载路径
-				fileName.RemoveFromEnd(TEXT(".uasset"), ESearchCase::IgnoreCase);
-				int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
-				fileName = fileName.RightChop(pos + 8);
-				fileName = TEXT("/Game") + fileName;
-				_goodsData->GamePath = fileName;
-				UE_LOG(LogTemp, Error, TEXT("zhx : pak mount game path : %s"), *fileName);
-			}
-		}
-	}
+	//for (int32 FileIndex = 0; FileIndex < files.Num(); FileIndex++)
+	//{
+	//	//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *files[FileIndex]);
+	//	if (files[FileIndex].EndsWith(TEXT(".uasset")))
+	//	{
+	//		FString fileName(files[FileIndex]);
+	//		//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *fileName);
+	//		FString shortName = FPackageName::GetShortName(fileName);
+	//		//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *shortName);
+	//		//if (shortName.Equals(_goodsData->modelName))
+	//		if (shortName.Equals(FString::Printf(TEXT("%s.uasset"),*_goodsData->modelName)))
+	//		{
+	//			//拼出UObject的加载路径
+	//			fileName.RemoveFromEnd(TEXT(".uasset"), ESearchCase::IgnoreCase);
+	//			int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
+	//			fileName = fileName.RightChop(pos + 8);
+	//			fileName = TEXT("/Game") + fileName;
+	//			_goodsData->GamePath = fileName;
+	//			UE_LOG(LogTemp, Error, TEXT("zhx : pak mount game path : %s"), *fileName);
+	//		}
+	//	}
+	//}
     FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;

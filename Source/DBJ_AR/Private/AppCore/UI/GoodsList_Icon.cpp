@@ -77,7 +77,7 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
 	case 1:
 	{
-        if (!m_Data->GamePath.IsEmpty())
+        if (m_Data->m_FilePathList.Num() > 0)
         {
 			if (m_IsChange)
 			{

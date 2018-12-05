@@ -34,6 +34,14 @@ void UUserAccountItem::On_Init()
 	{
 		m_AllNum = widget;
 	}
+	if (UImage * widget = (UImage*)GetWidgetFromName("WeiTijiaoImage"))
+	{
+		m_WeiTijiaoImage = widget;
+	}
+	if (UImage * widget = (UImage*)GetWidgetFromName("YiTijiaoImage"))
+	{
+		m_YiTijiaoImage = widget;
+	}
     
 }
 void UUserAccountItem::OnButtonClick()
@@ -53,16 +61,20 @@ void UUserAccountItem::ReView()
 {
 	FString price = FString::Printf(TEXT("合计: ￥%d"), m_Order->totalPrice);
 	FString quantity = FString::Printf(TEXT("共%d件商品"), m_Order->totalQuantity);
-	m_CompanyName->SetText(FText::FromString(m_Order->ReceiverCompanyName));
+	m_CompanyName->SetText(FText::FromString(m_Order->CommitTime));
 	m_AllPrice->SetText(FText::FromString(price));
 	m_AllNum->SetText(FText::FromString(quantity));
 	m_CommitTime->SetText(FText::FromString(m_Order->CommitTime));
 	if (m_Order->Status == 1)
 	{
+		m_WeiTijiaoImage->SetVisibility(ESlateVisibility::Visible);
+		m_YiTijiaoImage->SetVisibility(ESlateVisibility::Hidden);
 		m_StatusText->SetText(FText::FromString(TEXT("未提交")));
 	}
 	else
 	{
+		m_WeiTijiaoImage->SetVisibility(ESlateVisibility::Hidden);
+		m_YiTijiaoImage->SetVisibility(ESlateVisibility::Visible);
 		m_StatusText->SetText(FText::FromString(TEXT("已提交")));
 	}
 

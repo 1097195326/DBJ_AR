@@ -242,7 +242,11 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 {
     AActor * actor = nullptr;
-
+	UStaticMesh * mesh = _goodsData->LoadMesh();
+	if (mesh == nullptr)
+	{
+		return nullptr;
+	}
     APlayerCameraManager * cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
     FVector location = cameraManager->GetCameraLocation();
     FVector forward = cameraManager->GetCameraRotation().Vector();
@@ -270,7 +274,7 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 
 	m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->AddGoodsToList(_goodsData);
     //UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/DLC/Goods/AR_HuaPen_181026013/AR_HuaPen_181026013"));
-	UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
+	//UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *m_CurrentGoodsData->GamePath);
     uactor->m_Mesh->SetStaticMesh(mesh);
     uactor->m_Mesh->RegisterComponent();
 	uactor->m_Mesh->SetGoodsData(m_CurrentGoodsData);

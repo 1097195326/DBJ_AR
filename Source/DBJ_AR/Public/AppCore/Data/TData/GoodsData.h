@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DataT.h"
-
+#include "Engine/StaticMesh.h"
 
 enum GoodsDataType
 {
@@ -43,12 +43,15 @@ public:
 	UObject *	Object;
 
 	FString		 m_Type;
+	TArray<FString>	m_FilePathList;
 public:
     
 	virtual void InitWithJson(const TSharedPtr<FJsonObject> &obj) override;
 	~GoodsData();
 	
 	void CloneData(GoodsData * data);
+
+	UStaticMesh * LoadMesh();
 
 public:
 

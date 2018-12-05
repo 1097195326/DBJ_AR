@@ -19,6 +19,8 @@ public:
 	UTextBlock * m_CommitTime;
 	UTextBlock * m_AllPrice;
 	UTextBlock * m_AllNum;
+	UImage *	m_WeiTijiaoImage;
+	UImage *	m_YiTijiaoImage;
 
 	UFUNCTION()
 		void OnButtonClick();

@@ -32,7 +32,7 @@ void RuntimeCDataManager::DecodeAccountOrderList(const TSharedPtr<FJsonObject> _
 		objD->TryGetNumberField(TEXT("totalQuantity"), data->totalQuantity);
 		objD->TryGetNumberField(TEXT("totalPrice"), data->totalPrice);
 		objD->TryGetStringField(TEXT("remark"), data->Remark);
-
+		objD->TryGetStringField(TEXT("gmtCreate"),data->CommitTime);
 		const TArray<TSharedPtr<FJsonValue>> productList = objD->GetArrayField("productList");
 
 		for (TSharedPtr<FJsonValue> goodsData : productList)
