@@ -354,16 +354,16 @@ FString UFileDownloadManager::ProjectHotloadDownloadDir()
     FString AppendPath = FPaths::Combine(FPaths::ProjectSavedDir(),TEXT("dlc/paks/"));
     static FString persistentDir = pf.ConvertToAbsolutePathForExternalAppForWrite(*AppendPath);
 #endif
-    UE_LOG(LogTemp,Log,TEXT("zhx : ProjectHotloadDownloadDir : %s"),*persistentDir);
+    //UE_LOG(LogTemp,Log,TEXT("zhx : ProjectHotloadDownloadDir : %s"),*persistentDir);
 
     return persistentDir;
 }
 FString UFileDownloadManager::GetIOSDir()
 {
     FString downDir = ProjectHotloadDownloadDir();
-    UE_LOG(LogTemp,Log,TEXT("zhx : downDir : %s"),*downDir);
+    //UE_LOG(LogTemp,Log,TEXT("zhx : downDir : %s"),*downDir);
     FString iosDir = ExtractIOSDir(*downDir);
-    UE_LOG(LogTemp,Log,TEXT("zhx : iosDir : %s"),*iosDir);
+    //UE_LOG(LogTemp,Log,TEXT("zhx : iosDir : %s"),*iosDir);
 
     return iosDir;
 }

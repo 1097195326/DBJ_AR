@@ -51,12 +51,6 @@ FString UserInfo::GetToken()
 }
 bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> _JsonObj)
 {
-    //for test
-    if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_SavePath))
-    {
-        UE_LOG(LogTemp, Error, TEXT("zhx path: %s user info is exit "), *m_SavePath);
-        return true;
-    }
 	
 	//序列化.
 	FString mJson_Str;

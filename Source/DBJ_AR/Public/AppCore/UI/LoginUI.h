@@ -24,7 +24,8 @@ public:
 
 	void OnGetSmsCode(msg_ptr _msg);
 	void OnUserLogin(msg_ptr _msg);
-    
+	void OnAutoLogin(msg_ptr _msg);
+
 private:
     FString m_sms;
     FString m_IphoneNum;

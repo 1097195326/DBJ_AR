@@ -31,11 +31,16 @@ void ULoginUI::On_Start()
 	
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2002, this, &ULoginUI::OnGetSmsCode);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2001, this, &ULoginUI::OnUserLogin);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2016, this, &ULoginUI::OnAutoLogin);
+
+	LoginGameModule::GetInstance()->AutoLogin();
+
 }
 void ULoginUI::On_Delete()
 {
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2002, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2001, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2016, this);
 
 	if (m_Login_Button)
 	{
@@ -101,7 +106,16 @@ void ULoginUI::OnUserLogin(msg_ptr _msg)
 //    {
 //
 //    }
-   
+}
+void ULoginUI::OnAutoLogin(msg_ptr _msg)
+{
+	int result = _msg->GetMsgContent<int>();
+	if (result == 1)
+	{
+		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+	}
+	else
+	{
 
-
+	}
 }

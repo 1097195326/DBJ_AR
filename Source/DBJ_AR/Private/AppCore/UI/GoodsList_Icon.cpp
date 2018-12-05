@@ -158,7 +158,7 @@ void UGoodsList_Icon::SetData(GoodsData * _data,bool _isChange)
 	m_Data = _data;
 	m_IsChange = _isChange;
 
-    UE_LOG(LogTemp,Log,TEXT("zhx : set data name : %s,url:%s"),*m_Data->name,*m_Data->thumbnailUrl);
+    //UE_LOG(LogTemp,Log,TEXT("zhx : set data name : %s,url:%s"),*m_Data->name,*m_Data->thumbnailUrl);
     
 	m_ImageHost->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
 	m_IconName->SetText(FText::FromString(m_Data->name));

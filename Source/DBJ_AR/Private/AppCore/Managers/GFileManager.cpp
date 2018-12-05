@@ -68,7 +68,7 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 	{
 		/*FString VirtualMountPoint(FString::Printf(TEXT("/Game/%s"), *MP2));
 		FPackageName::RegisterMountPoint(VirtualMountPoint, MP);*/
-        UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *MP);
+        //UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *MP);
 	}
 	
 	TArray<FString> files;
@@ -78,13 +78,13 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 
 	for (int32 FileIndex = 0; FileIndex < files.Num(); FileIndex++)
 	{
-		UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *files[FileIndex]);
+		//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *files[FileIndex]);
 		if (files[FileIndex].EndsWith(TEXT(".uasset")))
 		{
 			FString fileName(files[FileIndex]);
-			UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *fileName);
+			//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *fileName);
 			FString shortName = FPackageName::GetShortName(fileName);
-			UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *shortName);
+			//UE_LOG(LogTemp, Log, TEXT("zhx : file name : %s"), *shortName);
 			//if (shortName.Equals(_goodsData->modelName))
 			if (shortName.Equals(FString::Printf(TEXT("%s.uasset"),*_goodsData->modelName)))
 			{
@@ -94,7 +94,7 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 				fileName = fileName.RightChop(pos + 8);
 				fileName = TEXT("/Game") + fileName;
 				_goodsData->GamePath = fileName;
-				UE_LOG(LogTemp, Log, TEXT("zhx : pak mount game path : %s"), *fileName);
+				UE_LOG(LogTemp, Error, TEXT("zhx : pak mount game path : %s"), *fileName);
 			}
 		}
 	}

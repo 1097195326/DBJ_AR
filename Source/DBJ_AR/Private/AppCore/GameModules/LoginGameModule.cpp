@@ -13,6 +13,7 @@ LoginGameModule::LoginGameModule()
 {
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &LoginGameModule::OnGetSmsCode);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &LoginGameModule::OnUserLogin);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1016, this, &LoginGameModule::OnAutoLogin);
 }
 void LoginGameModule::On_Init()
 {
@@ -34,6 +35,7 @@ void LoginGameModule::On_Delete()
 {
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1002, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1001, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1016, this);
 
 	if (m_CurrentUIController != nullptr)
 	{
@@ -94,4 +96,26 @@ void LoginGameModule::OnUserLogin(msg_ptr _msg)
 	MsgCenter::GetInstance()->SendMsg(msg);
 
 
+}
+void LoginGameModule::AutoLogin()
+{
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1016);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1016, httpUrl, TEXT(""), Http_Get, cookie, token));
+
+	MsgCenter::GetInstance()->SendMsg(mMsg);
+}
+void LoginGameModule::OnAutoLogin(msg_ptr _msg)
+{
+	int result = 0;
+	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		//UserInfo::Get()->SaveToLocal(jsonData);
+		result = 1;
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2016, &result));
+	MsgCenter::GetInstance()->SendMsg(msg);
 }
