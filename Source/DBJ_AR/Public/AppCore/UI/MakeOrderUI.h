@@ -33,6 +33,7 @@ public:
 	UCanvasPanel * m_SaveOrderPanel;
 	UButton * m_SaveOrderButton;
 	UButton * m_CommitOrderButton;
+	UTextBlock * m_CommitButtonText;
 
     UFUNCTION()
         void OnButtonClick(int _index);

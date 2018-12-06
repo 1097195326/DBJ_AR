@@ -22,6 +22,10 @@ void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+#if PLATFORM_WINDOWS
+	return;
+#endif
+
 	TArray<UARPlaneGeometry*> planeGeometryArray = UARBlueprintLibrary::GetAllTrackedPlanes();
 	if (planeGeometryArray.Num() > 0)
 	{

@@ -51,7 +51,10 @@ void UMakeOrderUI::On_Init()
 	if (UButton * widget = (UButton*)GetWidgetFromName("CommitButton"))
 	{
 		m_CommitOrderButton = widget;
-		
+	}
+	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("CommitButtonText"))
+	{
+		m_CommitButtonText = widget;
 	}
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2009, this, &UMakeOrderUI::OnCommitCurrentOrder);
 }
@@ -90,6 +93,8 @@ void UMakeOrderUI::InitView()
 		m_SaveOrderPanel->SetVisibility(ESlateVisibility::Hidden);
 		m_SaveOrderButton->SetVisibility(ESlateVisibility::Hidden);
 		m_CommitOrderButton->SetIsEnabled(false);
+		m_CommitButtonText->SetText(FText::FromString(TEXT("订单已提交")));
+		m_CommitButtonText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("999999"))));
 	}
 	TMap<int,GoodsData*> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
 	

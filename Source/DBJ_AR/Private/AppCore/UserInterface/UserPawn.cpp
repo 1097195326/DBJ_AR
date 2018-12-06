@@ -48,7 +48,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    StartARSession();
+    //StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -90,7 +90,7 @@ void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AUserPawn::StopARSession()
 {
     UARBlueprintLibrary::StopARSession();
-    
+	m_ARIsSetUP = false;
 }
 void AUserPawn::OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
