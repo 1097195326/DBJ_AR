@@ -18,6 +18,8 @@ void UUserPlaneComponent::BeginPlay()
 
 	
 }
+static int sectionIndex = 0;
+
 void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -50,37 +52,58 @@ void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickTyp
 			}
 			if (m_PlaneMap.Contains(planeName))
 			{
-				int32 section = *(m_PlaneMap.Find(planeName));
-				UpdateMeshSection(section, Vertices, Normals, UV0, VertexColors, Tangents);
+				PlaneStatus & st = *(m_PlaneMap.Find(planeName));
+				UpdateMeshSection(st.Section, Vertices, Normals, UV0, VertexColors, Tangents);
 			}
 			else
 			{
-				int32 section = m_PlaneMap.Num() + 1;
-				CreateMeshSection(section,Vertices,Triangles,Normals,UV0,VertexColors,Tangents,false);
+				++sectionIndex;
+				PlaneStatus st;
+				st.Section = sectionIndex;
+				st.IsHave = true;
+				CreateMeshSection(sectionIndex,Vertices,Triangles,Normals,UV0,VertexColors,Tangents,false);
 				UMaterialInterface * materialIns = LoadObject<UMaterialInstance>(nullptr, TEXT("/Game/Blueprints/Materials/Wirefame_MT"));
-				SetMaterial(section, materialIns);
-				m_PlaneMap.Add(planeName, section);
+				SetMaterial(sectionIndex, materialIns);
+				m_PlaneMap.Add(planeName, st);
 			}
 			
+		}
+	}
+	for (auto item : m_PlaneMap)
+	{
+		FString name = item.Key;
+		PlaneStatus & st = item.Value;
+		if (st.IsHave)
+		{
+			st.IsHave = false;
+		}
+		else
+		{
+			m_PlaneMap.Remove(name);
 		}
 	}
 }
 void UUserPlaneComponent::GetVertexAndIndex(FVector Center, FVector Extent,  TArray<FVector>& Vertices,  TArray<int32>& Triangles)
 {
-	Vertices.Add(Center + FVector(Extent.X, Extent.Y, Extent.Z)); // 0
-	Vertices.Add(Center + FVector(Extent.X, -Extent.Y, Extent.Z));// 1
-	Vertices.Add(Center + FVector(-Extent.X, -Extent.Y, Extent.Z));// 2
-	Vertices.Add(Center + FVector(-Extent.X, Extent.Y, Extent.Z));// 3
+	//Vertices.Add(Center + FVector(Extent.X, Extent.Y, Extent.Z)); // 0
+	//Vertices.Add(Center + FVector(Extent.X, -Extent.Y, Extent.Z));// 1
+	//Vertices.Add(Center + FVector(-Extent.X, -Extent.Y, Extent.Z));// 2
+	//Vertices.Add(Center + FVector(-Extent.X, Extent.Y, Extent.Z));// 3
 
-	Vertices.Add(Center + FVector(Extent.X, Extent.Y, -Extent.Z)); //4
-	Vertices.Add(Center + FVector(Extent.X, -Extent.Y, -Extent.Z));// 5
-	Vertices.Add(Center + FVector(-Extent.X, -Extent.Y, -Extent.Z));// 6
-	Vertices.Add(Center + FVector(-Extent.X, Extent.Y, -Extent.Z));//7
+	//Vertices.Add(Center + FVector(Extent.X, Extent.Y, -Extent.Z)); //4
+	//Vertices.Add(Center + FVector(Extent.X, -Extent.Y, -Extent.Z));// 5
+	//Vertices.Add(Center + FVector(-Extent.X, -Extent.Y, -Extent.Z));// 6
+	//Vertices.Add(Center + FVector(-Extent.X, Extent.Y, -Extent.Z));//7
+
+	Vertices.Add(Center + FVector(Extent.X, Extent.Y, 0.f)); // 0
+	Vertices.Add(Center + FVector(Extent.X, -Extent.Y, 0.f));// 1
+	Vertices.Add(Center + FVector(-Extent.X, -Extent.Y, 0.f));// 2
+	Vertices.Add(Center + FVector(-Extent.X, Extent.Y, 0.f));// 3
 
 	Triangles.Append({ 0,1,2 });
 	Triangles.Append({ 2,3,0 });
 
-	Triangles.Append({ 4,5,6 });
-	Triangles.Append({ 6,7,4 });
+	/*Triangles.Append({ 4,5,6 });
+	Triangles.Append({ 6,7,4 });*/
 
 }

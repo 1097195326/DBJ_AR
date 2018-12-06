@@ -4,6 +4,13 @@
 #include "ARBlueprintLibrary.h"
 #include "UserPlaneComponent.generated.h"
 
+
+struct PlaneStatus
+{
+	int Section;
+	bool IsHave;
+};
+
 UCLASS()
 class UUserPlaneComponent : public UProceduralMeshComponent
 {
@@ -20,6 +27,6 @@ public:
 
 	void	GetVertexAndIndex(FVector Center,FVector Extent, TArray<FVector>& Vertices,  TArray<int32>& Triangles);
 private:
-	TMap<FString, int>	m_PlaneMap;
+	TMap<FString, PlaneStatus>	m_PlaneMap;
 
 };
