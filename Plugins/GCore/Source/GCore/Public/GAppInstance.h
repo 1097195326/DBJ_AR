@@ -11,6 +11,7 @@
 
 #include "CoreMinimal.h"
 #include "GObject.h"
+#include "Misc/CoreDelegates.h"
 #include "Engine/GameInstance.h"
 #include "GAppInstance.generated.h"
 
@@ -32,10 +33,19 @@ public:
     static UGAppInstance * GetInstance();
     
     virtual void Init() override;
+    virtual void PostInitProperties() override;
+    virtual void BeginDestroy() override;
+    virtual void Shutdown() override;
+    
+    virtual    void ApplicationWillEnterBackground();
+    virtual    void ApplicationHasEnteredForeground();
     
 
     virtual	void OpenLevel(const FString & _levelName);
 
 	ENetworkStatus GetNetworkStatus();
+private:
+    void ApplicationWillEnterBackground_Hander();
+    void ApplicationHasEnteredForeground_Hander();
 };
 

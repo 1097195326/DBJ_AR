@@ -2,7 +2,7 @@
 
 #include "GAppInstance.h"
 #include "AppCore/Managers/DataManager.h"
-#include "Misc/CoreDelegates.h"
+
 #include "MsgCenter.h"
 #include "AppInstance.generated.h"
 
@@ -14,21 +14,14 @@ class DBJ_AR_API UAppInstance : public UGAppInstance
 public:
 	UAppInstance();
 
-    virtual void PostInitProperties() override;
-    virtual void BeginDestroy() override;
-    
-    
-    //    UFUNCTION()
-    virtual    void ApplicationWillEnterBackground();
-    //    UFUNCTION()
-    virtual    void ApplicationHasEnteredForeground();
     
 	virtual void On_Init() override;
 	virtual void On_Delete() override;
 
 	virtual void OpenLevel(const FString & _levelName) override;
 
-    
+    virtual    void ApplicationWillEnterBackground() override;
+    virtual    void ApplicationHasEnteredForeground() override;
 
 	void OnGloablMsg(msg_ptr _msg);
 

@@ -12,6 +12,7 @@
 #include "UserController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "ARBlueprintLibrary.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GFileManager.h"
 #include "UserActor.h"
@@ -62,7 +63,7 @@ public:
     
     UFUNCTION(BlueprintImplementableEvent)
         void StartARSession();
-	UFUNCTION(BlueprintImplementableEvent)
+//    UFUNCTION(BlueprintImplementableEvent)
 		void StopARSession();
     UFUNCTION(BlueprintImplementableEvent)
         void DrawPlnes();
@@ -83,7 +84,8 @@ public:
 
 	void	DeleteSelectARActor();
 	void	DeleteAllARActor();
-
+    void    QuitEditScene();
+    
 	int		GetChangeProductId();
 	void	ChangeSelectModel(FString _gamePath);
 	void	CancelChangeSelectModel();

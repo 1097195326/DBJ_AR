@@ -48,7 +48,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    //StartARSession();
+    StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -87,7 +87,11 @@ void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 #endif
     
 }
-
+void AUserPawn::StopARSession()
+{
+    UARBlueprintLibrary::StopARSession();
+    
+}
 void AUserPawn::OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx :: AUserPawn::OnFingerTouch pressed"));
@@ -303,13 +307,27 @@ void AUserPawn::DeleteSelectARActor()
 }
 void AUserPawn::DeleteAllARActor()
 {
-	for (int i = 0;i < m_AllUserActor.Num();i++)
-	{
-		AUserActor * actor = m_AllUserActor[i];
-		RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
-		actor->Destroy();
-	}
+//    for (int i = 0;i < m_AllUserActor.Num();i++)
+//    {
+//        AUserActor * actor = m_AllUserActor[i];
+//        RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
+//        actor->Destroy();
+//    }
+    TArray<AActor *> allUserActor;
+    UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);
+    for (int i = 0; i < allUserActor.Num(); i++)
+    {
+        AUserActor * actor = (AUserActor *)allUserActor[i];
+        actor->Destroy();
+    }
+    
 	m_AllUserActor.Empty();
+}
+void AUserPawn::QuitEditScene()
+{
+    DeleteAllARActor();
+    StopARSession();
+    
 }
 AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
 {
@@ -399,6 +417,13 @@ void AUserPawn::RotateSelectARActor()
 		float yawProcess = (currentRotator.Yaw + 180.f) / 360.f;
 		UE_LOG(LogTemp, Log, TEXT("zhx : current Yaw : %f"), yawProcess);
 
+//        if(currentRotator.Yaw > 0)
+//        {
+//            m_SelectActor->m_PlaneRotateComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
+//        }else
+//        {
+//            m_SelectActor->m_PlaneRotateComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
+//        }
 		m_SelectActor->m_PlaneRotateComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
 			
 		m_SelectActor->m_Mesh->SetRelativeRotation(currentRotator);//->SetActorRotation(currentRotator);

@@ -85,7 +85,7 @@ void USettingUI::OnUserLogout(msg_ptr _msg)
 	int result =  _msg->GetMsgContent<int>();
 	if (result == 1)
 	{
-		AUserPawn::GetInstance()->DeleteAllARActor();
+		AUserPawn::GetInstance()->QuitEditScene();
 		UAppInstance::GetInstance()->OpenLevel(TEXT("LoginLevel"));
 	}
 }
