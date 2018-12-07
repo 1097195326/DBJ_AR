@@ -28,11 +28,15 @@ void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickTyp
 	return;
 #endif
 
+//    ClearAllMeshSections();
+    
 	TArray<UARPlaneGeometry*> planeGeometryArray = UARBlueprintLibrary::GetAllTrackedPlanes();
 	if (planeGeometryArray.Num() > 0)
 	{
 		for (UARPlaneGeometry * planeGeometry : planeGeometryArray)
 		{
+//            sectionIndex = 0;
+            
 			FString planeName = planeGeometry->GetDebugName().ToString();//TEXT("sss");//planeGeometry->GetDebugName().ToString();
 
 			TArray<FVector> TempVertices;
@@ -50,38 +54,43 @@ void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickTyp
 				 FVector tvector = planeGeometry->GetLocalToWorldTransform().TransformPosition(TempVertices[i]);
 				 Vertices.Add(tvector);
 			}
-			if (m_PlaneMap.Contains(planeName))
-			{
-				PlaneStatus & st = *(m_PlaneMap.Find(planeName));
-				UpdateMeshSection(st.Section, Vertices, Normals, UV0, VertexColors, Tangents);
-			}
-			else
-			{
-				++sectionIndex;
-				PlaneStatus st;
-				st.Section = sectionIndex;
-				st.IsHave = true;
-				CreateMeshSection(sectionIndex,Vertices,Triangles,Normals,UV0,VertexColors,Tangents,false);
-				UMaterialInterface * materialIns = LoadObject<UMaterialInstance>(nullptr, TEXT("/Game/Blueprints/Materials/Wirefame_MT"));
-				SetMaterial(sectionIndex, materialIns);
-				m_PlaneMap.Add(planeName, st);
-			}
-			
+            if (m_PlaneMap.Contains(planeName))
+            {
+                PlaneStatus & st = *(m_PlaneMap.Find(planeName));
+                st.IsHave = true;
+                UpdateMeshSection(st.Section, Vertices, Normals, UV0, VertexColors, Tangents);
+            }
+            else
+            {
+                ++sectionIndex;
+                PlaneStatus st;
+                st.Section = sectionIndex;
+                st.IsHave = true;
+                CreateMeshSection(sectionIndex,Vertices,Triangles,Normals,UV0,VertexColors,Tangents,false);
+//                UMaterialInterface * materialIns = LoadObject<UMaterialInstance>(nullptr, TEXT("/Game/Blueprints/Materials/Wirefame_MT"));
+                UMaterialInterface * materialIns = LoadObject<UMaterial>(nullptr, TEXT("/Game/Blueprints/Materials/SelfPlaneM"));
+                SetMaterial(sectionIndex, materialIns);
+                m_PlaneMap.Add(planeName, st);
+//                UE_LOG(LogTemp,Log,TEXT(""))
+            }
 		}
 	}
-	for (auto item : m_PlaneMap)
-	{
-		FString name = item.Key;
-		PlaneStatus & st = item.Value;
-		if (st.IsHave)
-		{
-			st.IsHave = false;
-		}
-		else
-		{
-			m_PlaneMap.Remove(name);
-		}
-	}
+    for (auto item : m_PlaneMap)
+    {
+        FString name = item.Key;
+        PlaneStatus & st = item.Value;
+        if (st.IsHave)
+        {
+            st.IsHave = false;
+        }
+        else
+        {
+            UE_LOG(LogTemp, Log, TEXT("zhx : delete a plane ,name : %s"),*name);
+            ClearMeshSection(st.Section);
+            m_PlaneMap.Remove(name);
+        }
+    }
+    UE_LOG(LogTemp, Log, TEXT("zhx : m_PlaneMap num : %d, Sections num : %d, index : %d"),m_PlaneMap.Num(),GetNumSections(),sectionIndex);
 }
 void UUserPlaneComponent::GetVertexAndIndex(FVector Center, FVector Extent,  TArray<FVector>& Vertices,  TArray<int32>& Triangles)
 {
