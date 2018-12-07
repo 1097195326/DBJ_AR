@@ -19,6 +19,7 @@ void UUserPlaneComponent::BeginPlay()
 	
 }
 static int sectionIndex = 0;
+static TArray<FString> WhiteList;
 
 void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
@@ -29,6 +30,7 @@ void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickTyp
 #endif
 
 //    ClearAllMeshSections();
+    WhiteList.Empty();
     
 	TArray<UARPlaneGeometry*> planeGeometryArray = UARBlueprintLibrary::GetAllTrackedPlanes();
 	if (planeGeometryArray.Num() > 0)
@@ -38,7 +40,8 @@ void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickTyp
 //            sectionIndex = 0;
             
 			FString planeName = planeGeometry->GetDebugName().ToString();//TEXT("sss");//planeGeometry->GetDebugName().ToString();
-
+            WhiteList.Add(planeName);
+            
 			TArray<FVector> TempVertices;
 			TArray<FVector> Vertices;
 			TArray<int32> Triangles;
@@ -56,41 +59,44 @@ void UUserPlaneComponent::TickComponent(float DeltaTime, enum ELevelTick TickTyp
 			}
             if (m_PlaneMap.Contains(planeName))
             {
-                PlaneStatus & st = *(m_PlaneMap.Find(planeName));
-                st.IsHave = true;
-                UpdateMeshSection(st.Section, Vertices, Normals, UV0, VertexColors, Tangents);
+                int scetion = *(m_PlaneMap.Find(planeName));
+                UpdateMeshSection(scetion, Vertices, Normals, UV0, VertexColors, Tangents);
             }
             else
             {
-                ++sectionIndex;
-                PlaneStatus st;
-                st.Section = sectionIndex;
-                st.IsHave = true;
                 CreateMeshSection(sectionIndex,Vertices,Triangles,Normals,UV0,VertexColors,Tangents,false);
-//                UMaterialInterface * materialIns = LoadObject<UMaterialInstance>(nullptr, TEXT("/Game/Blueprints/Materials/Wirefame_MT"));
-                UMaterialInterface * materialIns = LoadObject<UMaterial>(nullptr, TEXT("/Game/Blueprints/Materials/SelfPlaneM"));
+                UMaterialInterface * materialIns = LoadObject<UMaterialInstance>(nullptr, TEXT("/Game/Blueprints/Materials/Wirefame_MT"));
+//                UMaterialInterface * materialIns = LoadObject<UMaterial>(nullptr, TEXT("/Game/Blueprints/Materials/SelfPlaneM"));
                 SetMaterial(sectionIndex, materialIns);
-                m_PlaneMap.Add(planeName, st);
-//                UE_LOG(LogTemp,Log,TEXT(""))
+                m_PlaneMap.Add(planeName, sectionIndex);
+                UE_LOG(LogTemp, Log, TEXT("zhx : create a plane ,name : %s index : %d track Num : %d, map Num : %d"),*planeName,sectionIndex,planeGeometryArray.Num(),m_PlaneMap.Num());
+                for (UARPlaneGeometry * planeGeometry : planeGeometryArray)
+                {
+                    FString ss = planeGeometry->GetDebugName().ToString();
+                    UE_LOG(LogTemp, Log, TEXT("zhx track name : %s"),*ss);
+                }
+                for (auto item : m_PlaneMap)
+                {
+                    FString ss = item.Key;
+                    int section = item.Value;
+                    UE_LOG(LogTemp, Log, TEXT("zhx map name : %s ,ishave : %d"),*ss,section);
+                }
+                ++sectionIndex;
             }
 		}
 	}
     for (auto item : m_PlaneMap)
     {
         FString name = item.Key;
-        PlaneStatus & st = item.Value;
-        if (st.IsHave)
+        int section = item.Value;
+        if (!WhiteList.Contains(name))
         {
-            st.IsHave = false;
-        }
-        else
-        {
-            UE_LOG(LogTemp, Log, TEXT("zhx : delete a plane ,name : %s"),*name);
-            ClearMeshSection(st.Section);
+            UE_LOG(LogTemp, Log, TEXT("zhx : delete a plane ,name : %s index : %d"),*name,section);
+            ClearMeshSection(section);
             m_PlaneMap.Remove(name);
         }
     }
-    UE_LOG(LogTemp, Log, TEXT("zhx : m_PlaneMap num : %d, Sections num : %d, index : %d"),m_PlaneMap.Num(),GetNumSections(),sectionIndex);
+//    UE_LOG(LogTemp, Log, TEXT("zhx : m_PlaneMap num : %d, Sections num : %d, index : %d"),m_PlaneMap.Num(),GetNumSections(),sectionIndex);
 }
 void UUserPlaneComponent::GetVertexAndIndex(FVector Center, FVector Extent,  TArray<FVector>& Vertices,  TArray<int32>& Triangles)
 {

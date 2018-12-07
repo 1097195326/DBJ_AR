@@ -27,6 +27,6 @@ public:
 
 	void	GetVertexAndIndex(FVector Center,FVector Extent, TArray<FVector>& Vertices,  TArray<int32>& Triangles);
 private:
-	TMap<FString, PlaneStatus>	m_PlaneMap;
-
+//    TMap<FString, PlaneStatus>    m_PlaneMap;
+    TMap<FString, int>    m_PlaneMap;
 };
