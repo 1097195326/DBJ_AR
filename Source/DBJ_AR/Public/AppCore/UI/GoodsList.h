@@ -19,17 +19,17 @@ public:
 	virtual void On_Delete() override;
 
 	void InitView();
-
 	void OnGetProductList(msg_ptr _msg);
-
 	void SelectCategoryButton(int _id);
-	
 	void ReloadData();
+    void OnButtonClick(int _index);
 
-	UFUNCTION()
-        void OnButtonClick();
+	int			m_TypeIndex;
+	int			m_InnerIndex;
+	int			m_MaterialIndex;
 private:
 	UButton * m_BackButton;
+	UButton * m_FilterButton;
 	UScrollBox * m_IconScrolBox;
 	UGridPanel * m_IconList;
 	UVerticalBox * m_CategoryView;
@@ -39,4 +39,7 @@ private:
 	int32		m_LastId;
 
 	bool		m_IsRequest;
+
+	
+
 };

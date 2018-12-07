@@ -16,7 +16,7 @@ enum ToolScrollType
 	t_HalfDay
 };
 UCLASS()
-class DBJ_AR_API  UToolScrollWidget : public UBaseUI
+class DBJ_AR_API  UToolScrollWidget : public UBaseUI, public SelectButtonDelegate
 {
     GENERATED_BODY()
 

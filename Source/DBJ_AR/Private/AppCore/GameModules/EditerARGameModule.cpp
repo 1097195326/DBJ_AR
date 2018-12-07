@@ -16,6 +16,9 @@ EditerARGameModule::EditerARGameModule()
 {
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1003, this, &EditerARGameModule::OnUserLogout);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1004, this, &EditerARGameModule::OnGetCategoryList);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1005, this, &EditerARGameModule::OnGetGoodsType);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1006, this, &EditerARGameModule::OnGetMaterials);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1007, this, &EditerARGameModule::OnGetInnerDiameters);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1008, this, &EditerARGameModule::OnGetProductList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1009, this, &EditerARGameModule::OnCommitCurrentOrder);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1010, this, &EditerARGameModule::OnGetAccountOrder);
@@ -42,6 +45,9 @@ void EditerARGameModule::On_Delete()
 {
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1003, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1004, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1005, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1006, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1007, this);
     MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1008, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1009, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1010, this);
@@ -77,7 +83,7 @@ void EditerARGameModule::OnGetCategoryList(msg_ptr _msg)
 	msg_ptr msg(new LocalMsg(Msg_Local, 2004, &result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
-void EditerARGameModule::GetProductList(int categoryId, int lastId, int size, int typeId, int materialId, int innerDiameterId)
+void EditerARGameModule::GetProductList(int categoryId, int lastId, int typeId, int materialId, int innerDiameterId, int size)
 {
 	FString appendUrl = FString::Printf(TEXT("categoryId=%i&lastId=%i&size=%i&typeId=%i&materialId=%i&innerDiameterId=%i"), categoryId, lastId, size, typeId, materialId, innerDiameterId);
 
@@ -268,5 +274,53 @@ void EditerARGameModule::OnUpdateSelf(msg_ptr _msg)
 		result = 1;
 	}
 	msg_ptr msg(new LocalMsg(Msg_Local, 2015, &result));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::GetInnerDiameters()
+{
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1007);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1007, httpUrl, TEXT(""), Http_Get, cookie, token));
+
+	MsgCenter::GetInstance()->SendMsg(mMsg);
+}
+void EditerARGameModule::OnGetInnerDiameters(msg_ptr _msg)
+{
+	TSharedPtr<FJsonObject> jsonObject = _msg->GetJsonObject();
+	msg_ptr msg(new LocalMsg(Msg_Local, 2007, jsonObject));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::GetMaterials()
+{
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1006);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1006, httpUrl, TEXT(""), Http_Get, cookie, token));
+
+	MsgCenter::GetInstance()->SendMsg(mMsg);
+}
+void EditerARGameModule::OnGetMaterials(msg_ptr _msg)
+{
+	TSharedPtr<FJsonObject> jsonObject = _msg->GetJsonObject();
+	msg_ptr msg(new LocalMsg(Msg_Local, 2006, jsonObject));
+	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void EditerARGameModule::GetGoodsType()
+{
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+
+	FString httpUrl = Data_M->GetURL(1005);
+	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1005, httpUrl, TEXT(""), Http_Get, cookie, token));
+
+	MsgCenter::GetInstance()->SendMsg(mMsg);
+}
+void EditerARGameModule::OnGetGoodsType(msg_ptr _msg)
+{
+	TSharedPtr<FJsonObject> jsonObject = _msg->GetJsonObject();
+	msg_ptr msg(new LocalMsg(Msg_Local, 2005, jsonObject));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }

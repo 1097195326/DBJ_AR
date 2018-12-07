@@ -27,6 +27,9 @@
         <mapping msgId="2002" channel="local" uri="mgw/smsCode/send"/>
         <mapping msgId="2003" channel="local" uri="mgw/logout"/>
         <mapping msgId="2004" channel="local" uri="mgw/categories" />
+        <mapping msgId="2005" channel="local" uri="mgw/types" />
+        <mapping msgId="2006" channel="local" uri="mgw/materials" />
+        <mapping msgId="2007" channel="local" uri="mgw/innerDiameters" />
         <mapping msgId="2008" channel="local" uri="mgw/products" />
         <mapping msgId="2009" channel="local" uri="mgw/orders" />
         <mapping msgId="2010" channel="local" uri="mgw/orders" />

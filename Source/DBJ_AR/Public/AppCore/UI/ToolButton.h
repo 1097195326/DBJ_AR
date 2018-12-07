@@ -7,6 +7,12 @@ struct IdData
 	int Id;
 	FString Name;
 };
+class UToolButton;
+class SelectButtonDelegate
+{
+public:
+	virtual void SelectButton(UToolButton * _button) = 0;
+};
 
 UCLASS()
 class DBJ_AR_API  UToolButton : public UBaseUI
@@ -23,9 +29,14 @@ public:
 
 	IdData	m_Data;
 
-	void	SetData(IdData _data);
+	void	SetShowBorder(bool _show);
+	void	SetData(const IdData & _data, SelectButtonDelegate * _delegate);
 	void	SelectButton(bool _isSelect);
 
     UFUNCTION()
         void OnButtonClick();
+
+private:
+	bool   m_IsShowBorder;
+	SelectButtonDelegate * m_Delegate;
 };

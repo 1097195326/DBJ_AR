@@ -1,6 +1,6 @@
 #include "GoodsList.h"
 #include "RuntimeTDataManager.h"
-
+#include "MsgCenter.h"
 #include "UIManager.h"
 #include "EditerARGameModule.h"
 
@@ -13,8 +13,13 @@ void UGoodsList::On_Init()
     if (UButton * button = (UButton*)GetWidgetFromName("BackButton"))
     {
 		m_BackButton = button;
-		m_BackButton->OnClicked.AddDynamic(this, &UGoodsList::OnButtonClick);
+		UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UGoodsList::OnButtonClick);
     }
+	if (UButton * button = (UButton*)GetWidgetFromName("FilterButton"))
+	{
+		m_FilterButton = button;
+		UIManager::GetInstance()->RegisterButton(2, m_FilterButton, this, &UGoodsList::OnButtonClick);
+	}
 	if (UScrollBox * scrollBox = (UScrollBox*)GetWidgetFromName("IconScrolBox"))
 	{
 		m_IconScrolBox = scrollBox;
@@ -30,11 +35,15 @@ void UGoodsList::On_Init()
 	
 	m_IsRequest = false;
 
+	m_CurrentSelectId = 0;
+	m_TypeIndex = 0;
+	m_MaterialIndex = 0;
+	m_InnerIndex = 0;
 }
 void UGoodsList::On_Start()
 {
     UE_LOG(LogTemp,Log,TEXT("zhx : goodslist ui start"));
-    MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UGoodsList::OnGetProductList);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UGoodsList::OnGetProductList);
     
     //UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
     
@@ -162,7 +171,7 @@ void UGoodsList::SelectCategoryButton(int _id)
 			m_CurrentSelectId = _id;
 			m_LastId = 0;
 			m_IsRequest = true;
-			EditerARGameModule::GetInstance()->GetProductList(m_CurrentSelectId,m_LastId);
+			EditerARGameModule::GetInstance()->GetProductList(m_CurrentSelectId,m_LastId,m_TypeIndex,m_MaterialIndex,m_InnerIndex);
 		}
 		else
 		{
@@ -176,13 +185,24 @@ void UGoodsList::ReloadData()
 	{
 		m_IsRequest = true;
 		UE_LOG(LogTemp, Log, TEXT("zhx : GoodsList reload Data"));
-		EditerARGameModule::GetInstance()->GetProductList(m_CurrentSelectId, m_LastId);
+		EditerARGameModule::GetInstance()->GetProductList(m_CurrentSelectId, m_LastId, m_TypeIndex, m_MaterialIndex, m_InnerIndex);
 
 	}
 }
-void UGoodsList::OnButtonClick()
+void UGoodsList::OnButtonClick(int _index)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList::OnButtonClick : "));
-	RemoveFromViewport();
+	switch (_index)
+	{
+	case 1:
+	{
+		RemoveFromViewport();
+	}break;
+	case 2:
+	{
+		UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterUI"),this);
+		baseUI->AddToViewport();
+	}break;
+	}
 
 }
