@@ -26,8 +26,10 @@ void RuntimeCDataManager::DecodeAccountOrderList(const TSharedPtr<FJsonObject> _
 		objD->TryGetStringField(TEXT("receiverPhone"), data->ReceiverPhone);
 		objD->TryGetStringField(TEXT("address"), data->Address);
 		objD->TryGetStringField(TEXT("detailAddress"), data->DetailAddress);
+		objD->TryGetStringField(TEXT("expectReceiveTime"), data->ReceiveTime);
 		objD->TryGetBoolField(TEXT("morning"), data->Morning);
 
+		objD->TryGetNumberField(TEXT("deliverType"), data->DeliverType);
 		objD->TryGetNumberField(TEXT("status"), data->Status);
 		objD->TryGetNumberField(TEXT("totalQuantity"), data->totalQuantity);
 		objD->TryGetNumberField(TEXT("totalPrice"), data->totalPrice);

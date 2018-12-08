@@ -42,11 +42,13 @@ void UGetStyleUI::On_Start()
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
 	if (order->DeliverType == 1)
 	{
-		OnButtonClick(2);
+		m_Box1->SetIsChecked(true);
+		m_Box2->SetIsChecked(false);
 	}
 	else
 	{
-		OnButtonClick(3);
+		m_Box1->SetIsChecked(false);
+		m_Box2->SetIsChecked(true);
 	}
 	
 }

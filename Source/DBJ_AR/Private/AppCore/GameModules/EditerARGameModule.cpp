@@ -170,7 +170,7 @@ void EditerARGameModule::CommitCurrentOrder()
 	t_jsonObject->SetNumberField(TEXT("provinceId"), order->ProvinceId);
 	t_jsonObject->SetNumberField(TEXT("cityId"), order->CityId);
 	t_jsonObject->SetNumberField(TEXT("districtId"), order->DistrictId);
-	t_jsonObject->SetStringField(TEXT("address"), order->Address);
+	t_jsonObject->SetStringField(TEXT("address"), order->DetailAddress);
 	t_jsonObject->SetStringField(TEXT("remark"), order->Remark);
 
 	TArray<TSharedPtr<FJsonValue>> array;
