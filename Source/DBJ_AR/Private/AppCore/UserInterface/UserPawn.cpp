@@ -502,15 +502,14 @@ int	 AUserPawn::GetChangeProductId()
 		return m_SelectActor->m_Mesh->m_Data->id;
 	}else if (m_SelectComponent->m_Data->typeId == 2)
 	{
-		m_SelectComponent->m_Data->matchedProduct->id;
+		return m_SelectComponent->m_Data->matchedProduct->id;
 	}
 	return 0;
 }
-void AUserPawn::ChangeSelectModel(FString _gamePath)
+void AUserPawn::ChangeSelectModel(UStaticMesh * mesh)
 {
 	if (m_SelectComponent)
 	{
-		UStaticMesh * mesh = LoadObject<UStaticMesh>(nullptr, *_gamePath);
 		if (mesh)
 		{
 			m_SelectComponent->SetStaticMesh(mesh);
@@ -522,8 +521,7 @@ void AUserPawn::CancelChangeSelectModel()
 {
 	if (m_SelectComponent)
 	{
-		FString gamePath = m_SelectComponent->m_Data->GamePath;
-		ChangeSelectModel(gamePath);
+		ChangeSelectModel(m_SelectComponent->m_Data->LoadMesh());
 	}
 }
 void AUserPawn::SureChangeSelectModel(GoodsData * _data)

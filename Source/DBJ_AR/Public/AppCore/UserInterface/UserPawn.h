@@ -87,7 +87,7 @@ public:
     void    QuitEditScene();
     
 	int		GetChangeProductId();
-	void	ChangeSelectModel(FString _gamePath);
+	void	ChangeSelectModel(UStaticMesh * mesh);
 	void	CancelChangeSelectModel();
 	void	SureChangeSelectModel(GoodsData * _data);
 

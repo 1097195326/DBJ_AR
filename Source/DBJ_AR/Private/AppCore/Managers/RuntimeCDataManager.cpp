@@ -1,5 +1,6 @@
-#include "RuntimeCDataManager.h"
+﻿#include "RuntimeCDataManager.h"
 #include "UserInfo.h"
+#include "DateTime.h"
 
 RuntimeCDataManager * RuntimeCDataManager::GetInstance()
 {
@@ -24,10 +25,27 @@ void RuntimeCDataManager::DecodeAccountOrderList(const TSharedPtr<FJsonObject> _
 		objD->TryGetStringField(TEXT("receiverCompanyName"), data->ReceiverCompanyName);
 		objD->TryGetStringField(TEXT("receiverName"), data->ReceiverName);
 		objD->TryGetStringField(TEXT("receiverPhone"), data->ReceiverPhone);
-		objD->TryGetStringField(TEXT("address"), data->Address);
-		objD->TryGetStringField(TEXT("detailAddress"), data->DetailAddress);
-		objD->TryGetStringField(TEXT("expectReceiveTime"), data->ReceiveTime);
+		objD->TryGetStringField(TEXT("deliveryArea"), data->Address);
+		objD->TryGetStringField(TEXT("address"), data->DetailAddress);
+		objD->TryGetNumberField(TEXT("expectReceiveTime"), data->ExpectReceiveTime);
+		objD->TryGetStringField(TEXT("expectReceiveTimeStr"), data->ReceiveTime);
 		objD->TryGetBoolField(TEXT("morning"), data->Morning);
+		
+		/*FString IsMorning;
+		if (data->Morning)
+		{
+			IsMorning = TEXT("上午");
+		}
+		else
+		{
+			IsMorning = TEXT("下午");
+		}
+		FDateTime time(data->ExpectReceiveTime);
+		data->ReceiveTime = FString::Printf(TEXT("%d年%d月%d日%s"), time.GetYear(),time.GetMonth(),time.GetDay(),*IsMorning);*/
+
+		objD->TryGetNumberField(TEXT("provinceId"), data->ProvinceId);
+		objD->TryGetNumberField(TEXT("cityId"), data->CityId);
+		objD->TryGetNumberField(TEXT("districtId"), data->DistrictId);
 
 		objD->TryGetNumberField(TEXT("deliverType"), data->DeliverType);
 		objD->TryGetNumberField(TEXT("status"), data->Status);

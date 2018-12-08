@@ -69,7 +69,7 @@ void UAddressAndTimeTool::OnButtonClick(int _index)
 			setS = FString::Printf(TEXT("%s%s%s%s"), *year, *month, *day, *halfDay);
 			parentUI->SetGetTime(setS);
 			FDateTime expTime(m_Widgets[0]->m_CurrentData.Id, m_Widgets[1]->m_CurrentData.Id, m_Widgets[2]->m_CurrentData.Id);
-			order->ExpectReceiveTime = expTime.ToUnixTimestamp();
+			order->ExpectReceiveTime = expTime.ToUnixTimestamp() * 1000;
 			order->Morning = m_Widgets[3]->m_CurrentData.Id == 1 ? true : false;
 
 		}break;

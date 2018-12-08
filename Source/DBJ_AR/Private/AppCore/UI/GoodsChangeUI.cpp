@@ -66,7 +66,7 @@ void UGoodsChangeUI::OnButtonClick(int id)
 	{
 	case 1:
 	{
-		if (m_CurrentGoodsData && !m_CurrentGoodsData->GamePath.IsEmpty())
+		if (m_CurrentGoodsData && m_CurrentGoodsData->m_FilePathList.Num()>0)
 		{
 			AUserPawn::GetInstance()->SureChangeSelectModel(m_CurrentGoodsData);
 		}
@@ -145,7 +145,7 @@ void UGoodsChangeUI::SelectChangeIcon(UGoodsList_Icon * _icon)
 		{
 			icon->ShowSelectIcon(true);
 			m_CurrentGoodsData = icon->GetData();
-			AUserPawn::GetInstance()->ChangeSelectModel(m_CurrentGoodsData->GamePath);
+			AUserPawn::GetInstance()->ChangeSelectModel(m_CurrentGoodsData->LoadMesh());
 		}
 		else
 		{
