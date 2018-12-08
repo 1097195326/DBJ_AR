@@ -27,5 +27,5 @@ public:
 	UTextBlock *  m_ItemContent;
 	UBorder *	m_BottomBorder;
 
-	
+    void SetOnlyShow();
 };

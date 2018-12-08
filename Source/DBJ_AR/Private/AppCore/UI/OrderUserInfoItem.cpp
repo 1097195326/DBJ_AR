@@ -55,7 +55,18 @@ void UOrderUserInfoItem::On_Start()
 		m_BottomBorder->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
+
 void UOrderUserInfoItem::On_Delete()
 {
 
+}
+void UOrderUserInfoItem::SetOnlyShow()
+{
+    if (true)
+    {
+        m_EditText->SetVisibility(ESlateVisibility::Hidden);
+        m_ItemContent->SetVisibility(ESlateVisibility::Visible);
+        m_DoSomethingButton->SetVisibility(ESlateVisibility::Hidden);
+        m_ShowGoImage->SetVisibility(ESlateVisibility::Hidden);
+    }
 }

@@ -1,4 +1,4 @@
-﻿#include "OrderUserInfoUI.h"
+#include "OrderUserInfoUI.h"
 #include "UIManager.h"
 #include "AddressAndTimeTool.h"
 #include "RuntimeRDataManager.h"
@@ -50,20 +50,49 @@ void UOrderUserInfoUI::On_Start()
 {
 	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	if(order->Status == 2)
+    {
+        m_CompanyName->SetOnlyShow();
+        m_GetStyle->SetOnlyShow();
+        m_UsserPhone->SetOnlyShow();
+        m_Address->SetOnlyShow();
+        m_DetailAddress->SetOnlyShow();
+        m_GetTime->SetOnlyShow();
+        
+        m_CompanyName->m_ItemContent->SetText(FText::FromString(order->ReceiverCompanyName));
+        if (order->DeliverType == 1)
+        {
+            m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("送货上门")));
+            m_Address->SetVisibility(ESlateVisibility::Visible);
+            m_DetailAddress->SetVisibility(ESlateVisibility::Visible);
+        }else
+        {
+            m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("自取")));
+            m_Address->SetVisibility(ESlateVisibility::Hidden);
+            m_DetailAddress->SetVisibility(ESlateVisibility::Hidden);
+        }
+        m_UserName->m_ItemContent->SetText(FText::FromString(order->ReceiverName));
+        m_UsserPhone->m_ItemContent->SetText(FText::FromString(order->ReceiverPhone));
+        m_Address->m_ItemContent->SetText(FText::FromString(order->Address));
+        m_DetailAddress->m_ItemContent->SetText(FText::FromString(order->DetailAddress));
+        m_GetTime->m_ItemContent->SetText(FText::FromString(order->ReceiveTime));
+    }else
+    {
+        m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
+        if (order->DeliverType == 1)
+        {
+            m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("送货上门")));
+        }else
+        {
+            m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("自取")));
+        }
+        m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
+        m_UsserPhone->m_EditText->SetText(FText::FromString(order->ReceiverPhone));
+        m_Address->m_ItemContent->SetText(FText::FromString(order->Address));
+        m_DetailAddress->m_EditText->SetText(FText::FromString(order->DetailAddress));
+        m_GetTime->m_ItemContent->SetText(FText::FromString(order->ReceiveTime));
+    }
 	
-	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
-	if (order->DeliverType == 1)
-	{
-		m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("送货上门")));
-	}else
-	{
-		m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("自取")));
-	}
-	m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
-	m_UsserPhone->m_EditText->SetText(FText::FromString(order->ReceiverPhone));
-	m_Address->m_ItemContent->SetText(FText::FromString(order->Address));
-	m_DetailAddress->m_EditText->SetText(FText::FromString(order->DetailAddress));
-	m_GetTime->m_ItemContent->SetText(FText::FromString(order->ReceiveTime));
 }
 void UOrderUserInfoUI::On_Delete()
 {

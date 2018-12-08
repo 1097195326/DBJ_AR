@@ -68,6 +68,11 @@ void UGetStyleUI::OnButtonClick(int _index)
 		m_Box2->SetIsChecked(false);
 		m_String = m_Text1->GetText().ToString();
 		RuntimeRDataManager::GetInstance()->GetCurrentOrder()->DeliverType = 1;
+        
+        UOrderUserInfoUI * parent = (UOrderUserInfoUI*)m_ParentUI;
+        parent->SetGetStyle(m_String);
+        parent->ReView();
+        RemoveFromParent();
 	}break;
 	case 3:
 	{
@@ -75,6 +80,11 @@ void UGetStyleUI::OnButtonClick(int _index)
 		m_Box2->SetIsChecked(true);
 		m_String = m_Text2->GetText().ToString();
 		RuntimeRDataManager::GetInstance()->GetCurrentOrder()->DeliverType = 2;
+        
+        UOrderUserInfoUI * parent = (UOrderUserInfoUI*)m_ParentUI;
+        parent->SetGetStyle(m_String);
+        parent->ReView();
+        RemoveFromParent();
 	}break;
 	default:
 		break;

@@ -89,7 +89,8 @@ R_Order * RuntimeRDataManager::MakeOrder()
 	m_CurrentOrder->ReceiverCompanyName = userData.companyName;
 	m_CurrentOrder->ReceiverName = userData.name;
 	m_CurrentOrder->ReceiverPhone = userData.phone;
-	m_CurrentOrder->Address = userData.detailAddress;
+	m_CurrentOrder->Address = userData.address;
+    m_CurrentOrder->DetailAddress = userData.detailAddress;
 
 	return m_CurrentOrder;
 }
