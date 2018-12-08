@@ -1,4 +1,4 @@
-﻿#include "LoginUI.h"
+#include "LoginUI.h"
 #include "UIManager.h"
 #include "LoginGameModule.h"
 #include "AppInstance.h"
