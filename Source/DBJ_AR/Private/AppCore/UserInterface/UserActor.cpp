@@ -70,9 +70,9 @@ bool AUserActor::MergeOtherActor(AUserActor * _otherActor)
             GoodsData * otherData = _otherActor->m_Mesh->m_Data;
             
             UUserComponent * component = NewObject<UUserComponent>(this,TEXT("HuaComponent"));
-            component->AttachToComponent(m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
             UStaticMesh * hua = _otherActor->m_Mesh->GetStaticMesh();
             component->SetStaticMesh(hua);
+            component->AttachToComponent(m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
             component->RegisterComponent();//WithWorld(GetWorld());
             component->SetGoodsData(otherData,socketName);
             m_HuaList.Add(component);
