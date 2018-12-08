@@ -243,9 +243,16 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 	UE_LOG(LogTemp, Log, TEXT("zhx : select good fail"));
     return false;
 }
-AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
+void AUserPawn::TryCreateMergeActor(GoodsData * _goodsData)
 {
-    AActor * actor = nullptr;
+	AUserActor * one = TryCreateARActor(_goodsData);
+	AUserActor * two = TryCreateARActor(_goodsData->matchedProduct);
+	MergeTwoUserActor(one, two);
+
+}
+AUserActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
+{
+	AUserActor * uactor = nullptr;
 	UStaticMesh * mesh = _goodsData->LoadMesh();
 	if (mesh == nullptr)
 	{
@@ -256,10 +263,10 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
     FVector forward = cameraManager->GetCameraRotation().Vector();
     location = location + forward.GetSafeNormal() * 100;
 
-    UClass * uclass = LoadClass<AActor>(NULL,TEXT("/Game/Blueprints/BP_UserActor.BP_UserActor_C"),NULL,LOAD_None,NULL);
-    actor = GetWorld()->SpawnActor<AActor>(uclass);
-    actor->SetActorLocation(location);
-    AUserActor * uactor = (AUserActor*)actor;
+    UClass * uclass = LoadClass<AUserActor>(NULL,TEXT("/Game/Blueprints/BP_UserActor.BP_UserActor_C"),NULL,LOAD_None,NULL);
+	uactor = GetWorld()->SpawnActor<AUserActor>(uclass);
+	uactor->SetActorLocation(location);
+    //AUserActor * uactor = (AUserActor*)actor;
     switch(_goodsData->typeId)
     {
         case 0:
@@ -286,7 +293,7 @@ AActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 	m_AllUserActor.Add(uactor);
 //    m_SelectActor = actor;
     
-	return nullptr;
+	return uactor;
 }
 void AUserPawn::TryDeleteARActor(AUserActor * actor)
 {
@@ -490,9 +497,12 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 }
 int	 AUserPawn::GetChangeProductId()
 {
-	if (m_SelectComponent)
+	if (m_SelectComponent->m_Data->typeId == 1)
 	{
-		return m_SelectComponent->m_Data->id;
+		return m_SelectActor->m_Mesh->m_Data->id;
+	}else if (m_SelectComponent->m_Data->typeId == 2)
+	{
+		m_SelectComponent->m_Data->matchedProduct->id;
 	}
 	return 0;
 }

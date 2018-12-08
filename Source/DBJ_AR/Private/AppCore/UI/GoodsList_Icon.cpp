@@ -87,7 +87,7 @@ void UGoodsList_Icon::OnButtonClick(int index)
 			else
 			{
 				m_ParentUI->RemoveFromViewport();
-				AUserPawn::GetInstance()->TryCreateARActor(m_Data);
+				AUserPawn::GetInstance()->TryCreateMergeActor(m_Data);
 			}
         }
 	}break;
@@ -217,6 +217,10 @@ void UGoodsList_Icon::SetData(GoodsData * _data,bool _isChange)
         m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
         m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
         GFileManager::GetInstance()->PakMount(m_Data);
+		if (m_Data->matchedProduct != nullptr)
+		{
+			GFileManager::GetInstance()->PakMount(m_Data->matchedProduct);
+		}
     }
     else
     {

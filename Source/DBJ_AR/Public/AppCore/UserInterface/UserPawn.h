@@ -76,8 +76,8 @@ public:
         bool IsHaveActorInScreenPosition(FVector2D _position);
     UFUNCTION(BlueprintCallable)
         AActor * TryCreateARActor(FVector2D _screenPosition);
-	
-	AActor * TryCreateARActor(GoodsData * _goodsData);
+	void	TryCreateMergeActor(GoodsData * _goodsData);
+	AUserActor * TryCreateARActor(GoodsData * _goodsData);
 	void	TryDeleteARActor(AUserActor* _actor);
 	
 	void MergeTwoUserActor(AUserActor * one, AUserActor * two);
