@@ -146,9 +146,9 @@ void ULoginUI::OnGetSmsCode(msg_ptr _msg)
 void ULoginUI::OnUserLogin(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnUserLogin : "));
-	int code  = *((int *)_msg->GetMsgContent());
+	int result = _msg->GetMsgContent<int>();
 
-    if (code == 200)
+    if (result == 1)
 	{
         UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
 //        UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));

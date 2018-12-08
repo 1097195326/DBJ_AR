@@ -38,18 +38,17 @@ void UGoodsChangeUI::On_Start()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2013, this, &UGoodsChangeUI::OnGetChangeList);
 
 	m_ProductId = AUserPawn::GetInstance()->GetChangeProductId();
+	//m_ProductId = 10;
 	EditerARGameModule::GetInstance()->GetChangeList(m_ProductId,m_LastId);
-	//test
-	OnGetChangeList(nullptr);
 }
 void UGoodsChangeUI::On_Tick(float delta)
 {
 	if (m_ScrollBox && !m_IsRequest)
 	{
 		float xx = m_ScrollBox->GetScrollOffset();
-		float yy = m_ScrollBox->GetDesiredSize().Y;
+		float yy = m_ScrollBox->GetDesiredSize().X;
 		UCanvasPanelSlot * scrollSlot = (UCanvasPanelSlot*)m_ScrollBox->Slot;
-		if (xx + scrollSlot->GetSize().Y >= yy)
+		if (xx + scrollSlot->GetSize().X >= yy)
 		{
 			ReloadData();
 		}
@@ -105,8 +104,7 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 
 	m_ScrollBox->ScrollToStart();
 	m_GridPanel->ClearChildren();
-//    TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
-    TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
+    TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
 
 	for (int i = 0; i < goods.Num(); i++)
 	{

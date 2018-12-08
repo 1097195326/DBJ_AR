@@ -43,4 +43,8 @@ private:
 	bool m_IsDowning;
 	FDelegateHandle m_DelegateHandle;
 
+	TArray<FFileInfo>	m_DownFiles;
+	int		m_DownIndex;
+	void GetDownFiles();
+	void DownFiles(int _index);
 };

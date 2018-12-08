@@ -41,7 +41,8 @@ public:
 
 	bool FileIsExist(FString _path);
     bool FileIsExist(int _id, FString _md5);
-    
+	bool FileIsExist(GoodsData * _data);
+
 	bool PakMount(GoodsData* _goodsData);
 
 	FString GetPakFilePath(int _id, FString _md5);

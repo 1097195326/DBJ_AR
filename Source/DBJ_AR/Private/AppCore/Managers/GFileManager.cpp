@@ -32,6 +32,21 @@ bool GFileManager::FileIsExist(int _id, FString _md5)
     FString pakPath = GetPakFilePath(_id,_md5);
     return FileIsExist(pakPath);
 }
+bool GFileManager::FileIsExist(GoodsData * _data)
+{
+	if (FileIsExist(_data->modelId,_data->pakMd5))
+	{
+		if (_data->matchedProduct == nullptr)
+		{
+			return true;
+		}
+		if (FileIsExist(_data->matchedProduct->modelId, _data->matchedProduct->pakMd5))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 void GFileManager::TestPak()
 {
 	//PakMount(9, TEXT("01d222cb4f9f18fd1316328e4bb2a007"));
@@ -98,7 +113,7 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 	//		}
 	//	}
 	//}
-//    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;
 }
