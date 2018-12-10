@@ -77,3 +77,21 @@ void MsgCenter::TickMsg()
         channel.second->TickMsg();
     }
 }
+void MsgCenter::RerequestHttp()
+{
+	auto iter = m_Channel_Map.find(Msg_HttpRequest);
+	if (iter != m_Channel_Map.end())
+	{
+		HttpChannel * channel = (HttpChannel*)iter->second;
+		channel->RerequestHttp();
+	}
+}
+void MsgCenter::ContineHttp()
+{
+	auto iter = m_Channel_Map.find(Msg_HttpRequest);
+	if (iter != m_Channel_Map.end())
+	{
+		HttpChannel * channel = (HttpChannel*)iter->second;
+		channel->ContineHttp();
+	}
+}

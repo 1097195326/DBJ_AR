@@ -44,6 +44,9 @@ public:
     virtual	void OpenLevel(const FString & _levelName);
 
 	ENetworkStatus GetNetworkStatus();
+
+	static bool CheckStringIsValid(const FString& str, const FString& Reg);
+	static bool CheckPhone(const FString& str);
 private:
     void ApplicationWillEnterBackground_Hander();
     void ApplicationHasEnteredForeground_Hander();

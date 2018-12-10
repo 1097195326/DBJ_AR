@@ -21,6 +21,8 @@ public:
 	UImage *  m_SwitchOn;
 
 	void OnButtonClick(int _index);
+	void SureLayout();
+
 	void ReView();
 
 	void	OnUserLogout(msg_ptr _msg);

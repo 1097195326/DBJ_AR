@@ -97,9 +97,7 @@ bool UserInfo::ReadLocalData()
 		return false;
 	}
 	//解析json组装data.
-	//TSharedPtr<FJsonObject> data = mJsonObj->GetObjectField(TEXT("data"));
-	m_SaveUserData.token = mJsonObj->GetStringField(TEXT("token"));
-	//TSharedPtr<FJsonObject> mRentVO = data->GetObjectField(TEXT("userRentVO"));
+	/*m_SaveUserData.token = mJsonObj->GetStringField(TEXT("token"));
 	m_SaveUserData.id = mJsonObj->GetIntegerField(TEXT("id"));
 	m_SaveUserData.phone = mJsonObj->GetStringField(TEXT("phone"));
 	m_SaveUserData.name = mJsonObj->GetStringField(TEXT("name"));
@@ -110,7 +108,24 @@ bool UserInfo::ReadLocalData()
 	m_SaveUserData.address = mJsonObj->GetStringField(TEXT("address"));
 	m_SaveUserData.detailAddress = mJsonObj->GetStringField(TEXT("detailAddress"));
 	m_SaveUserData.limit = mJsonObj->GetBoolField(TEXT("limit"));
-	m_SaveUserData.gmtCreate = mJsonObj->GetStringField(TEXT("gmtCreate"));
+	m_SaveUserData.gmtCreate = mJsonObj->GetStringField(TEXT("gmtCreate"));*/
+
+	mJsonObj->TryGetStringField(TEXT("token"), m_SaveUserData.token);
+	mJsonObj->TryGetNumberField(TEXT("id"), m_SaveUserData.id);
+	mJsonObj->TryGetStringField(TEXT("phone"), m_SaveUserData.phone);
+	mJsonObj->TryGetStringField(TEXT("name"), m_SaveUserData.name);
+	mJsonObj->TryGetStringField(TEXT("companyName"), m_SaveUserData.companyName);
+	mJsonObj->TryGetNumberField(TEXT("provinceId"), m_SaveUserData.provinceId);
+	mJsonObj->TryGetNumberField(TEXT("cityId"), m_SaveUserData.cityId);
+	mJsonObj->TryGetNumberField(TEXT("districtId"), m_SaveUserData.districtId);
+	mJsonObj->TryGetStringField(TEXT("address"), m_SaveUserData.address);
+	mJsonObj->TryGetStringField(TEXT("detailAddress"), m_SaveUserData.detailAddress);
+	mJsonObj->TryGetBoolField(TEXT("limit"), m_SaveUserData.limit);
+	mJsonObj->TryGetStringField(TEXT("gmtCreate"), m_SaveUserData.gmtCreate);
+	mJsonObj->TryGetNumberField(TEXT("remainingDays"), m_SaveUserData.RemainingDays);
+	mJsonObj->TryGetBoolField(TEXT("tips"), m_SaveUserData.Tips);
+	mJsonObj->TryGetStringField(TEXT("tipMessage"), m_SaveUserData.TipMessage);
+
 	return true;
 }
 bool UserInfo::SaveUserData(FString key, int value)

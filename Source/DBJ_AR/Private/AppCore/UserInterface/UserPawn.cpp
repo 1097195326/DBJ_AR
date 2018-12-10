@@ -502,8 +502,7 @@ int	 AUserPawn::GetChangeProductId()
 {
 	if (m_SelectActor && m_SelectComponent)
 	{
-		int id = m_SelectActor->m_MatchMap[m_SelectComponent->m_Data->id];
-		return id;
+		return m_SelectActor->m_MatchMap[m_SelectComponent->m_Data->id];
 	}
 	return 0;
 }

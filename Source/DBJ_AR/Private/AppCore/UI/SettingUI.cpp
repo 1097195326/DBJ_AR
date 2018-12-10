@@ -1,9 +1,11 @@
-#include "SettingUI.h"
+﻿#include "SettingUI.h"
 #include "UIManager.h"
 #include "UserInfo.h"
 #include "AppInstance.h"
 #include "EditerARGameModule.h"
 #include "UserPawn.h"
+#include "AlertUI.h"
+
 
 void USettingUI::On_Init()
 {
@@ -54,9 +56,10 @@ void USettingUI::OnButtonClick(int _index)
 	}break;
 	case 2:
 	{
-		/*AUserPawn::GetInstance()->DeleteAllARActor();
-		UAppInstance::GetInstance()->OpenLevel(TEXT("LoginLevel"));*/
-		EditerARGameModule::GetInstance()->UserLogout();
+		UAlertUI * alertUI = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("AlertUI"));
+		alertUI->SetContentText(TEXT("是否退出登录"));
+		alertUI->BindSureFunctionCall(this, &USettingUI::SureLayout);
+		alertUI->AddToViewport();
 	}break;
 	case 3:
 	{
@@ -65,6 +68,10 @@ void USettingUI::OnButtonClick(int _index)
 		RemoveFromParent();
 	}break;
 	}
+}
+void USettingUI::SureLayout()
+{
+	EditerARGameModule::GetInstance()->UserLogout();
 }
 void USettingUI::ReView()
 {

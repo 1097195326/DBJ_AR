@@ -17,7 +17,7 @@ void UTopHintTextUI::InitText(const FString & hintText, float showSecond)
 		m_IsUpdate = true;
 		UTextBlock * showText = NewObject<UTextBlock>();
 		showText->SetText(FText::FromString(hintText));
-		showText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("FF0034FF"))));
+		showText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("FFFFFFFF"))));
 		showText->SetFont(FSlateFontInfo(TEXT("PingFang_Regular_Font"), 30));
 		showText->SetJustification(ETextJustify::Center);
 		m_ShowTextView->AddChild(showText);

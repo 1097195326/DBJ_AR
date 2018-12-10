@@ -25,6 +25,9 @@ public:
 	FString detailAddress;
 	bool limit;
 	FString gmtCreate;
+	bool Tips;
+	FString TipMessage;
+	int32	RemainingDays;
 	// user data
 	int32 Allow4G;
 	FSaveUserData() { Allow4G = 1; }

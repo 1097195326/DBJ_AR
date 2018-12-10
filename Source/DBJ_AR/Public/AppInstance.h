@@ -24,6 +24,9 @@ public:
     virtual    void ApplicationHasEnteredForeground() override;
 
 	void OnGloablMsg(msg_ptr _msg);
+	void GloablMsgSure();
+	void GloablMsgCancel();
+
 
 	UFUNCTION(Exec)
 		void PakMount();

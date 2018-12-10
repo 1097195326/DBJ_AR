@@ -9,6 +9,7 @@
 #include "GCore.h"
 #include "GAppInstance.h"
 #include "Reachability.h"
+#include "Internationalization/Regex.h"
 
 UGAppInstance *  UGAppInstance::m_Instance = nullptr;
 
@@ -35,8 +36,10 @@ void UGAppInstance::BeginDestroy()
 {
     FCoreDelegates::ApplicationWillEnterBackgroundDelegate.RemoveAll(this);
     FCoreDelegates::ApplicationHasEnteredForegroundDelegate.RemoveAll(this);
+	
+	On_Delete();
     
-    Super::BeginDestroy();
+	Super::BeginDestroy();
 }
 void UGAppInstance::Shutdown()
 {
@@ -88,4 +91,17 @@ ENetworkStatus UGAppInstance::GetNetworkStatus()
     }
 #endif
 	return state;
+}
+bool UGAppInstance::CheckStringIsValid(const FString& str, const FString& Reg)
+{
+	FRegexPattern Pattern(Reg);
+	FRegexMatcher regMatcher(Pattern, str);
+	regMatcher.SetLimits(0, str.Len());
+	return regMatcher.FindNext();
+}
+bool UGAppInstance::CheckPhone(const FString& str)
+{
+	if (str.Len() != 11) return false;
+	FString reg = TEXT("^1\\d{10}$");
+	return UGAppInstance::CheckStringIsValid(str, reg);
 }

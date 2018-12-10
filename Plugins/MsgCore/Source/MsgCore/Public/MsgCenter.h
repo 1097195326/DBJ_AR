@@ -60,5 +60,8 @@ public:
     
 	void StopSendMsg();
     
+	void RerequestHttp();
+	void ContineHttp();
+
     void TickMsg();
 };

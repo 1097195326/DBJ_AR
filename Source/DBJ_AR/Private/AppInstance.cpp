@@ -5,7 +5,7 @@
 #include "GFileManager.h"
 #include "ARBlueprintLibrary.h"
 #include "UserPawn.h"
-
+#include "AlertUI.h"
 
 UAppInstance::UAppInstance()
 {
@@ -58,6 +58,20 @@ void UAppInstance::PakMount()
 
 void UAppInstance::OnGloablMsg(msg_ptr _msg)
 {
+	UE_LOG(LogTemp, Log, TEXT("zhx : APP Instance On Gloable Msg"));
+	UAlertUI * fullAlert = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("FullAlertUI"));
+	fullAlert->AddToViewport(999);
+	fullAlert->BindSureFunctionCall(this, &UAppInstance::GloablMsgSure);
+	fullAlert->SetContentText(TEXT("ÍøÂçÁ¬½ÓÊ§°Ü,Çë¼ì²éÍøÂçÉèÖÃ"));
+}
+void UAppInstance::GloablMsgSure()
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : APP Instance Sure Gloabl Msg"));
+	MsgCenter::GetInstance()->RerequestHttp();
+	
 
-
+}
+void UAppInstance::GloablMsgCancel()
+{
+	MsgCenter::GetInstance()->ContineHttp();
 }

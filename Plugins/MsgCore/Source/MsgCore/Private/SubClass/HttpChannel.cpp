@@ -1,5 +1,5 @@
 #include "HttpChannel.h"
-
+#include "MsgCenter.h"
 
 
 
@@ -122,15 +122,31 @@ void HttpChannel::OnMsgResponse(FHttpRequestPtr inReq, FHttpResponsePtr inResp, 
 				}
 			}
 		}
-	}
 
-	m_Msg_Queue.pop();
-	m_CurrentMsg = nullptr;
-	m_IsRequesting = false;
-	
+		m_Msg_Queue.pop();
+		m_CurrentMsg = nullptr;
+		m_IsRequesting = false;
+	}
+	else
+	{
+		msg_ptr msg(new LocalMsg(Msg_Local, 110, nullptr));
+		MsgCenter::GetInstance()->SendMsg(msg);
+	}
 }
+
 void HttpChannel::StopSendMsg()
 {
 	m_CanRun = false;
 	
+}
+void HttpChannel::RerequestHttp()
+{
+	m_CurrentMsg = nullptr;
+	m_IsRequesting = false;
+}
+void HttpChannel::ContineHttp()
+{
+	m_Msg_Queue.pop();
+	m_CurrentMsg = nullptr;
+	m_IsRequesting = false;
 }

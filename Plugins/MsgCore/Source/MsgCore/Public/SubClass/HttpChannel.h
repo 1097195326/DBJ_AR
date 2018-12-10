@@ -32,6 +32,9 @@ public:
 	virtual void StopSendMsg() override;
     virtual void TickMsg() override;
 
+	void	RerequestHttp();
+	void	ContineHttp();
+
 	virtual void SendMsg(msg_ptr _msg);
 
 	virtual void SendMsgToHttp(msg_ptr _msg);

@@ -7,6 +7,9 @@
 #include "UserPawn.h"
 #include "UserAccountUI.h"
 #include "RuntimeRDataManager.h"
+#include "AlertUI.h"
+#include "UserInfo.h"
+
 
 void UEditerARUI::On_Init()
 {
@@ -75,6 +78,14 @@ void UEditerARUI::On_Start()
     UI_M->RegisterButton(13, m_AddressButton, this, &UEditerARUI::On_Button_Click);
     UI_M->RegisterButton(14, m_OrderlistButton, this, &UEditerARUI::On_Button_Click);
     UI_M->RegisterButton(15, m_ShareButton, this, &UEditerARUI::On_Button_Click);
+
+	if (UserInfo::Get()->GetLocalData().Tips)
+	{
+		UAlertUI * alertUI = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("AlertUI"));
+		alertUI->SetContentText(UserInfo::Get()->GetLocalData().TipMessage);
+		alertUI->OnlyButtonShow(true);
+		alertUI->AddToViewport();
+	}
 }
 void UEditerARUI::On_Delete()
 {

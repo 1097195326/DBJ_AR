@@ -60,10 +60,14 @@ void LoginGameModule::GetSmsCodeToLogin(FString _phoneNum)
 void LoginGameModule::OnGetSmsCode(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : LoginGameModule::OnGetSmsCode : "));
+	int result = 0;
 	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
-	int code = 0;
-	jsonData->TryGetNumberField(TEXT("code"), code);
-	msg_ptr msg(new LocalMsg(Msg_Local, 2002,&code));
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+		result = 1;
+
+	}
+	msg_ptr msg(new LocalMsg(Msg_Local, 2002,&result));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void LoginGameModule::UserLogin(FString _phoneNum, FString _smsCodeNum)
@@ -86,11 +90,10 @@ void LoginGameModule::UserLogin(FString _phoneNum, FString _smsCodeNum)
 void LoginGameModule::OnUserLogin(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : LoginGameModule::OnUserLogin : "));
-	int result = 0;
+	
 	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
 	if (jsonData->GetIntegerField(TEXT("code")) == 200)
 	{
-		result = 1;
 		TSharedPtr<FJsonObject> jsonObj = jsonData->GetObjectField(TEXT("data"));
 		FString token = jsonObj->GetStringField(TEXT("token"));
 		TSharedPtr<FJsonObject> userData = jsonObj->GetObjectField(TEXT("userRentVO"));
@@ -99,30 +102,30 @@ void LoginGameModule::OnUserLogin(msg_ptr _msg)
 		UserInfo::Get()->SaveToLocal(userData);
 	}
 	
-	msg_ptr msg(new LocalMsg(Msg_Local, 2001, &result));
+	msg_ptr msg(new LocalMsg(Msg_Local, 2001, jsonData));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
 void LoginGameModule::AutoLogin()
 {
 	FString cookie = UserInfo::Get()->GetCookie();
 	FString token = UserInfo::Get()->GetToken();
+	if (!token.IsEmpty())
+	{
+		FString httpUrl = Data_M->GetURL(1016);
+		msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1016, httpUrl, TEXT(""), Http_Get, cookie, token));
 
-	FString httpUrl = Data_M->GetURL(1016);
-	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1016, httpUrl, TEXT(""), Http_Get, cookie, token));
-
-	MsgCenter::GetInstance()->SendMsg(mMsg);
+		MsgCenter::GetInstance()->SendMsg(mMsg);
+	}
 }
 void LoginGameModule::OnAutoLogin(msg_ptr _msg)
 {
-	int result = 0;
 	TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
 	if (jsonData->GetIntegerField(TEXT("code")) == 200)
 	{
 		TSharedPtr<FJsonObject> jsonObj = jsonData->GetObjectField(TEXT("data"));
 		jsonObj->SetStringField(TEXT("token"), UserInfo::Get()->GetToken());
 		UserInfo::Get()->SaveToLocal(jsonObj);
-		result = 1;
 	}
-	msg_ptr msg(new LocalMsg(Msg_Local, 2016, &result));
+	msg_ptr msg(new LocalMsg(Msg_Local, 2016, jsonData));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }

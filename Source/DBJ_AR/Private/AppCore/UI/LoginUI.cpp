@@ -84,24 +84,40 @@ void ULoginUI::On_Button_Click(int _index)
 	case 1:
 	{
 		UE_LOG(LogTemp,Log,TEXT("zhx : msm code button click "));
-		timeindex = 60;
-		m_VeriCode_Button->SetIsEnabled(false);
-		GetWorld()->GetTimerManager().SetTimer(m_TimeHandle, this, &ULoginUI::TimeRun, 1, true,0);
 		FString phoneNum = m_Phone_Text->GetText().ToString();
-		LoginGameModule::GetInstance()->GetSmsCodeToLogin(phoneNum);
-		break;
-	}
+		if (UAppInstance::CheckPhone(phoneNum))
+		{
+			timeindex = 60;
+			m_VeriCode_Button->SetIsEnabled(false);
+			GetWorld()->GetTimerManager().SetTimer(m_TimeHandle, this, &ULoginUI::TimeRun, 1, true, 0);
+			LoginGameModule::GetInstance()->GetSmsCodeToLogin(phoneNum);
+		}
+		else
+		{
+			UIManager::GetInstance()->TopHintText(TEXT("请输入正确的手机号"),1);
+		}
+		
+	}break;
 	case 2:
 	{
-		
 		FString phoneNum = m_Phone_Text->GetText().ToString();
 		FString veriCodeNum = m_VeriCode_Text->GetText().ToString();
-        LoginGameModule::GetInstance()->UserLogin(phoneNum, veriCodeNum);
-//        UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));
-        //UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
-        
-		break;
-	}
+		if (UAppInstance::CheckPhone(phoneNum))
+		{
+			if (!veriCodeNum.IsEmpty())
+			{
+				LoginGameModule::GetInstance()->UserLogin(phoneNum, veriCodeNum);
+			}
+			else
+			{
+				UIManager::GetInstance()->TopHintText(TEXT("验证码不能为空"), 1);
+			}
+		}
+		else
+		{
+			UIManager::GetInstance()->TopHintText(TEXT("请输入正确的手机号"), 1);
+		}
+	}break;
 	case 3:
 	{
 		m_MainPanel->SetVisibility(ESlateVisibility::Visible);
@@ -133,40 +149,42 @@ void ULoginUI::TimeRun()
 void ULoginUI::OnGetSmsCode(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnGetSmsCode : "));
-	int code = *((int*)(_msg->GetMsgContent()));
-	if (code == 200)
+	int result = *((int*)(_msg->GetMsgContent()));
+	if (result == 1)
 	{
-
+		UIManager::GetInstance()->TopHintText(TEXT("发送验证码成功"),1.f);
 	}
 	else
 	{
-
+		UIManager::GetInstance()->TopHintText(TEXT("发送验证码失败"),1.f);
 	}
 }
 void ULoginUI::OnUserLogin(msg_ptr _msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : ULoginUI::OnUserLogin : "));
-	int result = _msg->GetMsgContent<int>();
+	TSharedPtr<FJsonObject> jsonObj = _msg->GetJsonObject();
 
-    if (result == 1)
+	if (jsonObj->GetIntegerField(TEXT("code")) == 200)
 	{
         UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
-//        UAppInstance::GetInstance()->OpenLevel(TEXT("TestAR"));
 	}
     else
     {
-
+		FString msg = jsonObj->GetStringField(TEXT("msg"));
+		UIManager::GetInstance()->TopHintText(msg, 3.f);
     }
 }
 void ULoginUI::OnAutoLogin(msg_ptr _msg)
 {
-	int result = _msg->GetMsgContent<int>();
-	if (result == 1)
+	TSharedPtr<FJsonObject> jsonObj = _msg->GetJsonObject();
+
+	if (jsonObj->GetIntegerField(TEXT("code")) == 200)
 	{
 		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
 	}
 	else
 	{
-
+		FString msg = jsonObj->GetStringField(TEXT("msg"));
+		UIManager::GetInstance()->TopHintText(msg, 3.f);
 	}
 }
