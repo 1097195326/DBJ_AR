@@ -84,7 +84,7 @@ void UEditerARUI::On_Start()
 		UAlertUI * alertUI = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("AlertUI"));
 		alertUI->SetContentText(UserInfo::Get()->GetLocalData().TipMessage);
 		alertUI->OnlyButtonShow(true);
-		alertUI->AddToViewport();
+		alertUI->AddToViewport(99);
 	}
 }
 void UEditerARUI::On_Delete()

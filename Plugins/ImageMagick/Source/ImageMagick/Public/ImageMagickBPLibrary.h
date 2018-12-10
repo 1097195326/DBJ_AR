@@ -10,7 +10,7 @@
 #include "PlatformFileManager.h"
 #include <string>
 #if PLATFORM_WINDOWS
-#include <Magick++.h>
+//#include <Magick++.h>
 #endif
 #if PLATFORM_IOS
 #include <Magick++.h>

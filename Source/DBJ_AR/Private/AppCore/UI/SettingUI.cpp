@@ -59,7 +59,7 @@ void USettingUI::OnButtonClick(int _index)
 		UAlertUI * alertUI = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("AlertUI"));
 		alertUI->SetContentText(TEXT("是否退出登录"));
 		alertUI->BindSureFunctionCall(this, &USettingUI::SureLayout);
-		alertUI->AddToViewport();
+		alertUI->AddToViewport(99);
 	}break;
 	case 3:
 	{

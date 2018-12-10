@@ -5,7 +5,7 @@
 #include "HighResScreenshot.h"
 
 #if PLATFORM_WINDOWS
-#include "OpenFileDlg/OpenFileDlgWTF.h"
+//#include "OpenFileDlg/OpenFileDlgWTF.h"
 #elif PLATFORM_MAC
 #include "OpenFileDialogLib.h"
 #include "CocoaThread.h"
@@ -26,7 +26,7 @@ bool yOK;
 FImageInfo UImageMagickBPLibrary::HandleImage(FString PatternFilePath)
 {
 	FImageInfo imageInfo;
-#if PLATFORM_WINDOWS || PLATFORM_IOS
+#if PLATFORM_IOS
 	if (!GFileExit(PatternFilePath))
 	{
 		return imageInfo;
@@ -132,12 +132,12 @@ FString UImageMagickBPLibrary::ConvertPngToJpg(FString inFilePath)
 
 #endif
 #if PLATFORM_WINDOWS
-	if (GFileExit(inFilePath))
+	/*if (GFileExit(inFilePath))
 	{
 		Magick::Image pattern(TCHAR_TO_UTF8(*inFilePath));
 		pattern.write(TCHAR_TO_UTF8(*outFilePath));
 	
-	}
+	}*/
 #endif
 #if PLATFORM_IOS
 	if (GFileExit(inFilePath))

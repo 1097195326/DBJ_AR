@@ -24,25 +24,25 @@ public class ImageMagick : ModuleRules
         bool isdebug = Target.Configuration == UnrealTargetConfiguration.Debug && Target.bDebugBuildsActuallyUseDebugCRT;
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
-            PublicIncludePaths.AddRange(new string[] { Path.Combine(imagemagickPath, "Include","Win64") });
+            //PublicIncludePaths.AddRange(new string[] { Path.Combine(imagemagickPath, "Include","Win64") });
             
-            LibPath = Path.Combine(imagemagickPath, "Libraries", "Win64");
-            PublicLibraryPaths.Add(LibPath);
+            //LibPath = Path.Combine(imagemagickPath, "Libraries", "Win64");
+            //PublicLibraryPaths.Add(LibPath);
 
-            PublicAdditionalLibraries.Add("CORE_RL_Magick++_.lib");
-            PublicAdditionalLibraries.Add("CORE_RL_MagickCore_.lib");
-            PublicAdditionalLibraries.Add("CORE_RL_MagickWand_.lib");
-            PublicAdditionalLibraries.Add("OpenFileDlgLib.lib");
+            //PublicAdditionalLibraries.Add("CORE_RL_Magick++_.lib");
+            //PublicAdditionalLibraries.Add("CORE_RL_MagickCore_.lib");
+            //PublicAdditionalLibraries.Add("CORE_RL_MagickWand_.lib");
+            //PublicAdditionalLibraries.Add("OpenFileDlgLib.lib");
         }
         else if (Target.Platform == UnrealTargetPlatform.Win32)
         {
-            PublicIncludePaths.AddRange(new string[] { Path.Combine(imagemagickPath, "Include","Win64") });
-            LibPath = Path.Combine(imagemagickPath, "Libraries", "Win32");
-            PublicLibraryPaths.Add(LibPath);
+            //PublicIncludePaths.AddRange(new string[] { Path.Combine(imagemagickPath, "Include","Win64") });
+            //LibPath = Path.Combine(imagemagickPath, "Libraries", "Win32");
+            //PublicLibraryPaths.Add(LibPath);
 
-            PublicAdditionalLibraries.Add(Path.Combine(LibPath, "CORE_RL_Magick++_.lib"));
-            PublicAdditionalLibraries.Add(Path.Combine(LibPath, "CORE_RL_MagickCore_.lib"));
-            PublicAdditionalLibraries.Add(Path.Combine(LibPath, "CORE_RL_MagickWand_.lib"));
+            //PublicAdditionalLibraries.Add(Path.Combine(LibPath, "CORE_RL_Magick++_.lib"));
+            //PublicAdditionalLibraries.Add(Path.Combine(LibPath, "CORE_RL_MagickCore_.lib"));
+            //PublicAdditionalLibraries.Add(Path.Combine(LibPath, "CORE_RL_MagickWand_.lib"));
             
         }
         else if(Target.Platform == UnrealTargetPlatform.Mac)
