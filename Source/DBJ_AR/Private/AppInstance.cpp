@@ -1,4 +1,4 @@
-#include "AppInstance.h"
+ï»¿#include "AppInstance.h"
 #include "UIManager.h"
 #include "DataManager.h"
 #include "ScenePrototype.h"
@@ -62,7 +62,7 @@ void UAppInstance::OnGloablMsg(msg_ptr _msg)
 	UAlertUI * fullAlert = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("FullAlertUI"));
 	fullAlert->AddToViewport(999);
 	fullAlert->BindSureFunctionCall(this, &UAppInstance::GloablMsgSure);
-	fullAlert->SetContentText(TEXT("ÍøÂçÁ¬½ÓÊ§°Ü,Çë¼ì²éÍøÂçÉèÖÃ"));
+	fullAlert->SetContentText(TEXT("ç½‘ç»œè¿žæŽ¥å¤±è´¥,è¯·æ£€æŸ¥ç½‘ç»œè®¾ç½®"));
 }
 void UAppInstance::GloablMsgSure()
 {
