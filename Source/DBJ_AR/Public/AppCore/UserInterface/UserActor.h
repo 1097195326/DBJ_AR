@@ -32,7 +32,8 @@ public:
 	UStaticMeshComponent * m_PlaneRotateComponent;
     
     TArray<UUserComponent *> m_HuaList;
-    
+	TMap<int, int> m_MatchMap;
+
 	UPROPERTY(VisibleAnywhere)
 		int m_SoketIndex;
 
@@ -49,5 +50,7 @@ public:
     
     void    ResetHuaComponent();
 	void	ShowPlaneComponent(bool visiable);
+
+	void	SetMatchId(int mainId,int matchId);
 };
 

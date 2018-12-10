@@ -247,6 +247,9 @@ void AUserPawn::TryCreateMergeActor(GoodsData * _goodsData)
 {
 	AUserActor * one = TryCreateARActor(_goodsData);
 	AUserActor * two = TryCreateARActor(_goodsData->matchedProduct);
+	one->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
+	two->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
+
 	MergeTwoUserActor(one, two);
 
 }
@@ -497,12 +500,10 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 }
 int	 AUserPawn::GetChangeProductId()
 {
-	if (m_SelectComponent->m_Data->typeId == 1)
+	if (m_SelectActor && m_SelectComponent)
 	{
-		return m_SelectActor->m_Mesh->m_Data->id;
-	}else if (m_SelectComponent->m_Data->typeId == 2)
-	{
-		return m_SelectComponent->m_Data->matchedProduct->id;
+		int id = m_SelectActor->m_MatchMap[m_SelectComponent->m_Data->id];
+		return id;
 	}
 	return 0;
 }
