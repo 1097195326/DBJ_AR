@@ -3,7 +3,7 @@
 #include "PhotoPage.h"
 #include "UIManager.h"
 //#include "OSSModule.h"
-//#include "ImageMagick.h"
+#include "ImageMagick.h"
 
 
 
@@ -64,30 +64,29 @@ void UPhotoPage::PhotoPicture(int32 _pid)
 {
 	if (_pid == 1)
 	{
-		//UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
-		RemoveFromViewport();
-		//this->SetVisibility(ESlateVisibility::Hidden);
-        //IImageMagickModule::Get().OpenCamera(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+//        UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
+        RemoveFromViewport();
+//        this->SetVisibility(ESlateVisibility::Hidden);
+//        IImageMagickModule::Get().OpenCamera(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 		
 	}
 	if (_pid == 2)
 	{
-		//UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
-		//this->SetVisibility(ESlateVisibility::Hidden);
-		RemoveFromViewport();
-        //IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+//        UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
+        this->SetVisibility(ESlateVisibility::Hidden);
+        IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 		
 	}
 	if (_pid == 3)
 	{
-		//UE_LOG(LogTemp, Log, TEXT("remove picture");
+//        UE_LOG(LogTemp, Log, TEXT("remove picture");
 		RemoveFromViewport();
 	}
 }
 
 void UPhotoPage::GetUploadPattern()
 {
-	//IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPattern));
+    IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPattern));
 }
 
 void UPhotoPage::CBOnOpenPattern(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes)
@@ -242,7 +241,7 @@ void UPhotoPage::CBOnOpenPattern(bool isSuccess, FString inIconFilePath, FString
 
 void UPhotoPage::GetUploadPicture()
 {
-	//IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+    IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 }
 
 void UPhotoPage::CBOnOpenPicture(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes)

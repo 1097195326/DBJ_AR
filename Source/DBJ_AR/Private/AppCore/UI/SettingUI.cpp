@@ -1,4 +1,4 @@
-﻿#include "SettingUI.h"
+#include "SettingUI.h"
 #include "UIManager.h"
 #include "UserInfo.h"
 #include "AppInstance.h"

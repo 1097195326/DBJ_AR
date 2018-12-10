@@ -57,7 +57,7 @@ void ULoginUI::On_Start()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2001, this, &ULoginUI::OnUserLogin);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2016, this, &ULoginUI::OnAutoLogin);
 
-	LoginGameModule::GetInstance()->AutoLogin();
+    LoginGameModule::GetInstance()->AutoLogin();
 
 }
 void ULoginUI::On_Delete()
@@ -100,6 +100,9 @@ void ULoginUI::On_Button_Click(int _index)
 	}break;
 	case 2:
 	{
+        UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("PhotoPage"));
+        baseUI->AddToViewport();
+        break;
 		FString phoneNum = m_Phone_Text->GetText().ToString();
 		FString veriCodeNum = m_VeriCode_Text->GetText().ToString();
 		if (UAppInstance::CheckPhone(phoneNum))
