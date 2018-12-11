@@ -108,10 +108,9 @@ bool UGAppInstance::CheckPhone(const FString& str)
 	FString reg = TEXT("^1\\d{10}$");
 	return UGAppInstance::CheckStringIsValid(str, reg);
 }
-static IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
-
 UTexture2D* UGAppInstance::LoadImageFromDisk(UObject* Outer, const FString& ImagePath)
 {
+    static IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 	// Check if the file exists first
 	if (!FPaths::FileExists(ImagePath))
 	{

@@ -29,7 +29,7 @@ public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
-	virtual bool OpenSelectPattern(FOnOpenReresult inDelegate) override;
+	virtual bool OpenSelectPicture(FOnOpenReresult inDelegate) override;
 	virtual bool OpenCamera(FOnOpenReresult inDelegate) override;
 	virtual bool CopyTo(const FString &inSrcFile, const FString &inTarFile) override;
 
@@ -53,7 +53,7 @@ bool FImageMagickModule::OpenCamera(FOnOpenReresult inDelegate)
 
 	return true;
 }
-bool FImageMagickModule::OpenSelectPattern(FOnOpenReresult inDelegate)
+bool FImageMagickModule::OpenSelectPicture(FOnOpenReresult inDelegate)
 {
 	// 正在处理上次打开请求.
 	if (OnOpenReresult.IsBound() || OpenFileOperator == nullptr)

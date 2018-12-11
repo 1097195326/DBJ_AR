@@ -74,7 +74,7 @@ void UPhotoPage::PhotoPicture(int32 _pid)
 	{
 //        UE_LOG(LogTemp, Log, TEXT("PhotoPicture");
         this->SetVisibility(ESlateVisibility::Hidden);
-        IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+        IImageMagickModule::Get().OpenSelectPicture(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 		
 	}
 	if (_pid == 3)
@@ -86,162 +86,26 @@ void UPhotoPage::PhotoPicture(int32 _pid)
 
 void UPhotoPage::GetUploadPattern()
 {
-    IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPattern));
+    IImageMagickModule::Get().OpenSelectPicture(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPattern));
 }
 
 void UPhotoPage::CBOnOpenPattern(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes)
 {
     UE_LOG(LogTemp,Log,TEXT("zhx : UPhotoPage::CBOnOpenPattern"));
-    RemoveFromViewport();
-//    FString FileName;
-//    FString IconFileName;
-//
-//    FString ossIconUrl;
-//    FString nativeIconUrl;
-//    FString ossTextureUrl;
-//    FString nativeTextureUrl;
-//
-//    float cm_width = inRes.X / inDPI.X*2.54;
-//    float cm_height = inRes.Y / inDPI.Y*2.54;
-//
-//#if PLATFORM_ANDROID
-//
-//    FileName = FGuid::NewGuid().ToString();
-//    IconFileName = FGuid::NewGuid().ToString();
-//
-//    ossIconUrl = GPlatformFileManager::GetAndroidOssUrl(inIconFilePath, IconFileName);
-//    nativeIconUrl = GPlatformFileManager::GetAndroidNativeFullUrl(inIconFilePath, IconFileName);
-//
-//    ossTextureUrl = GPlatformFileManager::GetAndroidOssUrl(inFilePath, FileName);
-//    nativeTextureUrl = GPlatformFileManager::GetAndroidNativeFullUrl(inFilePath, FileName);
-//
-//    this->RemoveFromViewport();
-//
-//    if (isSuccess)
-//    {
-//        FString mTipContent = GLanguageTool::GetInstance()->GetLanguage(TEXT("key144"));
-//
-//        UUIManager::GetInstance()->OpenMiddleTip(mTipContent, 0.0f);
-//
-//        GPlatformFileManager::RecursiveCreateDirectory(*nativeIconUrl);
-//
-//        GPlatformFileManager::RecursiveCreateDirectory(*nativeTextureUrl);
-//
-//        IImageMagickModule::Get().CopyTo(inIconFilePath, nativeIconUrl);
-//        IImageMagickModule::Get().CopyTo(inFilePath, nativeTextureUrl);
-//
-//        //删除文件.
-//        /*if (GPlatformFileManager::FileExists(*inIconFilePath))
-//        {
-//            GPlatformFileManager::DeleteFile(*inIconFilePath);
-//        }
-//        if (GPlatformFileManager::FileExists(*inFilePath))
-//        {
-//            GPlatformFileManager::DeleteFile(*inFilePath);
-//        }*/
-//
-//        m_DesignModule->UploadPatternToOss(ossIconUrl, nativeIconUrl, ossTextureUrl, nativeTextureUrl, cm_width, cm_height, inDPI.X, inDPI.Y, inRes.X, inRes.Y);
-//    }
-//    else
-//    {
-//        UUIManager::GetInstance()->RemoveAllAlertUI();
-//
-//        FString mTipContent = GLanguageTool::GetInstance()->GetLanguage(TEXT("key158"));
-//
-//        UUIManager::GetInstance()->OpenMiddleTip2(mTipContent, 1.5);
-//    }
-//    UE_LOG(LogTemp, Log, TEXT("CBOnOpenPattern"));
-//
-//#elif PLATFORM_IOS
-//    UE_LOG(LogTemp, Log, TEXT("开始复制图片"));
-//
-//    FileName = FGuid::NewGuid().ToString();
-//    IconFileName = FGuid::NewGuid().ToString();
-//
-//    // ios特定获取的地方.
-//    ossIconUrl = GPlatformFileManager::GetIOSOssUrl(inIconFilePath, IconFileName);
-//    nativeIconUrl = GPlatformFileManager::GetIOSNativeFullUrl(inIconFilePath, IconFileName);
-//
-//    ossTextureUrl = GPlatformFileManager::GetIOSOssUrl(inFilePath, FileName);
-//    nativeTextureUrl = GPlatformFileManager::GetIOSNativeFullUrl(inFilePath, FileName);
-//
-//    this->RemoveFromViewport();
-//
-//    UE_LOG(LogTemp, Log, TEXT("结束复制图片：=%s"), *inIconFilePath);
-//    UE_LOG(LogTemp, Log, TEXT("结束复制图片：%d=%s"), isSuccess ? 1 : 0, *nativeIconUrl);
-//    UE_LOG(LogTemp, Log, TEXT(" 结束复制图片1：%s "), *ossTextureUrl);
-//    UE_LOG(LogTemp, Log, TEXT(" 结束复制图片2：%s "), *nativeTextureUrl);
-//
-//    if (isSuccess)
-//    {
-//        FString mTipContent = GLanguageTool::GetInstance()->GetLanguage(TEXT("key144"));
-//
-//        UUIManager::GetInstance()->OpenMiddleTip(mTipContent, 0.0f);
-//
-//        GPlatformFileManager::RecursiveCreateDirectory(*nativeIconUrl);
-//
-//        GPlatformFileManager::RecursiveCreateDirectory(*nativeTextureUrl);
-//
-//        IImageMagickModule::Get().CopyTo(inIconFilePath, nativeIconUrl);
-//        IImageMagickModule::Get().CopyTo(inFilePath, nativeTextureUrl);
-//        //删除文件.
-//        /*if (GPlatformFileManager::FileExists(*inIconFilePath))
-//        {
-//            GPlatformFileManager::DeleteFile(*inIconFilePath);
-//        }
-//        if (GPlatformFileManager::FileExists(*inFilePath))
-//        {
-//            GPlatformFileManager::DeleteFile(*inFilePath);
-//        }*/
-//
-//        m_DesignModule->UploadPatternToOss(ossIconUrl, nativeIconUrl, ossTextureUrl, nativeTextureUrl, cm_width, cm_height, inDPI.X, inDPI.Y, inRes.X, inRes.Y);
-//    }
-//
-//    else
-//    {
-//        UUIManager::GetInstance()->RemoveAllAlertUI();
-//
-//        FString mTipContent = GLanguageTool::GetInstance()->GetLanguage(TEXT("key158"));
-//
-//        UUIManager::GetInstance()->OpenMiddleTip2(mTipContent, 1.5);
-//    }
-//#endif
-//
-//#if PLATFORM_WINDOWS
-//    nativeIconUrl = GPlatformFileManager::GetWindowsOssUrl(inIconFilePath);
-//    ossIconUrl = GPlatformFileManager::GetWindowsNativeFullUrl(inIconFilePath);
-//
-//    nativeTextureUrl = GPlatformFileManager::GetWindowsOssUrl(inFilePath);
-//    ossTextureUrl = GPlatformFileManager::GetWindowsNativeFullUrl(inFilePath);
-//
-//    this->RemoveFromViewport();
-//
-//     if (isSuccess)
-//    {
-//        FString mTipContent = GLanguageTool::GetInstance()->GetLanguage(TEXT("key144"));
-//
-//        UUIManager::GetInstance()->OpenMiddleTip(mTipContent, 0.0f);
-//
-//        m_DesignModule->UploadPatternToOss(ossIconUrl, nativeIconUrl, ossTextureUrl, nativeTextureUrl, cm_width, cm_height, inDPI.X, inDPI.Y, inRes.X, inRes.Y);
-//    }
-//    else
-//    {
-//        UUIManager::GetInstance()->RemoveAllAlertUI();
-//
-//        FString mTipContent = GLanguageTool::GetInstance()->GetLanguage(TEXT("key158"));
-//
-//        UUIManager::GetInstance()->OpenMiddleTip2(mTipContent, 1.5);
-//    }
-//#endif
 
-	//OnOpenUploadPanel.Broadcast(isSuccess, ossIconUrl, nativeIconUrl, ossTextureUrl, nativeTextureUrl, cm_width, cm_height);
-	//GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Red, FString::Printf(TEXT("Open system pattern result(%s) dpi(%f,%f), resolution(%f,%f),width(%f),height(%f)"), isSuccess ? TEXT("TRUE") : TEXT("FALSE"), inDPI.X, inDPI.Y, inRes.X, inRes.Y, cm_width,cm_height));
-	//UE_LOG(ClothEditor, Log, TEXT("Open system pattern result(%s) dpi(%f,%f), resolution(%f,%f)"), isSuccess ? TEXT("TRUE") : TEXT("FALSE"), inDPI.X, inDPI.Y, inRes.X, inRes.Y);
+#if PLATFORM_ANDROID
+
+    
+
+#elif PLATFORM_IOS
+    
+#endif
+
 }
 
 void UPhotoPage::GetUploadPicture()
 {
-    IImageMagickModule::Get().OpenSelectPattern(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
+    IImageMagickModule::Get().OpenSelectPicture(FOnOpenReresult::CreateUObject(this, &UPhotoPage::CBOnOpenPicture));
 }
 
 void UPhotoPage::CBOnOpenPicture(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes)

@@ -1,4 +1,4 @@
-﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 #include "ModuleManager.h"
@@ -10,7 +10,7 @@ public:
 	static IImageMagickModule& Get();
 public:
 	/* Return : is can operate , return true, otherwise return false : for example, an open perator is runing */
-	virtual bool OpenSelectPattern(FOnOpenReresult inDelegate) = 0;
+	virtual bool OpenSelectPicture(FOnOpenReresult inDelegate) = 0;
 	virtual bool OpenCamera(FOnOpenReresult inDelegate) = 0;
 	virtual bool CopyTo(const FString &inSrcFile, const FString &inTarFile) = 0;
 };

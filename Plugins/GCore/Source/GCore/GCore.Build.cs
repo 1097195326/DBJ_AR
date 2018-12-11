@@ -46,7 +46,7 @@ public class GCore : ModuleRules
             new string[]
             {
                 "Core",  "CoreUObject", "Engine","Slate", "SlateCore","UMG", "InputCore","JsonUtilities","Json","HTTP","Networking",
-                "GXmlPlugins", "MsgCore", "ImageWrapper",
+                "GXmlPlugins", "MsgCore"
                 // ... add other public dependencies that you statically link with here ...
             }
             );
@@ -76,6 +76,7 @@ public class GCore : ModuleRules
             new string[] {
                 "ShaderCore",
                 "RenderCore",
+                 "ImageWrapper",
                 "RHI"
             }
         );
@@ -85,8 +86,7 @@ public class GCore : ModuleRules
         }
         PrivateIncludePathModuleNames.AddRange(
             new string[] {
-                "ImageWrapper",
-                 "TargetPlatform",
+                 "TargetPlatform"
             }
         );
 

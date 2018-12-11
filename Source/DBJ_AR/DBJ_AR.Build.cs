@@ -24,8 +24,7 @@ public class DBJ_AR : ModuleRules
             "ImageDownload",
             "PakFile",
             "ProceduralMeshComponent",
-            "AugmentedReality",
-            "ImageWrapper"
+            "AugmentedReality"
 });
 
         PublicDependencyModuleNames.AddRange(new string[] {"GCore",  "GXmlPlugins", "MsgCore", "DownloadTool","ImageMagick"});

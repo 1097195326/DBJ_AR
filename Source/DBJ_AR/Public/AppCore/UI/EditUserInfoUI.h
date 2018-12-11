@@ -30,4 +30,5 @@ public:
 private:
 	FString	m_Wto_UserName;
 
+    void OnSelectPicture(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes);
 };

@@ -1,4 +1,4 @@
-﻿#include "EditUserInfoUI.h"
+#include "EditUserInfoUI.h"
 #include "UIManager.h"
 #include "UserInfo.h"
 #include "EditerARGameModule.h"
@@ -6,6 +6,8 @@
 #include "Engine/Texture2D.h"
 #include "Misc/PackageName.h"
 #include "AppInstance.h"
+#include "ImageMagick.h"
+#include "FileDownloadManager.h"
 
 void UEditUserInfoUI::On_Init()
 {
@@ -75,31 +77,7 @@ void UEditUserInfoUI::OnButtonClick(int _index)
 	}break;
 	case 2:
 	{
-		FString iconPath = FPaths::Combine(FPaths::ProjectDir(), TEXT("saveIcon.png"));
-
-		IPlatformFile & pf = FPlatformFileManager::Get().GetPlatformFile();
-		if (pf.FileExists(*iconPath))
-		{
-			FString iconName = FPackageName::GetShortName(iconPath);
-			UE_LOG(LogTemp, Log, TEXT("zhx : icon find : %s"),*iconName);
-			FString iconSPath = FPaths::Combine(FPaths::ProjectSavedDir(), iconName);
-			if (pf.FileExists(*iconSPath))
-			{
-				pf.DeleteFile(*iconSPath);
-			}
-			//if (pf.MoveFile(*iconSPath, *iconPath))
-			if (pf.CopyFile(*iconSPath, *iconPath))
-			{
-				UserInfo::Get()->SaveUserData(TEXT("IconPath"), iconSPath);
-				UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this,UserInfo::Get()->GetLocalData().IconPath);
-				if (texture && texture->IsValidLowLevel())
-				{
-					m_UserImage->SetBrushFromTexture(texture);
-				}
-			}
-		}
-
-
+        IImageMagickModule::Get().OpenSelectPicture(FOnOpenReresult::CreateUObject(this, &UEditUserInfoUI::OnSelectPicture));
 	}break;
 	case 3:
 	{
@@ -122,4 +100,59 @@ void UEditUserInfoUI::EditString(const FString & text)
 
 	EditerARGameModule::GetInstance()->UpdateUserName(text);
 
+}
+void UEditUserInfoUI::OnSelectPicture(bool isSuccess, FString inIconFilePath, FString inFilePath, FVector2D inDPI, FVector2D inRes)
+{
+    UE_LOG(LogTemp,Log,TEXT("zhx : UEditUserInfoUI::OnSelectPicture"));
+    FString ueIconPath;
+    FString ueImagePath;
+#if PLATFORM_ANDROID
+    
+#elif PLATFORM_IOS
+    ueIconPath = UFileDownloadManager::Get()->ExtractIOSDir(*inIconFilePath);
+    ueImagePath = UFileDownloadManager::Get()->ExtractIOSDir(*inFilePath);
+#endif
+    IPlatformFile &  pf = FPlatformFileManager::Get().GetPlatformFile();
+    
+    if (pf.FileExists(*ueImagePath))
+    {
+        pf.DeleteFile(*ueImagePath);
+        UE_LOG(LogTemp,Log,TEXT("zhx : delete image : %s"),*ueImagePath);
+    }
+    if (pf.FileExists(*ueIconPath))
+    {
+        UE_LOG(LogTemp, Log, TEXT("zhx : icon find : %s"),*ueIconPath);
+//        UserInfo::Get()->SaveUserData(TEXT("IconPath"), ueIconPath);
+//        UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this,UserInfo::Get()->GetLocalData().IconPath);
+//        if (texture && texture->IsValidLowLevel())
+//        {
+//            UE_LOG(LogTemp,Log,TEXT("zhx : get valid texture"));
+//            m_UserImage->SetBrushFromTexture(texture);
+//        }
+        FString iconName = FPackageName::GetShortName(ueIconPath);
+        FString iconSavePath = UFileDownloadManager::Get()->GetAppPath(TEXT("Saved/HeadIconImage"));
+        if(!pf.DirectoryExists(*iconSavePath))
+        {
+            pf.CreateDirectoryTree(*iconSavePath);
+        }
+        FString iconSPath = FPaths::Combine(iconSavePath, iconName);
+        UE_LOG(LogTemp,Log,TEXT("zhx :  iconSPath : %s"),*iconSPath);
+        if (pf.FileExists(*iconSPath))
+        {
+            UE_LOG(LogTemp,Log,TEXT("zhx : delete ICON : %s"),*iconSPath);
+            pf.DeleteFile(*iconSPath);
+        }
+        if (pf.MoveFile(*iconSPath, *ueIconPath))
+        {
+            UE_LOG(LogTemp,Log,TEXT("zhx : MoveFile"));
+            UserInfo::Get()->SaveUserData(TEXT("IconPath"), iconSPath);
+            UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this,UserInfo::Get()->GetLocalData().IconPath);
+            if (texture && texture->IsValidLowLevel())
+            {
+                UE_LOG(LogTemp,Log,TEXT("zhx : get valid texture"));
+                m_UserImage->SetBrushFromTexture(texture);
+            }
+        }
+    }
+    
 }
