@@ -46,7 +46,7 @@ public class GCore : ModuleRules
             new string[]
             {
                 "Core",  "CoreUObject", "Engine","Slate", "SlateCore","UMG", "InputCore","JsonUtilities","Json","HTTP","Networking",
-                "GXmlPlugins", "MsgCore"
+                "GXmlPlugins", "MsgCore", "ImageWrapper",
                 // ... add other public dependencies that you statically link with here ...
             }
             );
@@ -58,7 +58,7 @@ public class GCore : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore",
+                "SlateCore"
                 // ... add private dependencies that you statically link with here ...  
             }
             );
@@ -76,7 +76,7 @@ public class GCore : ModuleRules
             new string[] {
                 "ShaderCore",
                 "RenderCore",
-                "RHI",
+                "RHI"
             }
         );
         if (Target.Platform == UnrealTargetPlatform.Android)
@@ -100,7 +100,7 @@ public class GCore : ModuleRules
 
             DynamicallyLoadedModuleNames.AddRange(
                 new string[] {
-                    "ImageWrapper",
+                    
                 }
             );
         };

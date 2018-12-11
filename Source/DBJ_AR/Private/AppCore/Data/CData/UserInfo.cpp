@@ -163,6 +163,41 @@ bool UserInfo::SaveUserData(FString key, int value)
 	ReadUserData();
 	return true;
 }
+bool UserInfo::SaveUserData(FString key, FString value)
+{
+	FString mjson_Str;
+	TSharedPtr<FJsonObject> mJsonObj = MakeShareable(new FJsonObject);
+	if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_LocalDataPath))
+	{
+		if (!FFileHelper::LoadFileToString(mjson_Str, *m_LocalDataPath))
+		{
+			return false;
+		}
+		TSharedRef<TJsonReader<>> mReader = TJsonReaderFactory<>::Create(mjson_Str);
+		if (!FJsonSerializer::Deserialize(mReader, mJsonObj))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Method UserInfo::ReadLocalData Deserialize  failed"));
+			return false;
+		}
+	}
+	mJsonObj->SetStringField(key, value);
+
+	TSharedRef<TJsonWriter<>> mWriter = TJsonWriterFactory<>::Create(&mjson_Str);
+	if (!FJsonSerializer::Serialize(mJsonObj.ToSharedRef(), mWriter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Method UserInfo::SaveLocalData Serialize  failed"));
+		return false;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("zhx : User INFO Write : %s"), *mjson_Str);
+
+	if (!FFileHelper::SaveStringToFile(mjson_Str, *m_LocalDataPath))
+	{
+		return false;
+	}
+	ReadUserData();
+	return true;
+}
 bool UserInfo::ReadUserData()
 {
 	//
@@ -189,7 +224,8 @@ bool UserInfo::ReadUserData()
 		return false;
 	}
 	//解析json组装data.
-	m_SaveUserData.Allow4G = mJsonObj->GetIntegerField(TEXT("Allow4G"));
+	mJsonObj->TryGetNumberField(TEXT("Allow4G"), m_SaveUserData.Allow4G);
+	mJsonObj->TryGetStringField(TEXT("IconPath"), m_SaveUserData.IconPath);
 
 	return true;
 }

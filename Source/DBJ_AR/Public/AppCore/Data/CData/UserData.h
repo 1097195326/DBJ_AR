@@ -30,6 +30,7 @@ public:
 	int32	RemainingDays;
 	// user data
 	int32 Allow4G;
+	FString IconPath;
 	FSaveUserData() { Allow4G = 1; }
 };
 

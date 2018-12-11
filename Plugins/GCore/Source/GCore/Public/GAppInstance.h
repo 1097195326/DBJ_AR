@@ -11,6 +11,7 @@
 
 #include "CoreMinimal.h"
 #include "GObject.h"
+#include "Engine/Texture2D.h"
 #include "Misc/CoreDelegates.h"
 #include "Engine/GameInstance.h"
 #include "GAppInstance.generated.h"
@@ -47,7 +48,13 @@ public:
 
 	static bool CheckStringIsValid(const FString& str, const FString& Reg);
 	static bool CheckPhone(const FString& str);
+
+	static UTexture2D* LoadImageFromDisk(UObject* Outer, const FString& ImagePath);
+	
 private:
+	
+	static UTexture2D* CreateTexture(UObject* Outer, const TArray<uint8>& PixelData, int32 InSizeX, int32 InSizeY, EPixelFormat PixelFormat = EPixelFormat::PF_B8G8R8A8, FName BaseName = NAME_None);
+
     void ApplicationWillEnterBackground_Hander();
     void ApplicationHasEnteredForeground_Hander();
 };

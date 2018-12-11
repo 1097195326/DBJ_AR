@@ -2,8 +2,10 @@
 #include "UIManager.h"
 #include "UserInfo.h"
 #include "EditerARGameModule.h"
-
-
+#include "PlatformFilemanager.h"
+#include "Engine/Texture2D.h"
+#include "Misc/PackageName.h"
+#include "AppInstance.h"
 
 void UEditUserInfoUI::On_Init()
 {
@@ -45,6 +47,11 @@ void UEditUserInfoUI::On_Start()
 	m_UserName->SetText(FText::FromString(UserInfo::Get()->GetLocalData().name));
 	m_UserPhone->SetText(FText::FromString(UserInfo::Get()->GetLocalData().phone));
 
+	UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this, UserInfo::Get()->GetLocalData().IconPath);
+	if (texture && texture->IsValidLowLevel())
+	{
+		m_UserImage->SetBrushFromTexture(texture);
+	}
 }
 void UEditUserInfoUI::On_Delete()
 {
@@ -68,8 +75,31 @@ void UEditUserInfoUI::OnButtonClick(int _index)
 	}break;
 	case 2:
 	{
-        UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("PhotoPage"));
-        baseUI->AddToViewport();
+		FString iconPath = FPaths::Combine(FPaths::ProjectDir(), TEXT("saveIcon.png"));
+
+		IPlatformFile & pf = FPlatformFileManager::Get().GetPlatformFile();
+		if (pf.FileExists(*iconPath))
+		{
+			FString iconName = FPackageName::GetShortName(iconPath);
+			UE_LOG(LogTemp, Log, TEXT("zhx : icon find : %s"),*iconName);
+			FString iconSPath = FPaths::Combine(FPaths::ProjectSavedDir(), iconName);
+			if (pf.FileExists(*iconSPath))
+			{
+				pf.DeleteFile(*iconSPath);
+			}
+			//if (pf.MoveFile(*iconSPath, *iconPath))
+			if (pf.CopyFile(*iconSPath, *iconPath))
+			{
+				UserInfo::Get()->SaveUserData(TEXT("IconPath"), iconSPath);
+				UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this,UserInfo::Get()->GetLocalData().IconPath);
+				if (texture && texture->IsValidLowLevel())
+				{
+					m_UserImage->SetBrushFromTexture(texture);
+				}
+			}
+		}
+
+
 	}break;
 	case 3:
 	{

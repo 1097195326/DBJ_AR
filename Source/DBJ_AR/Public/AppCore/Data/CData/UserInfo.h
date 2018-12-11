@@ -30,6 +30,7 @@ public:
 	void ClearLocalData();
 	bool SaveToLocal(TSharedPtr<FJsonObject> _JsonObj);
 	bool SaveUserData(FString key, int value);
+	bool SaveUserData(FString key, FString value);
 	bool ReadUserData();
 	const FSaveUserData&  GetLocalData();
 	bool IsExistLocalFile();
