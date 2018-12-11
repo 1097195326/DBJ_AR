@@ -46,8 +46,9 @@ void UGoodsFilterItem::SetData(const int & _type, const TArray<IdData> & _data,i
 		UGridSlot * slot = m_ContentGridPanel->AddChildToGrid(button);
 		//button->SetShowBorder(true);
 		button->SetData(m_Data[i],this);
-		slot->SetColumn(i % 5);
-		slot->SetRow(i / 5);
+		slot->SetColumn(i % 3);
+		slot->SetRow(i / 3);
+		slot->SetPadding(FMargin(0.f, 0.f, 40.f, 40.f));
 		m_Buttons.Add(button);
 	}
 	SelectButton(m_SelectIndex);

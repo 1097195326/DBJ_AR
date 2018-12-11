@@ -79,6 +79,7 @@ void UGoodsChangeUI::OnButtonClick(int id)
 	}break;
 	case 3:
 	{
+		AUserPawn::GetInstance()->CancelChangeSelectModel();
 		RemoveFromParent();
 	}break;
 	default:

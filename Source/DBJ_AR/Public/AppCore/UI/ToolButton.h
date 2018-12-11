@@ -31,12 +31,12 @@ public:
 
 	void	SetShowBorder(bool _show);
 	void	SetData(const IdData & _data, SelectButtonDelegate * _delegate);
-	void	SelectButton(bool _isSelect);
+	virtual void	SelectButton(bool _isSelect);
 
     UFUNCTION()
         void OnButtonClick();
 
-private:
+protected:
 	bool   m_IsShowBorder;
 	SelectButtonDelegate * m_Delegate;
 };
