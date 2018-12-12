@@ -83,7 +83,7 @@ void UGoodsFilterUI::OnButtonClick(int _index)
 		baseUI->m_TypeIndex = m_TypeIndex;
 		baseUI->m_MaterialIndex = m_MaterialIndex;
 		baseUI->m_InnerIndex = m_InnerIndex;
-		baseUI->ReloadData();
+		baseUI->ReloadData(true);
 	}break;
 	}
 }

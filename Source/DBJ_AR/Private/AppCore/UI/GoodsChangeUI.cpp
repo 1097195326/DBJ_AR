@@ -102,9 +102,9 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 	const TSharedPtr<FJsonObject> jsonData = jsonObject->GetObjectField("data");
 	m_LastId = jsonData->GetIntegerField(TEXT("lastId"));
 
-
-	m_ScrollBox->ScrollToStart();
-	m_GridPanel->ClearChildren();
+	int CurrentNum  = m_GoodsListIcons.Num();
+	/*m_ScrollBox->ScrollToStart();
+	m_GridPanel->ClearChildren();*/
     TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetChangeGoodsList();
 
 	for (int i = 0; i < goods.Num(); i++)
@@ -116,7 +116,7 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 			UE_LOG(LogTemp, Log, TEXT("zhx goods list add icon %d"), i);
 
 			UGridSlot * mGridSlot = m_GridPanel->AddChildToGrid(icon);
-			int mIndex = i;//CurrentNum + j;
+			int mIndex = CurrentNum + i;//CurrentNum + j;
 			mGridSlot->SetRow(mIndex % 2);
 			mGridSlot->SetColumn(mIndex / 2);
 
@@ -157,7 +157,7 @@ void UGoodsChangeUI::SelectChangeIcon(UGoodsList_Icon * _icon)
 }
 void UGoodsChangeUI::ReloadData()
 {
-	if (!m_IsRequest && UGoodsList_Icon::CanDownPak)
+	if (!m_IsRequest && UGoodsList_Icon::CanDownPak && m_LastId != 0)
 	{
 		m_IsRequest = true;
 		UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsChangeUI reload Data"));

@@ -21,7 +21,7 @@ public:
 	void InitView();
 	void OnGetProductList(msg_ptr _msg);
 	void SelectCategoryButton(int _id);
-	void ReloadData();
+	void ReloadData(bool _clear = false);
     void OnButtonClick(int _index);
 
 	int			m_TypeIndex;
@@ -34,7 +34,7 @@ private:
 	UGridPanel * m_IconList;
 	UVerticalBox * m_CategoryView;
 	TArray<UGoodsListButton*>		m_ListButtons;
-
+	TArray<UGoodsList_Icon*>		m_IconArray;
 	int			m_CurrentSelectId;
 	int32		m_LastId;
 

@@ -37,5 +37,4 @@ private:
 	int32		m_LastId;
 	bool		m_IsRequest;
 
-
 };

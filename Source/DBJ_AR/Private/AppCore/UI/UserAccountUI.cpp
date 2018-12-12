@@ -126,10 +126,10 @@ void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 	m_LastId = jsonData->GetIntegerField(TEXT("lastId"));
 
 
-	m_OrderListScroll->ClearChildren();
-	m_OrderListScroll->ScrollToStart();
+	/*m_OrderListScroll->ClearChildren();
+	m_OrderListScroll->ScrollToStart();*/
 	TArray<R_Order*> OrderList = RuntimeCDataManager::GetInstance()->GetAccountOrderList();
-
+	
 	for (int i = 0; i < OrderList.Num(); i++)
 	{
 		UUserAccountItem * item = (UUserAccountItem*)UIManager::GetInstance()->OpenUI(TEXT("UserAccountItem"),this);
@@ -137,12 +137,13 @@ void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 		UScrollBoxSlot * slot = (UScrollBoxSlot*)m_OrderListScroll->AddChild(item);
 		slot->SetPadding(FMargin(0.f,24.f,0.f,0.f));
 		item->SetOrder(OrderList[i]);
+
 	}
 	m_IsRequest = false;
 }
 void UUserAccountUI::ReloadData()
 {
-	if (!m_IsRequest)
+	if (!m_IsRequest && m_LastId != 0)
 	{
 		m_IsRequest = true;
 		UE_LOG(LogTemp, Log, TEXT("zhx : GoodsList reload Data"));

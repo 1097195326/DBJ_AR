@@ -108,15 +108,16 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
         return;
     }
 	const TSharedPtr<FJsonObject> jsonData = jsonObject->GetObjectField("data");
+	
 	m_LastId = jsonData->GetIntegerField(TEXT("lastId"));
 
-    m_IconScrolBox->ScrollToStart();
-	m_IconList->ClearChildren();
+    /*m_IconScrolBox->ScrollToStart();
+	m_IconList->ClearChildren();*/
      UE_LOG(LogTemp,Log,TEXT("zhx : get msg: %d"),2);
 	TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
     
     UE_LOG(LogTemp,Log,TEXT("zhx : good num : %d"),goods.Num());
-    
+	int CurrentNum = m_IconArray.Num();
 	for (int i = 0; i < goods.Num(); i++)
 	{
 		UGoodsList_Icon * icon = (UGoodsList_Icon*)UIManager::GetInstance()->OpenUI(TEXT("GoodsListIcon"),this);
@@ -124,9 +125,10 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
 		if (icon->IsValidLowLevel())
 		{
             UE_LOG(LogTemp,Log,TEXT("zhx goods list add icon %d"),i);
-            
+			m_IconArray.Add(icon);
+
 			UGridSlot * mGridSlot = m_IconList->AddChildToGrid(icon);
-			int mIndex = i;//CurrentNum + j;
+			int mIndex = CurrentNum + i;//CurrentNum + j;
 			mGridSlot->SetRow(mIndex / 2);
 			mGridSlot->SetColumn(mIndex % 2);
 
@@ -162,6 +164,10 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
 }
 void UGoodsList::SelectCategoryButton(int _id)
 {
+	m_IconScrolBox->ScrollToStart();
+	m_IconList->ClearChildren();
+	m_IconArray.Empty();
+
 	for (int i = 0; i< m_ListButtons.Num(); i++)
 	{
 		UGoodsListButton * button = m_ListButtons[i];
@@ -179,9 +185,19 @@ void UGoodsList::SelectCategoryButton(int _id)
 		}
 	}
 }
-void UGoodsList::ReloadData()
+void UGoodsList::ReloadData(bool _clear)
 {
-	if (!m_IsRequest && UGoodsList_Icon::CanDownPak)
+	if (_clear)
+	{
+		m_IconScrolBox->ScrollToStart();
+		m_IconList->ClearChildren();
+		m_IconArray.Empty();
+		m_IsRequest = true;
+		m_LastId = 0;
+		UE_LOG(LogTemp, Log, TEXT("zhx : GoodsList reload Data"));
+		EditerARGameModule::GetInstance()->GetProductList(m_CurrentSelectId, m_LastId, m_TypeIndex, m_MaterialIndex, m_InnerIndex);
+
+	}else if (!m_IsRequest && UGoodsList_Icon::CanDownPak && m_LastId != 0)
 	{
 		m_IsRequest = true;
 		UE_LOG(LogTemp, Log, TEXT("zhx : GoodsList reload Data"));
