@@ -331,9 +331,12 @@ void AUserPawn::DeleteAllARActor()
     for (int i = 0; i < allUserActor.Num(); i++)
     {
         AUserActor * actor = (AUserActor *)allUserActor[i];
-        actor->Destroy();
+		TryDeleteARActor(actor);
+		actor = nullptr;
     }
-    
+	bool IsSelect = false;
+	msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
+	MsgCenter::GetInstance()->SendMsg(_msg);
 	m_AllUserActor.Empty();
 }
 void AUserPawn::QuitEditScene()
