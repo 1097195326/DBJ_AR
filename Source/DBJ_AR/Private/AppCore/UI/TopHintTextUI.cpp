@@ -18,7 +18,7 @@ void UTopHintTextUI::InitText(const FString & hintText, float showSecond)
 		UTextBlock * showText = NewObject<UTextBlock>();
 		showText->SetText(FText::FromString(hintText));
 		showText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("FFFFFFFF"))));
-		showText->SetFont(FSlateFontInfo(TEXT("PingFang_Regular_Font"), 30));
+		showText->SetFont(FSlateFontInfo(TEXT("PingFang_Regular_Font"), 27));
 		showText->SetJustification(ETextJustify::Center);
 		m_ShowTextView->AddChild(showText);
 		GetWorld()->GetTimerManager().SetTimer(m_TimerHandle, this, &UTopHintTextUI::OnTimerUpdate, 0.1f, true);
