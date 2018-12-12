@@ -247,10 +247,13 @@ void AUserPawn::TryCreateMergeActor(GoodsData * _goodsData)
 {
 	AUserActor * one = TryCreateARActor(_goodsData);
 	AUserActor * two = TryCreateARActor(_goodsData->matchedProduct);
-	one->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
-	two->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
+	if (one && two)
+	{
+		one->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
+		two->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
 
-	MergeTwoUserActor(one, two);
+		MergeTwoUserActor(one, two);
+	}
 
 }
 AUserActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)

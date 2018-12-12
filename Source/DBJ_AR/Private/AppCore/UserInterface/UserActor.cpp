@@ -104,6 +104,7 @@ void AUserActor::ResetHuaComponent()
 }
 void AUserActor::SetMatchId(int mainId, int matchId)
 {
+	m_MatchMap.Empty();
 	m_MatchMap.Add(mainId, matchId);
 	m_MatchMap.Add(matchId, mainId);
 }
