@@ -84,9 +84,10 @@ void UAlertUI::OnlyButtonShow(bool _show)
 void UAlertUI::SetContentText(const FString & _content)
 {
 	FString Content = _content;
-	if (Content.Len() > 30)
+	int index = Content.Len() / 17;
+	for (int i = index; i > 0; i--)
 	{
-		Content.InsertAt(30, TEXT("\n"));
+		Content.InsertAt(17 * i, TEXT("\n"));
 	}
 	if (m_ContentText)
 	{
