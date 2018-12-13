@@ -95,8 +95,8 @@ public:
         void MoveSelecteARActor();
     UFUNCTION(BlueprintCallable)
         void RotateSelectARActor();
-    /*UFUNCTION(BlueprintCallable)
-        bool GetPressedFinger();*/
+    
+        void GetPressedFingers(int & num ,FVector2D & location);
 
 public:
     UPROPERTY(VisibleAnywhere)

@@ -48,7 +48,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    StartARSession();
+    //StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -95,42 +95,52 @@ void AUserPawn::StopARSession()
 void AUserPawn::OnFingerTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx :: AUserPawn::OnFingerTouch pressed"));
-
-    switch (FingerIndex)
-    {
-        case ETouchIndex::Touch1:
-        {
-            m_IsPressed = true;
-            m_FingerNum++;
-
-        }break;
-        case ETouchIndex::Touch2:
-        {
-            m_IsPressed = true;
-            m_FingerNum++;
-        }break;
-        default:
-            break;
-    }
-    if (m_FingerNum == 1)
-    {
-        m_ScreenPosition = GetFingerPosition(1);
-        
-        if (IsHaveActorInScreenPosition(m_ScreenPosition))
-        {
-            
-        }else
-        {
-//            m_SelectActor = TryCreateARActor(m_ScreenPosition);
-        }
-    }
+	int num;
+	FVector2D screenPosition;
+	GetPressedFingers(num, screenPosition);
+	if (num == 1)
+	{
+		IsHaveActorInScreenPosition(screenPosition);
+	}
+//    switch (FingerIndex)
+//    {
+//        case ETouchIndex::Touch1:
+//        {
+//            m_IsPressed = true;
+//            m_FingerNum++;
+//
+//        }break;
+//        case ETouchIndex::Touch2:
+//        {
+//            m_IsPressed = true;
+//            m_FingerNum++;
+//        }break;
+//        default:
+//            break;
+//    }
+//    if (m_FingerNum == 1)
+//    {
+//        m_ScreenPosition = GetFingerPosition(1);
+//        
+//        if (IsHaveActorInScreenPosition(m_ScreenPosition))
+//        {
+//            
+//        }else
+//        {
+////            m_SelectActor = TryCreateARActor(m_ScreenPosition);
+//        }
+//    }
 }
 void AUserPawn::OnFingerTouchMoved(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 //    UE_LOG(LogTemp, Log, TEXT("zhx :: AUserPawn::OnFingerTouch moved"));
     if (m_SelectActor)
     {
-        if (m_FingerNum == 1)
+		int num;
+		FVector2D screenPosition;
+		GetPressedFingers(num, screenPosition);
+
+        if (num == 1)
         {
 			if (m_WantToRotate)
 			{
@@ -141,7 +151,7 @@ void AUserPawn::OnFingerTouchMoved(const ETouchIndex::Type FingerIndex, const FV
 				MoveSelecteARActor();
 			}
            
-        }else if (m_FingerNum == 2)
+        }else if (num == 2)
         {
 			RotateSelectARActor();
         }
@@ -151,11 +161,32 @@ void AUserPawn::OnFingerTouchReleased(const ETouchIndex::Type FingerIndex, const
 {
     UE_LOG(LogTemp, Log, TEXT("zhx :: AUserPawn::OnFingerTouch releaseed"));
     
-    m_FingerNum--;
-    if (m_FingerNum <= 0)
-    {
-        m_IsPressed = false;
-    }
+	/*m_FingerNum--;
+	if (m_FingerNum <= 0)
+	{
+		m_IsPressed = false;
+	}*/
+}
+void AUserPawn::GetPressedFingers(int & num, FVector2D & location)
+{
+	bool oneP, twoP;
+	FVector2D oneFgLocation, twoFgLocation;
+	m_Controller->GetInputTouchState(ETouchIndex::Touch1, oneFgLocation.X, oneFgLocation.Y, oneP);
+	m_Controller->GetInputTouchState(ETouchIndex::Touch2, twoFgLocation.X, twoFgLocation.Y, twoP);
+
+	if (oneP && twoP)
+	{
+		num = 2;
+		location = (oneFgLocation + twoFgLocation) * 0.5;
+	}else if (oneP)
+	{
+		num = 1;
+		location = oneFgLocation;
+	}else if (twoP)
+	{
+		num = 1;
+		location = twoFgLocation;
+	}
 }
 FVector2D AUserPawn::GetFingerPosition(int _fingerNum)
 {
@@ -189,6 +220,12 @@ FVector2D AUserPawn::GetFingerPosition(int _fingerNum)
 }
 bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 {
+	if (m_Controller->PlayerInput)
+	{}
+	else
+	{
+		return false;
+	}
 	bool IsSelect = false;
     FHitResult hitResult;
     if (m_Controller->GetHitResultAtScreenPosition(_position, ECC_WorldStatic, false, hitResult))
@@ -203,7 +240,6 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 			{
 				UE_LOG(LogTemp, Log, TEXT("zhx : select plane rotate compoent"));
 				m_WantToRotate = true;
-
 			}
 			else
 			{
@@ -270,7 +306,11 @@ AUserActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
     location = location + forward.GetSafeNormal() * 100;
 
     UClass * uclass = LoadClass<AUserActor>(NULL,TEXT("/Game/Blueprints/BP_UserActor.BP_UserActor_C"),NULL,LOAD_None,NULL);
-	uactor = GetWorld()->SpawnActor<AUserActor>(uclass);
+	FActorSpawnParameters parameter;
+	parameter.Owner = this;
+	parameter.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	parameter.bNoFail = true;
+	uactor = GetWorld()->SpawnActor<AUserActor>(uclass,parameter);
 	uactor->SetActorLocation(location);
     //AUserActor * uactor = (AUserActor*)actor;
     switch(_goodsData->typeId)
@@ -376,7 +416,12 @@ void AUserPawn::MoveSelecteARActor()
     if (m_SelectActor && m_SelectActor->IsValidLowLevel())
     {
        
-        FVector2D _screenPosition = GetFingerPosition(1);
+        //FVector2D _screenPosition = GetFingerPosition(1);
+
+		int num;
+		FVector2D _screenPosition;
+		GetPressedFingers(num, _screenPosition);
+
 #if PLATFORM_IOS
 		FTransform t;
 		if (GetTrackedGeometryTransform(_screenPosition, t))

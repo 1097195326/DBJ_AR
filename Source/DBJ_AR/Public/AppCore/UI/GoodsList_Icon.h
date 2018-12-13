@@ -45,6 +45,6 @@ private:
 
 	TArray<FFileInfo>	m_DownFiles;
 	int		m_DownIndex;
-	void GetDownFiles();
+	bool GetDownFiles();
 	void DownFiles(int _index);
 };

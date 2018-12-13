@@ -59,7 +59,7 @@ void UGoodsList_Icon::On_Tick(float delta)
     if(m_IsDowning)
     {
         int progess = UFileDownloadManager::Get()->GetDownloadProgress(m_DownFiles[m_DownIndex].Id);
-        //UE_LOG(LogTemp,Log,TEXT("zhx : pregess : %d"),progess);
+        UE_LOG(LogTemp,Log,TEXT("zhx : pregess : %d"),progess);
         
         float pbar = (100 * m_DownIndex + progess) / (100.0f * m_DownFiles.Num());
         m_downloadingProgress->SetPercent(pbar);
@@ -108,10 +108,12 @@ void UGoodsList_Icon::OnButtonClick(int index)
 		}
 		if (CanDownPak)
 		{
-			GetDownFiles();
-			m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
-			m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
-			DownFiles(m_DownIndex);
+			if (GetDownFiles())
+			{
+				m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
+				m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
+				DownFiles(m_DownIndex);
+			}
 		}
 		else
 		{
@@ -173,7 +175,7 @@ void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
 
 
 }
-void UGoodsList_Icon::GetDownFiles()
+bool UGoodsList_Icon::GetDownFiles()
 {
 	m_DownFiles.Empty();
 	m_DownIndex = 0;
@@ -201,6 +203,11 @@ void UGoodsList_Icon::GetDownFiles()
 			m_DownFiles.Add(maInfo);
 		}
 	}
+	if (m_DownFiles.Num() > 0)
+	{
+		return true;
+	}
+	return false;
 }
 void UGoodsList_Icon::SetData(GoodsData * _data,bool _isChange)
 {

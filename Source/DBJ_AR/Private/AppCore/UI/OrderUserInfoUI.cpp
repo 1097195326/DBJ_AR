@@ -63,6 +63,7 @@ void UOrderUserInfoUI::On_Start()
         m_Address->SetOnlyShow();
         m_DetailAddress->SetOnlyShow();
         m_GetTime->SetOnlyShow();
+		m_SaveButton->SetVisibility(ESlateVisibility::Hidden);
     }
 	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
 	m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
