@@ -16,9 +16,7 @@ void UToolButton::On_Init()
 	if (UBorder * widget = (UBorder*)GetWidgetFromName("SelectBorder"))
 	{
 		m_SelectBorder = widget;
-		m_SelectBorder->SetVisibility(ESlateVisibility::Hidden);
 	}
-
 }
 void UToolButton::OnButtonClick()
 {
@@ -37,22 +35,10 @@ void UToolButton::SelectButton(bool _isSelect)
 	if (_isSelect)
 	{
 		m_ButtonText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("333333"))));
-		if (m_IsShowBorder)
-		{
-			m_SelectBorder->SetVisibility(ESlateVisibility::Visible);
-		}
 	}
 	else
 	{
 		m_ButtonText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("999999"))));
-		if (m_IsShowBorder)
-		{
-			m_SelectBorder->SetVisibility(ESlateVisibility::Hidden);
-		}
 	}
 
-}
-void UToolButton::SetShowBorder(bool _show)
-{
-	m_IsShowBorder = _show;
 }

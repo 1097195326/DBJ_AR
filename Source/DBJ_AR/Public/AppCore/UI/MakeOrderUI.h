@@ -22,6 +22,7 @@ public:
 	TArray<UOrderInfoUI*> m_InfoUIList;
 
     UButton * m_BackButton;
+	UTextBlock * m_TitleName;
 	// user info
 	UTextBlock * m_CompanyName;
 	UTextBlock * m_UserInfo;

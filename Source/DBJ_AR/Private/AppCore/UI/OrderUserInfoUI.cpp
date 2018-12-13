@@ -12,6 +12,11 @@ void UOrderUserInfoUI::On_Init()
         m_BackButton = widget;
 		UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UOrderUserInfoUI::OnButtonClick);
     }
+	if (UButton * widget = (UButton*)GetWidgetFromName("SaveButton"))
+	{
+		m_SaveButton = widget;
+		UIManager::GetInstance()->RegisterButton(10, m_SaveButton, this, &UOrderUserInfoUI::OnButtonClick);
+	}
 
 	if (UOrderUserInfoItem * widget = (UOrderUserInfoItem*)GetWidgetFromName("CompanyName"))
 	{
@@ -43,7 +48,6 @@ void UOrderUserInfoUI::On_Init()
 	if (UOrderUserInfoItem * widget = (UOrderUserInfoItem*)GetWidgetFromName("DetailAddress"))
 	{
 		m_DetailAddress = widget;
-		//UIManager::GetInstance()->RegisterButton(5, m_DetailAddress->m_DoSomethingButton, this, &UOrderUserInfoUI::OnButtonClick);
 	}
 }
 void UOrderUserInfoUI::On_Start()
@@ -59,42 +63,26 @@ void UOrderUserInfoUI::On_Start()
         m_Address->SetOnlyShow();
         m_DetailAddress->SetOnlyShow();
         m_GetTime->SetOnlyShow();
-        
-        m_CompanyName->m_ItemContent->SetText(FText::FromString(order->ReceiverCompanyName));
-        m_UserName->m_ItemContent->SetText(FText::FromString(order->ReceiverName));
-        m_UsserPhone->m_ItemContent->SetText(FText::FromString(order->ReceiverPhone));
-        m_Address->m_ItemContent->SetText(FText::FromString(order->Address));
-        m_DetailAddress->m_ItemContent->SetText(FText::FromString(order->DetailAddress));
-        m_GetTime->m_ItemContent->SetText(FText::FromString(order->ReceiveTime));
-
-		if (order->DeliverType == 1)
-		{
-			m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("送货上门")));
-			m_Address->SetVisibility(ESlateVisibility::Visible);
-			m_DetailAddress->SetVisibility(ESlateVisibility::Visible);
-		}
-		else
-		{
-			m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("自取")));
-			m_Address->SetVisibility(ESlateVisibility::Hidden);
-			m_DetailAddress->SetVisibility(ESlateVisibility::Hidden);
-		}
-    }else
-    {
-        m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
-        if (order->DeliverType == 1)
-        {
-            m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("送货上门")));
-        }else
-        {
-            m_GetStyle->m_ItemContent->SetText(FText::FromString(TEXT("自取")));
-        }
-        m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
-        m_UsserPhone->m_EditText->SetText(FText::FromString(order->ReceiverPhone));
-        m_Address->m_ItemContent->SetText(FText::FromString(order->Address));
-        m_DetailAddress->m_EditText->SetText(FText::FromString(order->DetailAddress));
-        m_GetTime->m_ItemContent->SetText(FText::FromString(order->ReceiveTime));
     }
+	m_CompanyName->m_EditText->SetText(FText::FromString(order->ReceiverCompanyName));
+	m_UserName->m_EditText->SetText(FText::FromString(order->ReceiverName));
+	m_UsserPhone->m_EditText->SetText(FText::FromString(order->ReceiverPhone));
+	m_Address->m_EditText->SetText(FText::FromString(order->Address));
+	m_DetailAddress->m_EditText->SetText(FText::FromString(order->DetailAddress));
+	m_GetTime->m_EditText->SetText(FText::FromString(order->ReceiveTime));
+
+	if (order->DeliverType == 1)
+	{
+		m_GetStyle->m_EditText->SetText(FText::FromString(TEXT("送货上门")));
+		m_Address->SetVisibility(ESlateVisibility::Visible);
+		m_DetailAddress->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		m_GetStyle->m_EditText->SetText(FText::FromString(TEXT("自取")));
+		m_Address->SetVisibility(ESlateVisibility::Hidden);
+		m_DetailAddress->SetVisibility(ESlateVisibility::Hidden);
+	}
 	
 }
 void UOrderUserInfoUI::On_Delete()
@@ -126,17 +114,6 @@ void UOrderUserInfoUI::OnButtonClick(int _index)
 	{
 	case 1:
 	{
-		R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
-		if (order->Status != 2)
-		{
-			order->ReceiverCompanyName = m_CompanyName->m_EditText->GetText().ToString();
-			order->ReceiverName = m_UserName->m_EditText->GetText().ToString();
-			order->ReceiverPhone = m_UsserPhone->m_EditText->GetText().ToString();
-			order->Address = m_Address->m_ItemContent->GetText().ToString();
-			order->DetailAddress = m_DetailAddress->m_EditText->GetText().ToString();
-			UMakeOrderUI * parentUI = (UMakeOrderUI*)m_ParentUI;
-			parentUI->ReView();
-		}
 		RemoveFromParent();
 	}break;
 	case 2:
@@ -158,9 +135,20 @@ void UOrderUserInfoUI::OnButtonClick(int _index)
 		addressUI->AddToViewport();
 		addressUI->SetType(t_Address);
 	}break;
-	case 5:
+	case 10:
 	{
-
+		R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+		if (order->Status != 2)
+		{
+			order->ReceiverCompanyName = m_CompanyName->m_EditText->GetText().ToString();
+			order->ReceiverName = m_UserName->m_EditText->GetText().ToString();
+			order->ReceiverPhone = m_UsserPhone->m_EditText->GetText().ToString();
+			order->Address = m_Address->m_EditText->GetText().ToString();
+			order->DetailAddress = m_DetailAddress->m_EditText->GetText().ToString();
+			UMakeOrderUI * parentUI = (UMakeOrderUI*)m_ParentUI;
+			parentUI->ReView();
+		}
+		RemoveFromParent();
 	}break;
 	default:
 		break;
@@ -168,17 +156,17 @@ void UOrderUserInfoUI::OnButtonClick(int _index)
 }
 void UOrderUserInfoUI::SetGetStyle(FString _style)
 {
-	m_GetStyle->m_ItemContent->SetText(FText::FromString(_style));
+	m_GetStyle->m_EditText->SetText(FText::FromString(_style));
 }
 void UOrderUserInfoUI::SetGetTime(FString _time)
 {
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
 	order->ReceiveTime = _time;
-	m_GetTime->m_ItemContent->SetText(FText::FromString(_time));
+	m_GetTime->m_EditText->SetText(FText::FromString(_time));
 }
 void UOrderUserInfoUI::SetAddress(FString _address)
 {
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
 	order->Address = _address;
-	m_Address->m_ItemContent->SetText(FText::FromString(_address));
+	m_Address->m_EditText->SetText(FText::FromString(_address));
 }

@@ -2,6 +2,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/KismetMathLibrary.h"
+
 
 static float rotator = 0.f;
 
@@ -24,10 +26,14 @@ void AUserPlaneActor::BeginPlay()
 }
 void  AUserPlaneActor::UpdateLoadingComponent()
 {
+#if PLATFORM_WINDOWS
+	return;
+#endif
 	TArray<UARPlaneGeometry*> planeGeometryArray = UARBlueprintLibrary::GetAllTrackedPlanes();
 	if (planeGeometryArray.Num() > 0)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(m_timerHandle);
+		m_LoadingComponent->SetVisibility(false);
 	}
 	else
 	{
@@ -35,19 +41,20 @@ void  AUserPlaneActor::UpdateLoadingComponent()
 		FVector location = cameraManager->GetCameraLocation();
 		FVector forward = cameraManager->GetCameraRotation().Vector();
 		location = location + forward.GetSafeNormal() * 150;
-		SetActorLocation(location);
+		
+		SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), location, 0.1f, 6.f));
 
-		rotator += 0.5;
-		if (rotator >= 360.f)
+		rotator += 1;
+		if (rotator >= 100)
 		{
-			rotator -= 360.f;
+			rotator -= 100;
 		}
-		float yawProcess = rotator / 360.f;
+		float yawProcess = rotator / 100.f;
 		m_LoadingComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
 	}
 }
 void AUserPlaneActor::ResetLoading()
 {
+	m_LoadingComponent->SetVisibility(true);
 	GetWorld()->GetTimerManager().SetTimer(m_timerHandle, this, &AUserPlaneActor::UpdateLoadingComponent, 0.1f, true, 0.f);
-
 }

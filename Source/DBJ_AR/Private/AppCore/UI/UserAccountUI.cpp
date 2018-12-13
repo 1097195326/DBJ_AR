@@ -4,6 +4,7 @@
 #include "EditerARGameModule.h"
 #include "RuntimeCDataManager.h"
 #include "UserAccountItem.h"
+#include "AppInstance.h"
 
 void UUserAccountUI::On_Init()
 {
@@ -22,7 +23,7 @@ void UUserAccountUI::On_Init()
 		m_ToUserInfoButton = widget;
 		
 	}
-	if (UNativeWidgetHost * widget = (UNativeWidgetHost*)GetWidgetFromName("UserImage"))
+	if (UImage * widget = (UImage*)GetWidgetFromName("UserImage"))
 	{
 		m_UserImage = widget;
 	}
@@ -61,6 +62,12 @@ void UUserAccountUI::On_Start()
 	m_CompanyName->SetText(FText::FromString(companyName));
 	m_UserName->SetText(FText::FromString(FString::Printf(TEXT("%s    %s"),*userName,*userPhone)));
 	m_AccountTypeText->SetText(FText::FromString(accountTypeS));
+
+	UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this, UserInfo::Get()->GetLocalData().IconPath);
+	if (texture && texture->IsValidLowLevel())
+	{
+		m_UserImage->SetBrushFromTexture(texture);
+	}
 
 	m_IsRequest = true;
 	EditerARGameModule::GetInstance()->GetAccountOrder(m_LastId);

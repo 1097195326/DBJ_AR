@@ -22,6 +22,10 @@ public:
 	/*virtual void BeginDestroy() override;
 	virtual void BeginPlay() override;*/
 
+	void UpdateSection();
+	void StartUpdate();
+	void StopUpdate();
+
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
@@ -29,4 +33,5 @@ public:
 private:
 //    TMap<FString, PlaneStatus>    m_PlaneMap;
     TMap<FString, int>    m_PlaneMap;
+	FTimerHandle m_TimerHeadle;
 };

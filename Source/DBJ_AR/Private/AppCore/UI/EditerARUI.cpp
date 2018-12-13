@@ -1,4 +1,4 @@
-#include "EditerARUI.h"
+﻿#include "EditerARUI.h"
 #include "UIManager.h"
 #include "EditerARGameModule.h"
 #include "AppInstance.h"
@@ -145,7 +145,10 @@ void UEditerARUI::On_Button_Click(int _index)
 		case 13:
 		{// reset AR session
 			//AUserPawn::GetInstance()->StopARSession();
-			AUserPawn::GetInstance()->DeleteAllARActor();
+			UAlertUI * alertUI = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("AlertUI"));
+			alertUI->SetContentText(TEXT("删除所有绿植"));
+			alertUI->BindSureFunctionCall(this, &UEditerARUI::DeleteAllUserActor);
+			alertUI->AddToViewport(99);
 			//AUserPawn::GetInstance()->StartARSession();
 		}break;
 		case 14:
@@ -164,6 +167,10 @@ void UEditerARUI::On_Button_Click(int _index)
             break;
     }
     
+}
+void UEditerARUI::DeleteAllUserActor()
+{
+	AUserPawn::GetInstance()->DeleteAllARActor();
 }
 void UEditerARUI::OnGetCategoryList(msg_ptr _msg)
 {

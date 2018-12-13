@@ -16,7 +16,8 @@ public:
 	virtual void On_Start() override;
 	virtual void On_Delete() override;
 
-    UButton * m_BackButton;
+	UButton * m_BackButton;
+	UButton * m_SaveButton;
 	UVerticalBox * m_ViewBox;
 
 	UOrderUserInfoItem * m_CompanyName;

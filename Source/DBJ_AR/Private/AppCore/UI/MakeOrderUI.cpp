@@ -10,7 +10,10 @@ void UMakeOrderUI::On_Init()
 	if (UButton * widget = (UButton*)GetWidgetFromName("BackButton"))
 	{
 		m_BackButton = widget;
-		
+	}
+	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("TitleName"))
+	{
+		m_TitleName = widget;
 	}
 	// user info
 	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("CompanyName"))
@@ -84,6 +87,7 @@ void UMakeOrderUI::InitView()
 {
 	ReView();
 	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	m_TitleName->SetText(FText::FromString(TEXT("订单详情")));
 	if (order->Status == 1)
 	{
 		m_SaveOrderPanel->SetVisibility(ESlateVisibility::Hidden);
@@ -95,6 +99,10 @@ void UMakeOrderUI::InitView()
 		m_CommitOrderButton->SetIsEnabled(false);
 		m_CommitButtonText->SetText(FText::FromString(TEXT("订单已提交")));
 		m_CommitButtonText->SetColorAndOpacity(FLinearColor(FColor::FromHex(TEXT("999999"))));
+	}
+	else
+	{
+		m_TitleName->SetText(FText::FromString(TEXT("预订单详情")));
 	}
 	TMap<int,GoodsData*> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
 	
@@ -138,7 +146,17 @@ void UMakeOrderUI::OnButtonClick(int _index)
 	{
 	case 1:
 	{//back button
-		RemoveFromParent();
+		R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+		if (order->Status == 0)
+		{
+			RemoveFromParent();
+		}
+		else
+		{
+			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"));
+			baseUI->AddToViewport();
+			RemoveFromParent();
+		}
 	}break;
 	case 2:
 	{// to order info button

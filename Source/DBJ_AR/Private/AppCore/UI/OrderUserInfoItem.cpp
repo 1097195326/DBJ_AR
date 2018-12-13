@@ -12,10 +12,6 @@ void UOrderUserInfoItem::On_Init()
 	{
 		m_ItemName = widget;
 	}
-	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("ItemContent"))
-	{
-		m_ItemContent = widget;
-	}
 	if (UEditableText * widget = (UEditableText*)GetWidgetFromName("EditerItem"))
 	{
 		m_EditText = widget;
@@ -32,17 +28,16 @@ void UOrderUserInfoItem::On_Init()
 void UOrderUserInfoItem::On_Start()
 {
 	m_ItemName->SetText(FText::FromString(m_ItemNameS));
+	m_EditText->SetHintText(FText::FromString(m_ItemContentS));
+
 	if (m_IsEdit)
 	{
-		m_EditText->SetVisibility(ESlateVisibility::Visible);
-		m_ItemContent->SetVisibility(ESlateVisibility::Hidden);
 		m_DoSomethingButton->SetVisibility(ESlateVisibility::Hidden);
 		m_ShowGoImage->SetVisibility(ESlateVisibility::Hidden);
 	}
 	else
 	{
-		m_EditText->SetVisibility(ESlateVisibility::Hidden);
-		m_ItemContent->SetVisibility(ESlateVisibility::Visible);
+		m_EditText->SetIsReadOnly(true);
 		m_DoSomethingButton->SetVisibility(ESlateVisibility::Visible);
 		m_ShowGoImage->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -64,8 +59,8 @@ void UOrderUserInfoItem::SetOnlyShow()
 {
     if (true)
     {
-        m_EditText->SetVisibility(ESlateVisibility::Hidden);
-        m_ItemContent->SetVisibility(ESlateVisibility::Visible);
+        m_EditText->SetVisibility(ESlateVisibility::Visible);
+		m_EditText->SetIsReadOnly(true);
         m_DoSomethingButton->SetVisibility(ESlateVisibility::Hidden);
         m_ShowGoImage->SetVisibility(ESlateVisibility::Hidden);
     }

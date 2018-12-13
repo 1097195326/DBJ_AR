@@ -73,7 +73,7 @@ void UToolScrollWidget::SetParentId(int _id)
 				data.Id = i;
 				data.Name = FString::Printf(TEXT("%d月"), i);
 				
-				UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"),this);
+				UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollButton"),this);
 				button->SetData(data,this);
 				m_Buttons.Add(button);
 				m_ScorllBox->AddChild(button);
@@ -101,7 +101,7 @@ void UToolScrollWidget::SetParentId(int _id)
 				data.Id = i;
 				data.Name = FString::Printf(TEXT("%d日"), i);
 				
-				UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"),this);
+				UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollButton"),this);
 				button->SetData(data,this);
 				m_Buttons.Add(button);
 				m_ScorllBox->AddChild(button);
@@ -127,7 +127,7 @@ void UToolScrollWidget::SetParentId(int _id)
 			{
 				data.Name = TEXT("下午");
 			}
-			UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"),this);
+			UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollButton"),this);
 			button->SetData(data,this);
 			m_Buttons.Add(button);
 			m_ScorllBox->AddChild(button);
@@ -161,7 +161,7 @@ void UToolScrollWidget::StartRun(int _id)
 			data.Id = nowYear + i;
 			data.Name = FString::Printf(TEXT("%d年"),nowYear+i);
 			
-			UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"),this);
+			UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollButton"),this);
 			button->SetData(data, this);
 			m_Buttons.Add(button);
 			m_ScorllBox->AddChild(button);
@@ -204,7 +204,7 @@ void UToolScrollWidget::OnGetAreasList(msg_ptr _msg)
 			data.Id = value->GetNumberField(TEXT("id"));
 			data.Name = value->GetStringField(TEXT("name"));
 
-			UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolButton"), this);
+			UToolButton * button = (UToolButton*)UIManager::GetInstance()->OpenUI(TEXT("ToolScrollButton"), this);
 			button->SetData(data, this);
 			m_Buttons.Add(button);
 			m_ScorllBox->AddChild(button);

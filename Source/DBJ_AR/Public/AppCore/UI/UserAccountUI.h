@@ -19,7 +19,7 @@ public:
 
     UButton * m_BackButton;
 	UButton * m_SettingButton;
-	UNativeWidgetHost * m_UserImage;
+	UImage *  m_UserImage;
 	UTextBlock * m_CompanyName;
 	UTextBlock * m_UserName;
 	UTextBlock * m_AccountTypeText;

@@ -26,17 +26,14 @@ public:
 	UTextBlock * m_ButtonText;
 	UBorder * m_SelectBorder;
 
-
 	IdData	m_Data;
 
-	void	SetShowBorder(bool _show);
-	void	SetData(const IdData & _data, SelectButtonDelegate * _delegate);
+	virtual void	SetData(const IdData & _data, SelectButtonDelegate * _delegate);
 	virtual void	SelectButton(bool _isSelect);
 
     UFUNCTION()
         void OnButtonClick();
 
 protected:
-	bool   m_IsShowBorder;
 	SelectButtonDelegate * m_Delegate;
 };

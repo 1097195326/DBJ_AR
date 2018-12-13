@@ -2,7 +2,7 @@
 #include "UIManager.h"
 #include "FileDownloadManager.h"
 #include "MakeOrderUI.h"
-
+#include "RuntimeRDataManager.h"
 
 
 void UOrderInfoUI::On_Init()
@@ -51,6 +51,11 @@ void UOrderInfoUI::On_Delete()
 void UOrderInfoUI::OnButtonClick(int _index)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
+	R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
+	if (order->Status == 2)
+	{
+		return;
+	}
 	UMakeOrderUI * parentUI = (UMakeOrderUI*)m_ParentUI;
 	int OldNum = m_Num;
 	switch (_index)
