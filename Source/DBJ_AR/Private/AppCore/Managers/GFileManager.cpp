@@ -113,7 +113,7 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 	//		}
 	//	}
 	//}
-    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+//    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;
 }

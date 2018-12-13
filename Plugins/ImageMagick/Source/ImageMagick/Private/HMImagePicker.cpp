@@ -68,7 +68,7 @@
     if([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear])
     {
         // 添加警告按钮
-        [alert addAction:cameraAction];
+//        [alert addAction:cameraAction];
     }
     [alert addAction:photosAction];
     [alert addAction:cancelAction];

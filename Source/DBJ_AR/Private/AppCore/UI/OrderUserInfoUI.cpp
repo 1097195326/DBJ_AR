@@ -147,8 +147,8 @@ void UOrderUserInfoUI::OnButtonClick(int _index)
 			order->DetailAddress = m_DetailAddress->m_EditText->GetText().ToString();
 			UMakeOrderUI * parentUI = (UMakeOrderUI*)m_ParentUI;
 			parentUI->ReView();
+            RemoveFromParent();
 		}
-		RemoveFromParent();
 	}break;
 	default:
 		break;
