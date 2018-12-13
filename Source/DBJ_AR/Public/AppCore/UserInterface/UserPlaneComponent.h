@@ -18,9 +18,6 @@ class UUserPlaneComponent : public UProceduralMeshComponent
 
 public:
 	UUserPlaneComponent();
-	/*~UserPlaneComponent();*/
-	/*virtual void BeginDestroy() override;
-	virtual void BeginPlay() override;*/
 
 	void UpdateSection();
 	void StartUpdate();

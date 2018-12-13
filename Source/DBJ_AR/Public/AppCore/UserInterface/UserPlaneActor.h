@@ -3,7 +3,6 @@
 
 #include "CoreMinimal.h"
 #include "UserPlaneComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "UserPlaneActor.generated.h"
 
 UCLASS()
@@ -16,14 +15,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UUserPlaneComponent * m_PlaneComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	UStaticMeshComponent * m_LoadingComponent;
-
-	void UpdateLoadingComponent();
-	void ResetLoading();
-
-	FTimerHandle m_timerHandle;
 
 	virtual void BeginPlay() override;
 

@@ -9,8 +9,8 @@ static TArray<FString> WhiteList;
 
 UUserPlaneComponent::UUserPlaneComponent()
 {
-	/*PrimaryComponentTick.bCanEverTick = true;
-	PrimaryComponentTick.SetTickFunctionEnable(true);*/
+//    PrimaryComponentTick.bCanEverTick = true;
+//    PrimaryComponentTick.SetTickFunctionEnable(true);
 
 }
 void UUserPlaneComponent::BeginPlay()
@@ -18,7 +18,7 @@ void UUserPlaneComponent::BeginPlay()
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Log, TEXT("zhx : plane component BeginPlay"));
 
-	StartUpdate();
+    StartUpdate();
 }
 void UUserPlaneComponent::StartUpdate()
 {
@@ -69,7 +69,7 @@ void UUserPlaneComponent::UpdateSection()
 			else
 			{
 				CreateMeshSection(sectionIndex, Vertices, Triangles, Normals, UV0, VertexColors, Tangents, false);
-				UMaterialInterface * materialIns = LoadObject<UMaterialInstance>(nullptr, TEXT("/Game/Blueprints/Materials/Wirefame_MT"));
+				UMaterialInterface * materialIns = LoadObject<UMaterialInstance>(nullptr, TEXT("/Game/Materials/Wirefame_MT"));
 				//                UMaterialInterface * materialIns = LoadObject<UMaterial>(nullptr, TEXT("/Game/Blueprints/Materials/SelfPlaneM"));
 				SetMaterial(sectionIndex, materialIns);
 				m_PlaneMap.Add(planeName, sectionIndex);
