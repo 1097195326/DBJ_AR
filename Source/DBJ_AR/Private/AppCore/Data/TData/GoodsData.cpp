@@ -64,6 +64,8 @@ void GoodsData::CloneData(GoodsData * data)
 	data->externalWidth = externalWidth;// : 80,
 	data->externalHeight = externalHeight;// : 80,
 	
+	data->m_FilePathList = m_FilePathList;
+
 	if (matchedProduct)
 	{
 		data->matchedProduct = new GoodsData();
@@ -78,7 +80,18 @@ void GoodsData::CloneData(GoodsData * data)
 UStaticMesh * GoodsData::LoadMesh()
 {
 	UStaticMesh * mesh = nullptr;
-
+	if (Object && Object->IsValidLowLevel())
+	{
+		return (UStaticMesh *)Object;
+	}
+	if (!GamePath.IsEmpty())
+	{
+		mesh = LoadObject<UStaticMesh>(nullptr, *GamePath);
+		if (mesh)
+		{
+			return mesh;
+		}
+	}
 	for (FString fileName : m_FilePathList)
 	{
 		if (fileName.EndsWith(TEXT(".uasset")))
@@ -92,6 +105,8 @@ UStaticMesh * GoodsData::LoadMesh()
 			mesh = LoadObject<UStaticMesh>(nullptr, *fileName);
 			if (mesh)
 			{
+				GamePath = fileName;
+				Object = mesh;
 				return mesh;
 			}
 		}
