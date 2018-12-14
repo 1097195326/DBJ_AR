@@ -80,6 +80,7 @@ bool AUserActor::MergeOtherActor(AUserActor * _otherActor)
             m_GoodsDatas.Add(otherData);
             
             m_SoketIndex += 1;
+            _otherActor->m_GoodsDatas.Empty();
             _otherActor->Destroy();
             GEngine->ForceGarbageCollection(true);
             return true;

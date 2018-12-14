@@ -49,6 +49,16 @@ void RuntimeRDataManager::RemoveGoodsFromList(TArray<GoodsData*> _datas)
 	}
 	
 }
+void RuntimeRDataManager::RemoveAllGoodsData()
+{
+    for (int i = 0; i < m_RuntimeGoodsList.Num(); i++)
+    {
+        GoodsData * data = m_RuntimeGoodsList[i];
+        delete data;
+    }
+    m_RuntimeGoodsList.Empty();
+    
+}
 TArray<GoodsData*> RuntimeRDataManager::GetRuntimeGoodsList()
 {
 	return m_RuntimeGoodsList;

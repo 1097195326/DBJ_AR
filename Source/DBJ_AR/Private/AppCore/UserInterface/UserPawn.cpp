@@ -54,10 +54,10 @@ void AUserPawn::On_Start()
 }
 void AUserPawn::On_Tick(float delta)
 {
-    if(m_ARIsSetUP)
-    {
-        DrawPlnes();
-    }
+//    if(m_ARIsSetUP)
+//    {
+//        DrawPlnes();
+//    }
 #if PLATFORM_WINDOWS
 	if (IsCMove)
 	{
@@ -374,6 +374,7 @@ void AUserPawn::DeleteAllARActor()
 		TryDeleteARActor(actor);
 		actor = nullptr;
     }
+    RuntimeRDataManager::GetInstance()->RemoveAllGoodsData();
 	bool IsSelect = false;
 	msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
 	MsgCenter::GetInstance()->SendMsg(_msg);

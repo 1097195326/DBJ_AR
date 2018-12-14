@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "GObject.h"
 #include "CoreMinimal.h"
@@ -40,6 +40,7 @@ public:
 	GoodsData * AddGoodsToList(GoodsData* _data);
 	GoodsData * ChangeListGoods(GoodsData* _preData,GoodsData * _changeData);
 	void RemoveGoodsFromList(TArray<GoodsData*> _datas);
+    void RemoveAllGoodsData();
 	TArray<GoodsData*>	GetRuntimeGoodsList();
 
 	TMap<int, GoodsData*> GetOrderDatas();

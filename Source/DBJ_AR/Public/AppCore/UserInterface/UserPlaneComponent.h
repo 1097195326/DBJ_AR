@@ -26,7 +26,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
-	void	GetVertexAndIndex(FVector Center,FVector Extent, TArray<FVector>& Vertices,  TArray<int32>& Triangles);
+	void	GetVertexAndIndex(FVector Center,FVector Extent, TArray<FVector>& Vertices,  TArray<int32>& Triangles, TArray<FVector2D> & UV0);
 private:
 //    TMap<FString, PlaneStatus>    m_PlaneMap;
     TMap<FString, int>    m_PlaneMap;

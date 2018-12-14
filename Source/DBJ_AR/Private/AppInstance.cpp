@@ -1,4 +1,4 @@
-﻿#include "AppInstance.h"
+#include "AppInstance.h"
 #include "UIManager.h"
 #include "DataManager.h"
 #include "ScenePrototype.h"
@@ -6,6 +6,8 @@
 #include "ARBlueprintLibrary.h"
 #include "UserPawn.h"
 #include "AlertUI.h"
+#include "Kismet/KismetSystemLibrary.h"
+
 
 UAppInstance::UAppInstance()
 {
@@ -20,10 +22,10 @@ void UAppInstance::On_Init()
     Data_M->LoadAllXMLData();
 
     
-//    UGameUserSettings* mGameUserSettings = GEngine->GetGameUserSettings();
-//    FIntPoint mPoint = mGameUserSettings->GetScreenResolution();
-//    GEngine->AddOnScreenDebugMessage(-1, 999999, FColor::Red, FString::Printf(TEXT("ScreenResolution x=%d,y=%d"), mPoint.X,mPoint.Y));
-//    
+    UGameUserSettings* mGameUserSettings = GEngine->GetGameUserSettings();
+    FIntPoint mPoint = mGameUserSettings->GetScreenResolution();
+    GEngine->AddOnScreenDebugMessage(-1, 999999, FColor::Red, FString::Printf(TEXT("ScreenResolution x=%d,y=%d"), mPoint.X,mPoint.Y));
+    
 }
 void UAppInstance::On_Delete()
 {
@@ -33,14 +35,16 @@ void UAppInstance::ApplicationWillEnterBackground()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : ---UGAppInstance::ApplicationWillEnterBackground"));
 	
-    AUserPawn::GetInstance()->DeleteAllARActor();
-//    AUserPawn::GetInstance()->StopARSession();
+//    AUserPawn::GetInstance()->DeleteAllARActor();
+//    AUserPawn::GetInstance()->QuitEditScene();
+//    UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit);
+    UARBlueprintLibrary::PauseARSession();
 
 }
 void UAppInstance::ApplicationHasEnteredForeground()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : ---UGAppInstance::ApplicationHasEnteredForeground"));
-//    AUserPawn::GetInstance()->StartARSession();
+    AUserPawn::GetInstance()->StartARSession();
     
 }
 void UAppInstance::OpenLevel(const FString & _levelName)
