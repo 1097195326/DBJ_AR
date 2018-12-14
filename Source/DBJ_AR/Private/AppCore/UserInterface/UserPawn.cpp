@@ -16,7 +16,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine.h"
 #include "RuntimeRDataManager.h"
-#include "MsgCenter.h"
+
 
 AUserPawn * AUserPawn::m_self = nullptr;
 
@@ -26,6 +26,8 @@ AUserPawn * AUserPawn::GetInstance()
 }
 AUserPawn::AUserPawn(const FObjectInitializer& ObjectInitializer)
 {
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3002, this, &AUserPawn::ApplicationWillEnterBackground);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3003, this, &AUserPawn::ApplicationWillEnterBackground);
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
     
     m_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
@@ -48,7 +50,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    StartARSession();
+    //StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -69,6 +71,11 @@ void AUserPawn::On_Tick(float delta)
 
 #endif
 
+}
+void AUserPawn::On_Delete()
+{
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 3002, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 3003, this);
 }
 void AUserPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -285,10 +292,16 @@ void AUserPawn::TryCreateMergeActor(GoodsData * _goodsData)
 	AUserActor * two = TryCreateARActor(_goodsData->matchedProduct);
 	if (one && two)
 	{
+		UE_LOG(LogTemp, Log, TEXT("zhx : one actor data num : %d"), one->m_GoodsDatas.Num());
+		UE_LOG(LogTemp, Log, TEXT("zhx : two actor data num : %d"), two->m_GoodsDatas.Num());
+
 		one->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
 		two->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
 
 		MergeTwoUserActor(one, two);
+
+		UE_LOG(LogTemp, Log, TEXT("zhx : GetRuntimeGoodsList data num : %d"), RuntimeRDataManager::GetInstance()->GetRuntimeGoodsList().Num());
+
 	}
 
 }
@@ -618,4 +631,13 @@ void AUserPawn::ChangeGoods()
         m_SelectComponent->SetStaticMesh(mesh);
         m_SelectComponent->RegisterComponent();
     }
+}
+void AUserPawn::ApplicationWillEnterBackground(msg_ptr _msg)
+{
+	QuitEditScene();
+
+}
+void AUserPawn::ApplicationHasEnteredForeground(msg_ptr _msg)
+{
+	StopARSession();
 }

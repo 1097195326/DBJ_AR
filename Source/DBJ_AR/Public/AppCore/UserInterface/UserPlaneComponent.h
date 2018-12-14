@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "ProceduralMeshComponent.h"
 #include "ARBlueprintLibrary.h"
+#include "MsgCenter.h"
 #include "UserPlaneComponent.generated.h"
 
 
@@ -18,6 +19,10 @@ class UUserPlaneComponent : public UProceduralMeshComponent
 
 public:
 	UUserPlaneComponent();
+	~UUserPlaneComponent();
+
+	void ApplicationWillEnterBackground(msg_ptr _msg);
+	void ApplicationHasEnteredForeground(msg_ptr _msg);
 
 	void UpdateSection();
 	void StartUpdate();

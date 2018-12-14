@@ -16,6 +16,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GFileManager.h"
 #include "UserActor.h"
+#include "MsgCenter.h"
 #include "UserPawn.generated.h"
 
 
@@ -40,8 +41,12 @@ public:
     virtual void On_Init() override;
 	virtual void On_Start() override;
 	virtual void On_Tick(float delta) override;
+	virtual void On_Delete() override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	void ApplicationWillEnterBackground(msg_ptr _msg);
+	void ApplicationHasEnteredForeground(msg_ptr _msg);
 
 	//FVector2D  m_PreScreenPosition;
 	//PC

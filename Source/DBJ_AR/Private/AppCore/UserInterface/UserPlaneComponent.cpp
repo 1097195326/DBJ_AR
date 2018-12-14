@@ -11,6 +11,22 @@ UUserPlaneComponent::UUserPlaneComponent()
 {
 //    PrimaryComponentTick.bCanEverTick = true;
 //    PrimaryComponentTick.SetTickFunctionEnable(true);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3002, this, &UUserPlaneComponent::ApplicationWillEnterBackground);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3003, this, &UUserPlaneComponent::ApplicationHasEnteredForeground);
+}
+UUserPlaneComponent::~UUserPlaneComponent()
+{
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 3002, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 3003, this);
+}
+void UUserPlaneComponent::ApplicationWillEnterBackground(msg_ptr _msg)
+{
+	StopUpdate();
+	ClearAllMeshSections();
+}
+void UUserPlaneComponent::ApplicationHasEnteredForeground(msg_ptr _msg)
+{
+	StartUpdate();
 
 }
 void UUserPlaneComponent::BeginPlay()

@@ -39,6 +39,11 @@
         <mapping msgId="2016" channel="local" uri="mgw/users/current" dest="login current user" />
         
         <mapping msgId="3001" channel="local" uri="" dest = "select actor send msg to UI"/>
+        <mapping msgId="3002" channel="local" uri="" dest = "ApplicationWillEnterBackground"/>
+        <mapping msgId="3003" channel="local" uri="" dest = "ApplicationHasEnteredForeground"/>
 
+        <mapping msgId="110" channel="local" uri="" dest = "http connect fail"/>
+
+        
     <httpMapping/>
 </root>
