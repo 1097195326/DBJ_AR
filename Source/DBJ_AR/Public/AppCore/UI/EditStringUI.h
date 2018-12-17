@@ -20,9 +20,13 @@ public:
 
 	void	SetDelegate(EditStringDelegate * _delegate,FString _titleName,FString _hintS);
 
-    UButton * m_CancelButton;
-	UButton * m_SureButton;
-	UTextBlock * m_TitleName;
+	UPROPERTY()
+		UButton * m_CancelButton;
+	UPROPERTY()
+		UButton * m_SureButton;
+	UPROPERTY()
+		UTextBlock * m_TitleName;
+	UPROPERTY()
 	UEditableText * m_EditString;
 
     void OnButtonClick(int _index);

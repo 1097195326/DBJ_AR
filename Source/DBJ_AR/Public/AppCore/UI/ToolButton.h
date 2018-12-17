@@ -22,8 +22,11 @@ class DBJ_AR_API  UToolButton : public UBaseUI
 public:
     virtual void On_Init() override;
 
-    UButton * m_ViewButton;
-	UTextBlock * m_ButtonText;
+	UPROPERTY()
+		UButton * m_ViewButton;
+	UPROPERTY()
+		UTextBlock * m_ButtonText;
+	UPROPERTY()
 	UBorder * m_SelectBorder;
 
 	IdData	m_Data;

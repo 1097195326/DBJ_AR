@@ -10,16 +10,26 @@ class UEditerARUI : public UBaseUI
     GENERATED_BODY()
     
 public:
-    UButton * m_ProductListButton;
-	UButton * m_ChangeButton;
+	UPROPERTY()
+		UButton * m_ProductListButton;
+	UPROPERTY()
+		UButton * m_ChangeButton;
+	UPROPERTY()
 	UButton * m_DeleteButton;
 	// top button list
-	UButton * m_ShowlistButton;
-	UScrollBox *  m_ShowlistPanel;
-	UButton * m_CloseListButton;
-	UButton * m_AcountButton;
-	UButton * m_AddressButton;
-	UButton * m_OrderlistButton;
+	UPROPERTY()
+		UButton * m_ShowlistButton;
+	UPROPERTY()
+		UScrollBox *  m_ShowlistPanel;
+	UPROPERTY()
+		UButton * m_CloseListButton;
+	UPROPERTY()
+		UButton * m_AcountButton;
+	UPROPERTY()
+		UButton * m_AddressButton;
+	UPROPERTY()
+		UButton * m_OrderlistButton;
+	UPROPERTY()
 	UButton * m_ShareButton;
 
 public:

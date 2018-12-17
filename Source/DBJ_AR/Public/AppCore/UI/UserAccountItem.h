@@ -12,16 +12,24 @@ class DBJ_AR_API  UUserAccountItem : public UBaseUI
 public:
 	virtual void On_Init() override;
 
-	UButton *	m_EditerOrderButton;
-	UTextBlock * m_CompanyName;
-	UTextBlock * m_StatusText;
-	UScrollBox * m_IconListScroll;
-	UTextBlock * m_CommitTime;
-	UTextBlock * m_AllPrice;
-	UTextBlock * m_AllNum;
-	UImage *	m_WeiTijiaoImage;
-	UImage *	m_YiTijiaoImage;
-
+	UPROPERTY()
+		UButton *	m_EditerOrderButton;
+	UPROPERTY()
+		UTextBlock * m_CompanyName;
+	UPROPERTY()
+		UTextBlock * m_StatusText;
+	UPROPERTY()
+		UScrollBox * m_IconListScroll;
+	UPROPERTY()
+		UTextBlock * m_CommitTime;
+	UPROPERTY()
+		UTextBlock * m_AllPrice;
+	UPROPERTY()
+		UTextBlock * m_AllNum;
+	UPROPERTY()
+		UImage *	m_WeiTijiaoImage;
+	UPROPERTY()
+		UImage *	m_YiTijiaoImage;
 	UFUNCTION()
 		void OnButtonClick();
 

@@ -28,12 +28,19 @@ public:
 	int			m_InnerIndex;
 	int			m_MaterialIndex;
 private:
-	UButton * m_BackButton;
-	UButton * m_FilterButton;
-	UScrollBox * m_IconScrolBox;
-	UGridPanel * m_IconList;
-	UVerticalBox * m_CategoryView;
-	TArray<UGoodsListButton*>		m_ListButtons;
+	UPROPERTY()
+		UButton * m_BackButton;
+	UPROPERTY()
+		UButton * m_FilterButton;
+	UPROPERTY()
+		UScrollBox * m_IconScrolBox;
+	UPROPERTY()
+		UGridPanel * m_IconList;
+	UPROPERTY()
+		UVerticalBox * m_CategoryView;
+	UPROPERTY()
+		TArray<UGoodsListButton*>		m_ListButtons;
+	UPROPERTY()
 	TArray<UGoodsList_Icon*>		m_IconArray;
 	int			m_CurrentSelectId;
 	int32		m_LastId;

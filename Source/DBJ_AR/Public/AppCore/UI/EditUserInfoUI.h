@@ -15,11 +15,17 @@ public:
 	virtual void On_Start() override;
 	virtual void On_Delete() override;
 
-	UButton * m_BackButton;
-	UButton * m_EditUerNameButton;
-	UImage * m_UserImage;
-    UButton * m_ChangeUserImage;
-	UTextBlock * m_UserName;
+	UPROPERTY()
+		UButton * m_BackButton;
+	UPROPERTY()
+		UButton * m_EditUerNameButton;
+	UPROPERTY()
+		UImage * m_UserImage;
+	UPROPERTY()
+		UButton * m_ChangeUserImage;
+	UPROPERTY()
+		UTextBlock * m_UserName;
+	UPROPERTY()
 	UTextBlock * m_UserPhone;
 
     void OnButtonClick(int _index);

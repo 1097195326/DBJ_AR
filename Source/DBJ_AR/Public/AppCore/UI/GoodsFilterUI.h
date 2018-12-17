@@ -15,8 +15,11 @@ public:
 	virtual void On_Start() override;
 	virtual void On_Delete() override;
 
-	UVerticalBox * m_ViewVerticalBox;
-	UButton * m_CancelButton;
+	UPROPERTY()
+		UVerticalBox * m_ViewVerticalBox;
+	UPROPERTY()
+		UButton * m_CancelButton;
+	UPROPERTY()
 	UButton * m_SureButton;
 	
 	void OnButtonClick(int _index);

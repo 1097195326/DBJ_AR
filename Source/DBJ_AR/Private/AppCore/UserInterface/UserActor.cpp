@@ -27,6 +27,7 @@ void AUserActor::BeginDestroy()
 {
 	m_Mesh->m_Data = nullptr;
 	m_GoodsDatas.Empty();
+	
 	Super::BeginDestroy();
 
 	UE_LOG(LogTemp, Log, TEXT("zhx : AUserActor::BeginDestroy"));

@@ -14,8 +14,11 @@ public:
     virtual void On_Init() override;
 	virtual void On_Delete() override;
 
-    UButton * m_ViewButton;
-	UTextBlock * m_Text;
+	UPROPERTY()
+		UButton * m_ViewButton;
+	UPROPERTY()
+		UTextBlock * m_Text;
+	UPROPERTY()
 	UBorder * m_Border;
 
     UFUNCTION()

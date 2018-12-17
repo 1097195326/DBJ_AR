@@ -18,13 +18,21 @@ public:
     virtual void On_Init() override;
 	virtual void On_Delete() override;
 
-	UNativeWidgetHost * m_Icon;
-	UTextBlock * m_GoodsName;
-	UTextBlock * m_GoodsBorder;
-	UTextBlock * m_CompanyName;
-	UTextBlock * m_GoodsPrice;
-	UTextBlock * m_GoodsNum;
-	UButton * m_SubButton;
+	UPROPERTY()
+		UNativeWidgetHost * m_Icon;
+	UPROPERTY()
+		UTextBlock * m_GoodsName;
+	UPROPERTY()
+		UTextBlock * m_GoodsBorder;
+	UPROPERTY()
+		UTextBlock * m_CompanyName;
+	UPROPERTY()
+		UTextBlock * m_GoodsPrice;
+	UPROPERTY()
+		UTextBlock * m_GoodsNum;
+	UPROPERTY()
+		UButton * m_SubButton;
+	UPROPERTY()
 	UButton * m_AddButton;
 
 	void SetData(GoodsData * _data);

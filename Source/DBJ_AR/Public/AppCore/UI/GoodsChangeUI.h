@@ -17,10 +17,15 @@ public:
 	virtual void On_Tick(float delta) override;
 	virtual void On_Delete() override;
 
-	UButton *	m_BackButton;
-    UButton *	m_CancelButton;
-	UButton *	m_SureButton;
-	UScrollBox * m_ScrollBox;
+	UPROPERTY()
+		UButton *	m_BackButton;
+	UPROPERTY()
+		UButton *	m_CancelButton;
+	UPROPERTY()
+		UButton *	m_SureButton;
+	UPROPERTY()
+		UScrollBox * m_ScrollBox;
+	UPROPERTY()
 	UGridPanel * m_GridPanel;
 
     void OnButtonClick(int id);
@@ -33,6 +38,7 @@ public:
 
 	//void SetData(int _id,FString _path);
 private:
+	UPROPERTY()
 	TArray<UGoodsList_Icon*>	m_GoodsListIcons;
 
 	GoodsData * m_CurrentGoodsData;

@@ -16,16 +16,26 @@ public:
 	virtual void On_Start() override;
 	virtual void On_Delete() override;
 
-	UButton * m_BackButton;
-	UButton * m_SaveButton;
+	UPROPERTY()
+		UButton * m_BackButton;
+	UPROPERTY()
+		UButton * m_SaveButton;
+	UPROPERTY()
 	UVerticalBox * m_ViewBox;
 
-	UOrderUserInfoItem * m_CompanyName;
-	UOrderUserInfoItem * m_GetStyle;
-	UOrderUserInfoItem * m_UserName;
-	UOrderUserInfoItem * m_UsserPhone;
-	UOrderUserInfoItem * m_GetTime;
-	UOrderUserInfoItem * m_Address;
+	UPROPERTY()
+		UOrderUserInfoItem * m_CompanyName;
+	UPROPERTY()
+		UOrderUserInfoItem * m_GetStyle;
+	UPROPERTY()
+		UOrderUserInfoItem * m_UserName;
+	UPROPERTY()
+		UOrderUserInfoItem * m_UsserPhone;
+	UPROPERTY()
+		UOrderUserInfoItem * m_GetTime;
+	UPROPERTY()
+		UOrderUserInfoItem * m_Address;
+	UPROPERTY()
 	UOrderUserInfoItem * m_DetailAddress;
 
 	void ReView();

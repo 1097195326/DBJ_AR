@@ -19,15 +19,20 @@ public:
     virtual void On_Init() override;
 	virtual void On_Start() override;
 	virtual void On_Delete() override;
-	
+
 	TMap<ToolScrollType, int>	m_LevelMap;
 
+	UPROPERTY()
 	TArray<UToolScrollWidget*>	m_Widgets;
 
+	UPROPERTY()
 	UHorizontalBox * m_ScrollWidgetList;
 
-    UButton * m_CancelButton;
+	UPROPERTY()
+	UButton * m_CancelButton;
+	UPROPERTY()
 	UButton * m_SureButton;
+	UPROPERTY()
 	UTextBlock * m_TitleName;
 
 	AddOrTimeType  m_type;

@@ -511,7 +511,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 		{
             if(two->MergeOtherActor(one))
             {
-                m_SelectActor = two;
+                //m_SelectActor = two;
 				one = nullptr;
             }
 //            FString socketName = FString::Printf(TEXT("Socket%d"), two->m_SoketIndex + 1);
@@ -539,7 +539,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
 		{
             if(one->MergeOtherActor(two))
             {
-                m_SelectActor = one;
+                //m_SelectActor = one;
 				two = nullptr;
             }
             

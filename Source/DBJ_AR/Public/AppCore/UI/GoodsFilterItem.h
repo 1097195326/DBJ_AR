@@ -12,7 +12,9 @@ class DBJ_AR_API  UGoodsFilterItem : public UBaseUI,public SelectButtonDelegate
 public:
 	virtual void On_Init() override;
 
-	UTextBlock * m_TitleName;
+	UPROPERTY()
+		UTextBlock * m_TitleName;
+	UPROPERTY()
 	UGridPanel * m_ContentGridPanel;
 
 	void SetData(const int & _type, const TArray<IdData> & _data,int _index);
@@ -25,5 +27,6 @@ private:
 
 	UToolButton * m_SelectButton;
 	int	m_SelectIndex;
+	UPROPERTY()
 	TArray<UToolButton*> m_Buttons;
 };

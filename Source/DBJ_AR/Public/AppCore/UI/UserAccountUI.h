@@ -16,15 +16,22 @@ public:
 	virtual void On_Tick(float delta) override;
 	virtual void On_Delete() override;
 
-
+	UPROPERTY()
     UButton * m_BackButton;
+	UPROPERTY()
 	UButton * m_SettingButton;
+	UPROPERTY()
 	UImage *  m_UserImage;
-	UTextBlock * m_CompanyName;
-	UTextBlock * m_UserName;
-	UTextBlock * m_AccountTypeText;
+	UPROPERTY()
+		UTextBlock * m_CompanyName;
+	UPROPERTY()
+		UTextBlock * m_UserName;
+	UPROPERTY()
+		UTextBlock * m_AccountTypeText;
+	UPROPERTY()
 	UButton * m_ToUserInfoButton;
 
+	UPROPERTY()
 	UScrollBox * m_OrderListScroll;
 
     void OnButtonClick(int _index);

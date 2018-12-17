@@ -31,13 +31,21 @@ public:
 		static bool CanDownPak;
 
 private:
+	UPROPERTY()
     UButton *	m_IconButton;
+	UPROPERTY()
 	UButton	*	m_DownloadButton;
+	UPROPERTY()
 	UImage	*	m_Image;
+	UPROPERTY()
     UImage  *   m_DownOKImage;
+	UPROPERTY()
 	UImage  *   m_SelectIcon;
+	UPROPERTY()
 	UTextBlock * m_IconName;
+	UPROPERTY()
 	UNativeWidgetHost * m_ImageHost;
+	UPROPERTY()
     UProgressBar * m_downloadingProgress;
     
 	GoodsData * m_Data;

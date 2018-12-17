@@ -59,7 +59,7 @@ void UGoodsList_Icon::On_Delete()
 
 	UI_M->UnRegisterButton(m_IconButton);
 	UI_M->UnRegisterButton(m_DownloadButton);
-
+	
 }
 void UGoodsList_Icon::On_Tick(float delta)
 {

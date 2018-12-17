@@ -24,7 +24,9 @@ public:
     virtual void On_Init() override;
 	virtual void On_Delete() override;
 
-    UButton * m_ViewButton;
+	UPROPERTY()
+		UButton * m_ViewButton;
+	UPROPERTY()
 	UScrollBox * m_ScorllBox;
 
 	int			m_Level;
@@ -35,6 +37,7 @@ public:
 
 	TArray<UToolButton*>	m_Buttons;
 
+	UPROPERTY()
 	UToolScrollWidget * m_NextNode;
 	
 	void	StartRun(int _id = 0);

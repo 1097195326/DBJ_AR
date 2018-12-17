@@ -13,6 +13,7 @@ class DBJ_AR_API  UTopHintTextUI : public UBaseUI
 public:
     virtual void On_Init() override;
 
+	UPROPERTY()
     UVerticalBox * m_ShowTextView;
 
 	void	InitText(const FString & hintText, float showSecond);

@@ -10,17 +10,25 @@ class ULoginUI : public UBaseUI
 	GENERATED_BODY()
 
 public:
-	UCanvasPanel * m_XieyiPanel;
-	UCanvasPanel * m_MainPanel;
-
-	UButton * m_BackButton;
-	UButton * m_Login_Button;
-	UButton * m_VeriCode_Button;
+	UPROPERTY()
+		UCanvasPanel * m_XieyiPanel;
+	UPROPERTY()
+		UCanvasPanel * m_MainPanel;
+	UPROPERTY()
+		UButton * m_BackButton;
+	UPROPERTY()
+		UButton * m_Login_Button;
+	UPROPERTY()
+		UButton * m_VeriCode_Button;
+	UPROPERTY()
 	UButton * m_Button_Open_Service_Agreement;
 
-	UEditableText * m_Phone_Text;
-	UEditableText * m_VeriCode_Text;
-	UTextBlock *  m_VeriText;
+	UPROPERTY()
+		UEditableText * m_Phone_Text;
+	UPROPERTY()
+		UEditableText * m_VeriCode_Text;
+	UPROPERTY()
+		UTextBlock *  m_VeriText;
 
 public:
 	virtual void On_Init() override;

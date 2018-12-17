@@ -19,21 +19,34 @@ public:
 	void	InitView();
 	void	ReView();
 
+	UPROPERTY()
 	TArray<UOrderInfoUI*> m_InfoUIList;
 
-    UButton * m_BackButton;
+	UPROPERTY()
+		UButton * m_BackButton;
+	UPROPERTY()
 	UTextBlock * m_TitleName;
 	// user info
-	UTextBlock * m_CompanyName;
-	UTextBlock * m_UserInfo;
-	UTextBlock * m_AddressInfo;
+	UPROPERTY()
+		UTextBlock * m_CompanyName;
+	UPROPERTY()
+		UTextBlock * m_UserInfo;
+	UPROPERTY()
+		UTextBlock * m_AddressInfo;
+	UPROPERTY()
 	UButton * m_ToOrderInfoButton;
 	//main view
-	UScrollBox * m_OrderScroll;
-	UTextBlock * m_Allprice;
-	UCanvasPanel * m_SaveOrderPanel;
-	UButton * m_SaveOrderButton;
-	UButton * m_CommitOrderButton;
+	UPROPERTY()
+		UScrollBox * m_OrderScroll;
+	UPROPERTY()
+		UTextBlock * m_Allprice;
+	UPROPERTY()
+		UCanvasPanel * m_SaveOrderPanel;
+	UPROPERTY()
+		UButton * m_SaveOrderButton;
+	UPROPERTY()
+		UButton * m_CommitOrderButton;
+	UPROPERTY()
 	UTextBlock * m_CommitButtonText;
 
     UFUNCTION()

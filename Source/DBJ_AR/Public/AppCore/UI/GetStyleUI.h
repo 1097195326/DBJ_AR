@@ -13,14 +13,21 @@ public:
 	virtual void On_Start() override;
 	FString m_String;
 
-    UButton * m_BackButton;
-	UButton * m_SongHuoButton;
+	UPROPERTY()
+		UButton * m_BackButton;
+	UPROPERTY()
+		UButton * m_SongHuoButton;
+	UPROPERTY()
 	UButton * m_ZiquButton;
 
-	UTextBlock * m_Text1;
-	UTextBlock * m_Text2;
-	UCheckBox * m_Box1;
-	UCheckBox * m_Box2;
+	UPROPERTY()
+		UTextBlock * m_Text1;
+	UPROPERTY()
+		UTextBlock * m_Text2;
+	UPROPERTY()
+		UCheckBox * m_Box1;
+	UPROPERTY()
+		UCheckBox * m_Box2;
 
     
     void OnButtonClick(int _index);

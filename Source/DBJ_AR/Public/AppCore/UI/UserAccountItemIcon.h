@@ -11,6 +11,7 @@ class DBJ_AR_API  UUserAccountItemIcon : public UBaseUI
 public:
     virtual void On_Init() override;
 
+	UPROPERTY()
     UNativeWidgetHost * m_ShowImage;
 
 	void SetImageUrl(FString _url);

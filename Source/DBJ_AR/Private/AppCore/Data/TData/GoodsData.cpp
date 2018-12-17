@@ -83,7 +83,7 @@ void GoodsData::CloneData(GoodsData * data)
 UStaticMesh * GoodsData::LoadMesh()
 {
 	UStaticMesh * mesh = nullptr;
-	if (Object && Object->IsValidLowLevel())
+	if (Object != nullptr && Object->IsValidLowLevel())
 	{
 		return (UStaticMesh *)Object;
 	}

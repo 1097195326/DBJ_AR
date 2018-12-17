@@ -16,13 +16,19 @@ public:
     virtual void On_Init() override;
 	virtual void On_Delete() override;
 
+	UPROPERTY()
 	UTextBlock * m_ContentText;
 
-	UButton * m_SureButton;
-	UButton * m_CancelButton;
+	UPROPERTY()
+		UButton * m_SureButton;
+	UPROPERTY()
+		UButton * m_CancelButton;
+	UPROPERTY()
 	UButton * m_OnlySureButton;
 
-	UCanvasPanel * m_ShowPanel;
+	UPROPERTY()
+		UCanvasPanel * m_ShowPanel;
+	UPROPERTY()
 	UCanvasPanel * m_OnlyPanel;
 
 	void	OnlyButtonShow(bool _show);

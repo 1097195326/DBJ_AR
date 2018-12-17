@@ -22,10 +22,15 @@ public:
 	UPROPERTY(EditAnywhere)
 		bool m_ShowBorder;
 
-	UImage * m_ShowGoImage;
-    UButton * m_DoSomethingButton;
-	UTextBlock *  m_ItemName;
-	UEditableText * m_EditText;
+	UPROPERTY()
+		UImage * m_ShowGoImage;
+	UPROPERTY()
+		UButton * m_DoSomethingButton;
+	UPROPERTY()
+		UTextBlock *  m_ItemName;
+	UPROPERTY()
+		UEditableText * m_EditText;
+	UPROPERTY()
 	UBorder *	m_BottomBorder;
 
     void SetOnlyShow();
