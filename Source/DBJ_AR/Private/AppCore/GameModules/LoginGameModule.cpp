@@ -14,6 +14,7 @@ LoginGameModule::LoginGameModule()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &LoginGameModule::OnGetSmsCode);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &LoginGameModule::OnUserLogin);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1016, this, &LoginGameModule::OnAutoLogin);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1017, this, &LoginGameModule::OnUpdateRentDay);
 }
 void LoginGameModule::On_Init()
 {
@@ -36,6 +37,7 @@ void LoginGameModule::On_Delete()
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1002, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1001, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1016, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1017, this);
 
 	if (m_CurrentUIController != nullptr)
 	{
@@ -100,6 +102,7 @@ void LoginGameModule::OnUserLogin(msg_ptr _msg)
 
 		userData->SetStringField(TEXT("token"), token);
 		UserInfo::Get()->SaveToLocal(userData);
+		UpdateRentDay();
 	}
 	
 	msg_ptr msg(new LocalMsg(Msg_Local, 2001, jsonData));
@@ -125,7 +128,27 @@ void LoginGameModule::OnAutoLogin(msg_ptr _msg)
 		TSharedPtr<FJsonObject> jsonObj = jsonData->GetObjectField(TEXT("data"));
 		jsonObj->SetStringField(TEXT("token"), UserInfo::Get()->GetToken());
 		UserInfo::Get()->SaveToLocal(jsonObj);
+		UpdateRentDay();
 	}
 	msg_ptr msg(new LocalMsg(Msg_Local, 2016, jsonData));
 	MsgCenter::GetInstance()->SendMsg(msg);
+}
+void LoginGameModule::UpdateRentDay()
+{
+	FString cookie = UserInfo::Get()->GetCookie();
+	FString token = UserInfo::Get()->GetToken();
+	if (!token.IsEmpty())
+	{
+		FString httpUrl = Data_M->GetURL(1017);
+		msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 1017, httpUrl, TEXT(""), Http_Put, cookie, token));
+		MsgCenter::GetInstance()->SendMsg(mMsg);
+	}
+}
+void LoginGameModule::OnUpdateRentDay(msg_ptr _msg)
+{
+	/*TSharedPtr<FJsonObject> jsonData = _msg->GetJsonObject();
+	if (jsonData->GetIntegerField(TEXT("code")) == 200)
+	{
+
+	}*/
 }

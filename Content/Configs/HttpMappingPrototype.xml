@@ -21,7 +21,7 @@
         <mapping msgId="1014" channel="http" uri="mgw/areas" dest="get areas" />
         <mapping msgId="1015" channel="http" uri="mgw/users/updateSelf" dest="update self" />
         <mapping msgId="1016" channel="http" uri="mgw/users/current" dest="login current user" />
-
+        <mapping msgId="1017" channel="http" uri="mgw/users/updateRentDays" dest="updateRentDays" />
 
         <mapping msgId="2001" channel="local" uri="mgw/login" />
         <mapping msgId="2002" channel="local" uri="mgw/smsCode/send"/>

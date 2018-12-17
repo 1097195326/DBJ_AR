@@ -20,5 +20,7 @@ public:
 	void OnUserLogin(msg_ptr _msg);
 	void AutoLogin();
 	void OnAutoLogin(msg_ptr _msg);
+	void UpdateRentDay();
+	void OnUpdateRentDay(msg_ptr _msg);
 
 };
