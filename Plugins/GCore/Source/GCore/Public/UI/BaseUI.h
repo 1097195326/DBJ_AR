@@ -24,11 +24,17 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeDestruct() override;
 
+	/*virtual FReply NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent) override;
+	virtual void NativeOnFocusLost(const FFocusEvent& InFocusEvent) override;*/
+
 public:
 	void SetParentUI(UBaseUI * _ui);
 	virtual void On_Init() override;
 	virtual void On_Tick(float delta) override;
 	virtual void On_Delete() override;
+
+	/*virtual void On_FocusReceived();
+	virtual void On_FocusLost();*/
 protected:
 	UBaseUI * m_ParentUI;
 

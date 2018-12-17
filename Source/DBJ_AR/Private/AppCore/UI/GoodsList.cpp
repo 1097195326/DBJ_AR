@@ -45,7 +45,7 @@ void UGoodsList::On_Start()
     UE_LOG(LogTemp,Log,TEXT("zhx : goodslist ui start"));
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2008, this, &UGoodsList::OnGetProductList);
     
-    //UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
+    UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
     
     InitView();
 }
@@ -67,6 +67,8 @@ void UGoodsList::On_Delete()
     m_IconScrolBox = nullptr;
     m_IconList = nullptr;
     
+	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(UGameplayStatics::GetPlayerController(this, 0), m_ParentUI);
+
     UE_LOG(LogTemp,Log,TEXT("zhx : goodslist ui delete"));
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2008, this);
 }

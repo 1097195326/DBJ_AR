@@ -26,7 +26,7 @@ public:
     virtual void On_Init() override;
     virtual void On_Start() override;
     virtual void On_Delete() override;
-    
+
     void On_Button_Click(int _index);
 	void DeleteAllUserActor();
 

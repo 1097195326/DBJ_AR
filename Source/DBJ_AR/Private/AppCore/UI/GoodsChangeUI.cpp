@@ -35,6 +35,8 @@ void UGoodsChangeUI::On_Init()
 }
 void UGoodsChangeUI::On_Start()
 {
+	UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
+
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2013, this, &UGoodsChangeUI::OnGetChangeList);
 
 	m_ProductId = AUserPawn::GetInstance()->GetChangeProductId();
@@ -56,6 +58,8 @@ void UGoodsChangeUI::On_Tick(float delta)
 }
 void UGoodsChangeUI::On_Delete()
 {
+	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(UGameplayStatics::GetPlayerController(this, 0), m_ParentUI);
+
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2013, this);
 
 }

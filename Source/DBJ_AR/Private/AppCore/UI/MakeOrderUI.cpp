@@ -63,7 +63,8 @@ void UMakeOrderUI::On_Init()
 }
 void UMakeOrderUI::On_Start()
 {
-	//UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
+	UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
+
     UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UMakeOrderUI::OnButtonClick);
     UIManager::GetInstance()->RegisterButton(2, m_ToOrderInfoButton, this, &UMakeOrderUI::OnButtonClick);
     UIManager::GetInstance()->RegisterButton(3, m_SaveOrderButton, this, &UMakeOrderUI::OnButtonClick);
@@ -73,6 +74,8 @@ void UMakeOrderUI::On_Start()
 }
 void UMakeOrderUI::On_Delete()
 {
+	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(UGameplayStatics::GetPlayerController(this, 0), m_ParentUI);
+
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2009, this);
 
 	UIManager::GetInstance()->UnRegisterButton(m_BackButton);

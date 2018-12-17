@@ -117,7 +117,7 @@ void UEditerARUI::On_Button_Click(int _index)
         case 2:
         {
 			
-			UGoodsChangeUI * changeUI = (UGoodsChangeUI *)UIManager::GetInstance()->OpenUI(TEXT("GoodsChangeUI"));
+			UGoodsChangeUI * changeUI = (UGoodsChangeUI *)UIManager::GetInstance()->OpenUI(TEXT("GoodsChangeUI"),this);
 
 			changeUI->AddToViewport();
             break;
@@ -139,7 +139,7 @@ void UEditerARUI::On_Button_Click(int _index)
 		}break;
 		case 12:
 		{// user account 
-			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"));
+			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"),this);
 			baseUI->AddToViewport();
 		}break;
 		case 13:
@@ -155,7 +155,7 @@ void UEditerARUI::On_Button_Click(int _index)
 		{//to order list 
 			//RemoveFromParent();
 			RuntimeRDataManager::GetInstance()->MakeOrder();
-			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("MakeOrderUI"));
+			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("MakeOrderUI"), this);
 			baseUI->AddToViewport();
 			//baseUI->addto
 		}break;
@@ -179,7 +179,7 @@ void UEditerARUI::OnGetCategoryList(msg_ptr _msg)
 	{
 		
 	}
-	UGoodsList * goodsList = (UGoodsList *)UIManager::GetInstance()->OpenUI(TEXT("GoodsList"));
+	UGoodsList * goodsList = (UGoodsList *)UIManager::GetInstance()->OpenUI(TEXT("GoodsList"),this);
     UE_LOG(LogTemp,Log,TEXT("zhx : new goodslist : %lld"),goodsList);
     
 	goodsList->AddToViewport();

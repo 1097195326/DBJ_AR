@@ -48,6 +48,8 @@ void UUserAccountUI::On_Init()
 }
 void UUserAccountUI::On_Start()
 {
+	UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(UGameplayStatics::GetPlayerController(this, 0), this);
+
     UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UUserAccountUI::OnButtonClick);
     UIManager::GetInstance()->RegisterButton(2, m_SettingButton, this, &UUserAccountUI::OnButtonClick);
     UIManager::GetInstance()->RegisterButton(3, m_ToUserInfoButton, this, &UUserAccountUI::OnButtonClick);
@@ -87,6 +89,8 @@ void UUserAccountUI::On_Tick(float delta)
 }
 void UUserAccountUI::On_Delete()
 {
+	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(UGameplayStatics::GetPlayerController(this, 0), m_ParentUI);
+
     UIManager::GetInstance()->UnRegisterButton(m_BackButton);
     UIManager::GetInstance()->UnRegisterButton(m_SettingButton);
     UIManager::GetInstance()->UnRegisterButton(m_ToUserInfoButton);
