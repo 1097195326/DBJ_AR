@@ -563,7 +563,10 @@ int	 AUserPawn::GetChangeProductId()
 {
 	if (m_SelectActor && m_SelectComponent)
 	{
-		return m_SelectActor->m_MatchMap[m_SelectComponent->m_Data->id];
+		if (m_SelectActor->m_MatchMap.Contains(m_SelectComponent->m_Data->id))
+		{
+			return m_SelectActor->m_MatchMap[m_SelectComponent->m_Data->id];
+		}
 	}
 	return 0;
 }
@@ -590,10 +593,15 @@ void AUserPawn::SureChangeSelectModel(GoodsData * _data)
 	if (m_SelectComponent)
 	{
 		GoodsData * preData = m_SelectComponent->m_Data;
+		int preId = preData->id;
 		m_SelectActor->RemoveGoodsData(preData);
 		m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->ChangeListGoods(preData, _data);
 		m_SelectActor->AddGoodsData(m_CurrentGoodsData);
 		m_SelectComponent->SetGoodsData(m_CurrentGoodsData);
+		int preValue = m_SelectActor->m_MatchMap[preId];
+		m_SelectActor->m_MatchMap.Remove(preId);
+		m_SelectActor->m_MatchMap[preValue] = m_CurrentGoodsData->id;
+		m_SelectActor->m_MatchMap.Add(m_CurrentGoodsData->id, preValue);
 	}
 }
 // PC TEST
