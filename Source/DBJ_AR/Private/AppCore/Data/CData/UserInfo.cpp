@@ -97,18 +97,6 @@ bool UserInfo::ReadLocalData()
 		return false;
 	}
 	//解析json组装data.
-	/*m_SaveUserData.token = mJsonObj->GetStringField(TEXT("token"));
-	m_SaveUserData.id = mJsonObj->GetIntegerField(TEXT("id"));
-	m_SaveUserData.phone = mJsonObj->GetStringField(TEXT("phone"));
-	m_SaveUserData.name = mJsonObj->GetStringField(TEXT("name"));
-	m_SaveUserData.companyName = mJsonObj->GetStringField(TEXT("companyName"));
-	m_SaveUserData.provinceId = mJsonObj->GetIntegerField(TEXT("provinceId"));
-	m_SaveUserData.cityId = mJsonObj->GetIntegerField(TEXT("cityId"));
-	m_SaveUserData.districtId = mJsonObj->GetIntegerField(TEXT("districtId"));
-	m_SaveUserData.address = mJsonObj->GetStringField(TEXT("address"));
-	m_SaveUserData.detailAddress = mJsonObj->GetStringField(TEXT("detailAddress"));
-	m_SaveUserData.limit = mJsonObj->GetBoolField(TEXT("limit"));
-	m_SaveUserData.gmtCreate = mJsonObj->GetStringField(TEXT("gmtCreate"));*/
 
 	mJsonObj->TryGetStringField(TEXT("token"), m_SaveUserData.token);
 	mJsonObj->TryGetNumberField(TEXT("id"), m_SaveUserData.id);
@@ -118,8 +106,8 @@ bool UserInfo::ReadLocalData()
 	mJsonObj->TryGetNumberField(TEXT("provinceId"), m_SaveUserData.provinceId);
 	mJsonObj->TryGetNumberField(TEXT("cityId"), m_SaveUserData.cityId);
 	mJsonObj->TryGetNumberField(TEXT("districtId"), m_SaveUserData.districtId);
-	mJsonObj->TryGetStringField(TEXT("address"), m_SaveUserData.address);
-	mJsonObj->TryGetStringField(TEXT("detailAddress"), m_SaveUserData.detailAddress);
+	mJsonObj->TryGetStringField(TEXT("deliveryArea"), m_SaveUserData.address);
+	mJsonObj->TryGetStringField(TEXT("address"), m_SaveUserData.detailAddress);
 	mJsonObj->TryGetBoolField(TEXT("limit"), m_SaveUserData.limit);
 	mJsonObj->TryGetStringField(TEXT("gmtCreate"), m_SaveUserData.gmtCreate);
 	mJsonObj->TryGetNumberField(TEXT("remainingDays"), m_SaveUserData.RemainingDays);

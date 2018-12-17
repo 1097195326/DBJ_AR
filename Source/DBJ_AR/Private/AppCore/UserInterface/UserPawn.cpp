@@ -364,6 +364,8 @@ void AUserPawn::TryDeleteARActor(AUserActor * actor)
 
 		actor->Destroy();
 	}
+	GEngine->ForceGarbageCollection(true);
+
 }
 void AUserPawn::DeleteSelectARActor()
 {
@@ -387,6 +389,9 @@ void AUserPawn::DeleteAllARActor()
 	bool IsSelect = false;
 	msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
 	MsgCenter::GetInstance()->SendMsg(_msg);
+
+	GEngine->ForceGarbageCollection(true);
+
 }
 void AUserPawn::QuitEditScene()
 {
