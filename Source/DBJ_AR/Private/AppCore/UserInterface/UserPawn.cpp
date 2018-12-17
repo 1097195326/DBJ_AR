@@ -493,7 +493,7 @@ void AUserPawn::RotateSelectARActor()
 //        {
 //            m_SelectActor->m_PlaneRotateComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
 //        }
-		m_SelectActor->m_PlaneRotateComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
+		m_SelectActor->m_PlaneRotateComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), 1.f - yawProcess);
 			
 		m_SelectActor->m_Mesh->SetRelativeRotation(currentRotator);//->SetActorRotation(currentRotator);
 		
@@ -587,11 +587,14 @@ void AUserPawn::CancelChangeSelectModel()
 }
 void AUserPawn::SureChangeSelectModel(GoodsData * _data)
 {
-	GoodsData * preData = m_SelectComponent->m_Data;
-	m_SelectActor->RemoveGoodsData(preData);
-	m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->ChangeListGoods(preData,_data);
-	m_SelectActor->AddGoodsData(m_CurrentGoodsData);
-	m_SelectComponent->SetGoodsData(m_CurrentGoodsData);
+	if (m_SelectComponent)
+	{
+		GoodsData * preData = m_SelectComponent->m_Data;
+		m_SelectActor->RemoveGoodsData(preData);
+		m_CurrentGoodsData = RuntimeRDataManager::GetInstance()->ChangeListGoods(preData, _data);
+		m_SelectActor->AddGoodsData(m_CurrentGoodsData);
+		m_SelectComponent->SetGoodsData(m_CurrentGoodsData);
+	}
 }
 // PC TEST
 void AUserPawn::SelectGoods()

@@ -71,7 +71,7 @@ void UGoodsChangeUI::OnButtonClick(int id)
 	{
 	case 1:
 	{
-		if (m_CurrentGoodsData && m_CurrentGoodsData->m_FilePathList.Num()>0)
+		if (m_CurrentGoodsData)
 		{
 			AUserPawn::GetInstance()->SureChangeSelectModel(m_CurrentGoodsData);
 		}
