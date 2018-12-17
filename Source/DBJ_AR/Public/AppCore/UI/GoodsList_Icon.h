@@ -12,7 +12,8 @@ class DBJ_AR_API  UGoodsList_Icon : public UBaseUI
     GENERATED_BODY()
 
 public:
-    virtual void On_Init() override;
+	virtual void On_Init() override;
+	virtual void On_Start() override;
 	virtual void On_Delete() override;
     virtual void On_Tick(float delta);
 
@@ -24,6 +25,8 @@ public:
 		void OnButtonClick(int index);
 	//UFUNCTION()
 		void OnGetPakFinish(int _finish, FFileInfo _info);
+		void CheckPak();
+
 
 		static bool CanDownPak;
 

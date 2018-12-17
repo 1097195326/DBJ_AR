@@ -20,7 +20,7 @@ public:
 
     UBaseUI* OpenUI(const FString & _uiName,UBaseUI * _ParentUI = nullptr);
 
-	void	TopHintText(const FString & hintText, float showSecond = 3);
+	void	TopHintText(const FString & hintText, float showSecond = 2);
 
 
     template<typename T>

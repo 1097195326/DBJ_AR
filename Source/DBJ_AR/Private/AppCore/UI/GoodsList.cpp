@@ -1,4 +1,4 @@
-#include "GoodsList.h"
+﻿#include "GoodsList.h"
 #include "RuntimeTDataManager.h"
 #include "MsgCenter.h"
 #include "UIManager.h"
@@ -51,7 +51,7 @@ void UGoodsList::On_Start()
 }
 void UGoodsList::On_Tick(float delta)
 {
-	if (m_IconScrolBox && !m_IsRequest)
+	if (m_IconScrolBox && !m_IsRequest && UGoodsList_Icon::CanDownPak)
 	{
 		float xx = m_IconScrolBox->GetScrollOffset();
 		float yy = m_IconScrolBox->GetDesiredSize().Y;
@@ -164,6 +164,11 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
 }
 void UGoodsList::SelectCategoryButton(int _id)
 {
+	if (!UGoodsList_Icon::CanDownPak)
+	{
+		UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
+		return;
+	}
 	m_IconScrolBox->ScrollToStart();
 	m_IconList->ClearChildren();
 	m_IconArray.Empty();
@@ -207,6 +212,12 @@ void UGoodsList::ReloadData(bool _clear)
 }
 void UGoodsList::OnButtonClick(int _index)
 {
+	if (!UGoodsList_Icon::CanDownPak)
+	{
+		UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
+		return;
+	}
+
     UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList::OnButtonClick : "));
 	switch (_index)
 	{

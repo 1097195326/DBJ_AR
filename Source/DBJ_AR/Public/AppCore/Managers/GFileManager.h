@@ -44,6 +44,7 @@ public:
 	bool FileIsExist(GoodsData * _data);
 
 	bool PakMount(GoodsData* _goodsData);
+	UStaticMesh * LoadMesh(GoodsData * _goodsData);
 
 	FString GetPakFilePath(int _id, FString _md5);
 	FString GetPakKey(int _id, FString _md5);

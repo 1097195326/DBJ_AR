@@ -1,4 +1,4 @@
-#include "GoodsChangeUI.h"
+﻿#include "GoodsChangeUI.h"
 #include "UIManager.h"
 #include "RuntimeTDataManager.h"
 #include "EditerARGameModule.h"
@@ -43,7 +43,7 @@ void UGoodsChangeUI::On_Start()
 }
 void UGoodsChangeUI::On_Tick(float delta)
 {
-	if (m_ScrollBox && !m_IsRequest)
+	if (m_ScrollBox && !m_IsRequest && UGoodsList_Icon::CanDownPak)
 	{
 		float xx = m_ScrollBox->GetScrollOffset();
 		float yy = m_ScrollBox->GetDesiredSize().X;
@@ -62,6 +62,11 @@ void UGoodsChangeUI::On_Delete()
 void UGoodsChangeUI::OnButtonClick(int id)
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : UTestUIB::OnButtonClick : "));
+	if (!UGoodsList_Icon::CanDownPak)
+	{
+		UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
+		return;
+	}
 	switch (id)
 	{
 	case 1:

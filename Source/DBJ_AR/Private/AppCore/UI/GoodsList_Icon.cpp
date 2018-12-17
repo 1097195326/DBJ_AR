@@ -48,8 +48,15 @@ void UGoodsList_Icon::On_Init()
     
 	m_DownIndex = 0;
 }
+void UGoodsList_Icon::On_Start()
+{
+	m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
+
+}
 void UGoodsList_Icon::On_Delete()
 {
+	UFileDownloadManager::Get()->OnFileDownloadCompleted().Remove(m_DelegateHandle);
+
 	UI_M->UnRegisterButton(m_IconButton);
 	UI_M->UnRegisterButton(m_DownloadButton);
 
@@ -77,7 +84,12 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
 	case 1:
 	{
-        if (m_Data->m_FilePathList.Num() > 0)
+		if (!CanDownPak)
+		{
+			UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
+			return;
+		}
+        if (m_Data)
         {
 			if (m_IsChange)
 			{
@@ -111,13 +123,12 @@ void UGoodsList_Icon::OnButtonClick(int index)
 			if (GetDownFiles())
 			{
 				m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
-				m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddUObject(this, &UGoodsList_Icon::OnGetPakFinish);
 				DownFiles(m_DownIndex);
 			}
 		}
 		else
 		{
-			UIManager::GetInstance()->TopHintText(TEXT("正在下载中..."));
+			UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
 		}
 	}break;
 	default:
@@ -130,6 +141,8 @@ void UGoodsList_Icon::DownFiles(int _index)
 	{
 		if (m_DownIndex >= m_DownFiles.Num())
 		{
+			m_DownFiles.Empty();
+			m_DownIndex = 0;
 			return;
 		}
 		if (UFileDownloadManager::Get()->RequestDownloadFile(m_DownFiles[_index]))
@@ -140,40 +153,46 @@ void UGoodsList_Icon::DownFiles(int _index)
 		}
 	}
 }
-void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
+void UGoodsList_Icon::CheckPak()
 {
-	UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnGetPakFinish : %d"),m_DownIndex);
-	m_IsDowning = false;
-	CanDownPak = true;
-	if (_finish == 0 && _info.Id == m_DownFiles[m_DownIndex].Id &&
-		GFileManager::GetInstance()->FileIsExist(m_DownFiles[m_DownIndex].Id, m_DownFiles[m_DownIndex].Md5))
+	if (GFileManager::GetInstance()->FileIsExist(m_Data))
 	{
-		++m_DownIndex;
-		if (m_DownIndex < m_DownFiles.Num())
-		{
-			DownFiles(m_DownIndex);
-			return;
-		}
-		
-		m_DownIndex = 0;
-		m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
-
-		UFileDownloadManager::Get()->OnFileDownloadCompleted().Remove(m_DelegateHandle);
 		m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
 		m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
-		GFileManager::GetInstance()->PakMount(m_Data);
-		if (m_Data->matchedProduct != nullptr)
-		{
-			GFileManager::GetInstance()->PakMount(m_Data->matchedProduct);
-		}
 	}
 	else
 	{
 		m_DownloadButton->SetVisibility(ESlateVisibility::Visible);
 		m_DownOKImage->SetVisibility(ESlateVisibility::Hidden);
 	}
+}
+void UGoodsList_Icon::OnGetPakFinish(int _finish, FFileInfo _info)
+{
+	UE_LOG(LogTemp, Log, TEXT("zhx : UGoodsList_Icon::OnGetPakFinish : %d"),m_DownIndex);
+	if (m_IsDowning == false)
+	{
+		return;
+	}
+	m_IsDowning = false;
+	CanDownPak = true;
 
-
+	CheckPak();
+	if (m_DownFiles.Num() > 0)
+	{
+		if (_finish == 0 && _info.Id == m_DownFiles[m_DownIndex].Id)
+		{
+			++m_DownIndex;
+			if (m_DownIndex < m_DownFiles.Num())
+			{
+				DownFiles(m_DownIndex);
+				return;
+			}
+			m_DownFiles.Empty();
+			m_DownIndex = 0;
+			m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	
 }
 bool UGoodsList_Icon::GetDownFiles()
 {
@@ -213,27 +232,10 @@ void UGoodsList_Icon::SetData(GoodsData * _data,bool _isChange)
 {
 	m_Data = _data;
 	m_IsChange = _isChange;
-
     //UE_LOG(LogTemp,Log,TEXT("zhx : set data name : %s,url:%s"),*m_Data->name,*m_Data->thumbnailUrl);
-
+	CheckPak();
 	m_ImageHost->SetContent(SNew(SImage).Image(UFileDownloadManager::Get()->m_ImageCache.Download(*m_Data->thumbnailUrl)->Attr()));
 	m_IconName->SetText(FText::FromString(m_Data->name));
-    
-    if(GFileManager::GetInstance()->FileIsExist(m_Data))
-    {
-        m_DownloadButton->SetVisibility(ESlateVisibility::Hidden);
-        m_DownOKImage->SetVisibility(ESlateVisibility::Visible);
-        GFileManager::GetInstance()->PakMount(m_Data);
-		if (m_Data->matchedProduct != nullptr)
-		{
-			GFileManager::GetInstance()->PakMount(m_Data->matchedProduct);
-		}
-    }
-    else
-    {
-        m_DownloadButton->SetVisibility(ESlateVisibility::Visible);
-        m_DownOKImage->SetVisibility(ESlateVisibility::Hidden);
-    }
     m_downloadingProgress->SetVisibility(ESlateVisibility::Hidden);
 	if (m_SelectIcon)
 	{

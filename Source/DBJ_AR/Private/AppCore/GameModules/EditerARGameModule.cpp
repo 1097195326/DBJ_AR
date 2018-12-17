@@ -25,6 +25,9 @@ EditerARGameModule::EditerARGameModule()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1013, this, &EditerARGameModule::OnGetChangeList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1014, this, &EditerARGameModule::OnGetAreaList);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1015, this, &EditerARGameModule::OnUpdateSelf);
+
+	//m_DelegateHandle = UFileDownloadManager::Get()->OnFileDownloadCompleted().AddRaw(this, &EditerARGameModule::OnGetPakFinish);
+
 }
 void EditerARGameModule::On_Init()
 {
@@ -55,12 +58,19 @@ void EditerARGameModule::On_Delete()
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1014, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_HttpRequest, 1015, this);
 
+	//UFileDownloadManager::Get()->OnFileDownloadCompleted().Remove(m_DelegateHandle);
 
     if (m_CurrentUIController != nullptr)
     {
         delete m_CurrentUIController;
     }
 }
+//void EditerARGameModule::OnGetPakFinish(int _finish, FFileInfo _info)
+//{
+//	UE_LOG(LogTemp, Log, TEXT("zhx : EditerARGameModule::OnGetPakFinish"));
+//
+//
+//}
 void EditerARGameModule::GetCategoryList()
 {
 	FString cookie = UserInfo::Get()->GetCookie();

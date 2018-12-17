@@ -52,6 +52,61 @@ void GFileManager::TestPak()
 	//PakMount(9, TEXT("01d222cb4f9f18fd1316328e4bb2a007"));
 
 }
+UStaticMesh * GFileManager::LoadMesh(GoodsData * _goodsData)
+{
+	UStaticMesh * mesh = nullptr;
+	FString _filePath = GetPakFilePath(_goodsData->modelId, _goodsData->pakMd5);
+	if (!FileIsExist(_filePath))
+	{
+		return nullptr;
+	}
+	FString GamePath;
+	FString _fileKey = GetPakKey(_goodsData->modelId, _goodsData->pakMd5);
+	if (m_MountedFiles.Contains(_fileKey))
+	{
+		GamePath = *m_MountedFiles.Find(_fileKey);
+		mesh = LoadObject<UStaticMesh>(nullptr, *GamePath);
+		return mesh;
+	}
+	FPlatformFileManager::Get().SetPlatformFile(*m_PakPlatformFile);
+
+	FPakFile PakFile(m_PakPlatformFile, *_filePath, false);
+
+	FString MP = PakFile.GetMountPoint();
+	int32 pos1 = MP.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
+	FString MP2 = MP.RightChop(pos1 + 9);
+	MP = FPaths::ProjectContentDir() + MP2;
+
+	if (m_PakPlatformFile->Mount(*_filePath, 0, *MP))
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("zhx %s mount to %s success"), *_filePath, *MP);
+	}
+
+	TArray<FString> files;
+	PakFile.FindFilesAtPath(files, *PakFile.GetMountPoint(), true, false, true);
+
+	FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+
+	for (FString fileName : files)
+	{
+		if (fileName.EndsWith(TEXT(".uasset")))
+		{
+			//拼出UObject的加载路径
+			fileName.RemoveFromEnd(TEXT(".uasset"), ESearchCase::IgnoreCase);
+			int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
+			fileName = fileName.RightChop(pos + 8);
+			fileName = TEXT("/Game") + fileName;
+
+			mesh = LoadObject<UStaticMesh>(nullptr, *fileName);
+			if (mesh)
+			{
+				m_MountedFiles.Add(_fileKey, fileName);
+				return mesh;
+			}
+		}
+	}
+	return mesh;
+}
 bool GFileManager::PakMount(GoodsData* _goodsData)
 {
 	FString _filePath = GetPakFilePath(_goodsData->modelId, _goodsData->pakMd5);
@@ -113,7 +168,7 @@ bool GFileManager::PakMount(GoodsData* _goodsData)
 	//		}
 	//	}
 	//}
-//    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	return true;
 }

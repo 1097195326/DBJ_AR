@@ -1,4 +1,5 @@
 #include "GoodsData.h"
+#include "GFileManager.h"
 
 
 void GoodsData::InitWithJson(const TSharedPtr<FJsonObject> &obj)
@@ -40,8 +41,10 @@ GoodsData::~GoodsData()
 {
 	if (matchedProduct)
 	{
+		matchedProduct->Object = nullptr;
 		delete matchedProduct;
 	}
+	Object = nullptr;
 }
 void GoodsData::CloneData(GoodsData * data)
 {
@@ -84,32 +87,7 @@ UStaticMesh * GoodsData::LoadMesh()
 	{
 		return (UStaticMesh *)Object;
 	}
-	if (!GamePath.IsEmpty())
-	{
-		mesh = LoadObject<UStaticMesh>(nullptr, *GamePath);
-		if (mesh)
-		{
-			return mesh;
-		}
-	}
-	for (FString fileName : m_FilePathList)
-	{
-		if (fileName.EndsWith(TEXT(".uasset")))
-		{
-			//拼出UObject的加载路径
-			fileName.RemoveFromEnd(TEXT(".uasset"), ESearchCase::IgnoreCase);
-			int32 pos = fileName.Find(TEXT("/Content/"), ESearchCase::IgnoreCase);
-			fileName = fileName.RightChop(pos + 8);
-			fileName = TEXT("/Game") + fileName;
-			
-			mesh = LoadObject<UStaticMesh>(nullptr, *fileName);
-			if (mesh)
-			{
-				GamePath = fileName;
-				Object = mesh;
-				return mesh;
-			}
-		}
-	}
+	mesh = GFileManager::GetInstance()->LoadMesh(this);
+	Object = mesh;
 	return mesh;
 }

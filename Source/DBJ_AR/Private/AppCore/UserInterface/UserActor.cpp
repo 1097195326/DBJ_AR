@@ -25,6 +25,7 @@ void AUserActor::BeginPlay()
 }
 void AUserActor::BeginDestroy()
 {
+	m_Mesh->m_Data = nullptr;
 	m_GoodsDatas.Empty();
 	Super::BeginDestroy();
 

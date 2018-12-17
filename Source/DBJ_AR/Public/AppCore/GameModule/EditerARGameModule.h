@@ -1,5 +1,6 @@
 #pragma once
 #include "GameModule.h"
+//#include "FileDownloadManager.h"
 
 
 class DBJ_AR_API EditerARGameModule : public GameModule
@@ -14,6 +15,9 @@ public:
 	virtual void On_Init();
 	virtual void On_Start();
 	virtual void On_Delete();
+
+	/*FDelegateHandle m_DelegateHandle;
+	void OnGetPakFinish(int _finish, FFileInfo _info);*/
 
 	void	GetCategoryList();
 	void	OnGetCategoryList(msg_ptr _msg);

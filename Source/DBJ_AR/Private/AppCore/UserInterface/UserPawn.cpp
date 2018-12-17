@@ -349,18 +349,19 @@ AUserActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
     uactor->m_Mesh->RegisterComponent();
 	uactor->m_Mesh->SetGoodsData(m_CurrentGoodsData);
 	uactor->m_GoodsDatas.Add(m_CurrentGoodsData);
-	m_AllUserActor.Add(uactor);
 //    m_SelectActor = actor;
     
 	return uactor;
 }
 void AUserPawn::TryDeleteARActor(AUserActor * actor)
 {
-	if (m_AllUserActor.Contains(actor))
+	TArray<AActor *> allUserActor;
+	UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);
+
+	if (allUserActor.Contains(actor))
 	{
 		RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
 
-		m_AllUserActor.Remove(actor);
 		actor->Destroy();
 	}
 }
@@ -373,12 +374,7 @@ void AUserPawn::DeleteSelectARActor()
 }
 void AUserPawn::DeleteAllARActor()
 {
-//    for (int i = 0;i < m_AllUserActor.Num();i++)
-//    {
-//        AUserActor * actor = m_AllUserActor[i];
-//        RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
-//        actor->Destroy();
-//    }
+
     TArray<AActor *> allUserActor;
     UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);
     for (int i = 0; i < allUserActor.Num(); i++)
@@ -391,7 +387,6 @@ void AUserPawn::DeleteAllARActor()
 	bool IsSelect = false;
 	msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
 	MsgCenter::GetInstance()->SendMsg(_msg);
-	m_AllUserActor.Empty();
 }
 void AUserPawn::QuitEditScene()
 {
@@ -419,7 +414,6 @@ AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
             uactor->m_Mesh->SetStaticMesh(mesh);
             uactor->m_Mesh->RegisterComponent();
 			uactor->AddGoodsData(m_CurrentGoodsData);
-			m_AllUserActor.Add(uactor);
         }
     }
    
@@ -513,6 +507,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
             if(two->MergeOtherActor(one))
             {
                 m_SelectActor = two;
+				one = nullptr;
             }
 //            FString socketName = FString::Printf(TEXT("Socket%d"), two->m_SoketIndex + 1);
 //
@@ -540,6 +535,7 @@ void AUserPawn::MergeTwoUserActor(AUserActor * one, AUserActor * two)
             if(one->MergeOtherActor(two))
             {
                 m_SelectActor = one;
+				two = nullptr;
             }
             
 //            FString socketName = FString::Printf(TEXT("Socket%d"), one->m_SoketIndex + 1);

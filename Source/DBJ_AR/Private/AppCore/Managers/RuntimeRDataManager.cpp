@@ -41,10 +41,14 @@ void RuntimeRDataManager::RemoveGoodsFromList(TArray<GoodsData*> _datas)
 	for (int i = 0; i < _datas.Num(); i++)
 	{
 		GoodsData * data = _datas[i];
-		if (data != nullptr && m_RuntimeGoodsList.Find(data))
+		if (data != nullptr )
 		{
-			m_RuntimeGoodsList.Remove(data);
-			delete data;
+			if (m_RuntimeGoodsList.Contains(data))
+			{
+				m_RuntimeGoodsList.Remove(data);
+				delete data;
+				UE_LOG(LogTemp, Log, TEXT(""));
+			}
 		}
 	}
 	
