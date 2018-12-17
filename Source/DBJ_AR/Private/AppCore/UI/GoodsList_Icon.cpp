@@ -1,4 +1,4 @@
-﻿#include "GoodsList_Icon.h"
+#include "GoodsList_Icon.h"
 #include "UserPawn.h"
 #include "UIManager.h"
 #include "GoodsChangeUI.h"
@@ -59,7 +59,6 @@ void UGoodsList_Icon::On_Delete()
 
 	UI_M->UnRegisterButton(m_IconButton);
 	UI_M->UnRegisterButton(m_DownloadButton);
-	
 }
 void UGoodsList_Icon::On_Tick(float delta)
 {
