@@ -8,6 +8,46 @@
 #if PLATFORM_IOS
 #import "IOSAppDelegate.h"
 #import "IOSView.h"
+
+@implementation SaveImage
+
++ (SaveImage *)GetInstance
+{
+    static SaveImage * m = nil;
+    if (m == nil)
+    {
+        m = [[SaveImage alloc] init];
+    }
+    return m;
+}
+
+- (void)saveImageToPhotos:(UIImage *)image
+{
+    UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+    
+}
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    NSString *msg = nil ;
+    if(error != NULL){
+        msg = @"保存图片失败" ;
+    }else{
+        msg = @"保存图片成功" ;
+    }
+    IOSAppDelegate* AppDelegate = (IOSAppDelegate*)[[UIApplication sharedApplication] delegate];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:msg preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                 style:UIAlertActionStyleDefault
+                                               handler:^(UIAlertAction* action)
+    {
+        [alert dismissViewControllerAnimated: YES completion: nil];
+    }];
+    [alert addAction: okAction];
+    [AppDelegate.IOSController presentViewController:alert animated:YES completion:nil];
+    [alert release];
+}
+
+@end
 #endif
 
 void USharingFunctions::Share(FString EmailSubject, FString Message, FString Url, FScreenshotImage Image, FVector2D Origin)
@@ -60,43 +100,43 @@ void USharingFunctions::Share(FString EmailSubject, FString Message, FString Url
 		
 		UIImage* SharingImage = [UIImage imageWithCGImage:cgImage];
 		CGImageRelease(cgImage);
-		
+//        [[SaveImage GetInstance]saveImageToPhotos:SharingImage];
 		[items addObject:SharingImage];
 	}
 	
-	UIActivityViewController* activityViewController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
-	
-	if (activityViewController)
-	{
-        activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll];
-		if (EmailSubject.Len() > 0)
-		{
-			[activityViewController setValue:EmailSubject.GetNSString() forKey:@"subject"];
-		}
-		
-		[activityViewController setCompletionHandler:^(NSString *activityType, BOOL completed) {
-								   USharingComponent::SharingFinishedDelegate.Broadcast(FString(activityType), completed);
-		 }];
-		
-		IOSAppDelegate* AppDelegate = (IOSAppDelegate*)[[UIApplication sharedApplication] delegate];
+    UIActivityViewController* activityViewController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
 
-		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-		{
-			UIPopoverController* Popover = [[[UIPopoverController alloc] initWithContentViewController:activityViewController] autorelease];
-			
-			if (Popover)
-			{
-				UIView* View = AppDelegate.IOSController.view;
-				CGRect Rect = CGRectMake(Origin.X, Origin.Y, 100, 100);
-				[Popover presentPopoverFromRect:Rect inView:View permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-			}
-		}
-		else
-		{
-			[AppDelegate.IOSController presentViewController:activityViewController animated:YES completion:nil];
-		}
-	}
-	
-	[activityViewController release];
+    if (activityViewController)
+    {
+        activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll];
+        if (EmailSubject.Len() > 0)
+        {
+            [activityViewController setValue:EmailSubject.GetNSString() forKey:@"subject"];
+        }
+
+        [activityViewController setCompletionHandler:^(NSString *activityType, BOOL completed) {
+                                   USharingComponent::SharingFinishedDelegate.Broadcast(FString(activityType), completed);
+         }];
+
+        IOSAppDelegate* AppDelegate = (IOSAppDelegate*)[[UIApplication sharedApplication] delegate];
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            UIPopoverController* Popover = [[[UIPopoverController alloc] initWithContentViewController:activityViewController] autorelease];
+
+            if (Popover)
+            {
+                UIView* View = AppDelegate.IOSController.view;
+                CGRect Rect = CGRectMake(Origin.X, Origin.Y, 100, 100);
+                [Popover presentPopoverFromRect:Rect inView:View permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            }
+        }
+        else
+        {
+            [AppDelegate.IOSController presentViewController:activityViewController animated:YES completion:nil];
+        }
+    }
+
+    [activityViewController release];
 #endif
 }

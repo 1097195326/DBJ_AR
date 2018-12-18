@@ -26,3 +26,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Sharing)
 	static void Share(FString EmailSubject, FString Message, FString Url, FScreenshotImage Image, FVector2D Origin = FVector2D(0,0));
 };
+#if PLATFORM_IOS
+#import <foundation/Foundation.h>
+
+@interface SaveImage : NSObject {
+    
+}
+
++ (SaveImage *)GetInstance;
+
+- (void)saveImageToPhotos:(UIImage *)image;
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo;
+
+@end
+#endif

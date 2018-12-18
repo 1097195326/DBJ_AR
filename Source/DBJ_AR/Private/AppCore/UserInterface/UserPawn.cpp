@@ -50,7 +50,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    //StartARSession();
+    StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -234,6 +234,19 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 		return false;
 	}
 	bool IsSelect = false;
+    
+    if (m_SelectComponent)
+    {
+        m_SelectComponent->SetRenderCustomDepth(false);
+    }
+    if (m_SelectActor)
+    {
+        m_SelectActor->ShowPlaneComponent(false);
+        m_WantToRotate = false;
+    }
+    m_SelectComponent = nullptr;
+    m_SelectActor = nullptr;
+    
     FHitResult hitResult;
     if (m_Controller->GetHitResultAtScreenPosition(_position, ECC_WorldStatic, false, hitResult))
     {
@@ -269,17 +282,6 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 		}
 	}
 	
-	if (m_SelectComponent)
-	{
-		m_SelectComponent->SetRenderCustomDepth(false);
-	}
-	if (m_SelectActor)
-	{
-		m_SelectActor->ShowPlaneComponent(false);
-		m_WantToRotate = false;
-	}
-	m_SelectComponent = nullptr;
-	m_SelectActor = nullptr;
 	msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
 	MsgCenter::GetInstance()->SendMsg(_msg);
 

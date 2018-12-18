@@ -18,7 +18,7 @@ void UGoodsList_Icon::On_Init()
 	if (UButton * button = (UButton*)GetWidgetFromName("DownButton"))
 	{
 		m_DownloadButton = button;
-		UI_M->RegisterButton(2, m_DownloadButton, this, &UGoodsList_Icon::OnButtonClick);
+//        UI_M->RegisterButton(2, m_DownloadButton, this, &UGoodsList_Icon::OnButtonClick);
 	}
 	if (UImage * image = (UImage*)GetWidgetFromName("IconImage"))
 	{
@@ -58,7 +58,7 @@ void UGoodsList_Icon::On_Delete()
 	UFileDownloadManager::Get()->OnFileDownloadCompleted().Remove(m_DelegateHandle);
 
 	UI_M->UnRegisterButton(m_IconButton);
-	UI_M->UnRegisterButton(m_DownloadButton);
+//    UI_M->UnRegisterButton(m_DownloadButton);
 }
 void UGoodsList_Icon::On_Tick(float delta)
 {
@@ -83,11 +83,6 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
 	case 1:
 	{
-		if (!CanDownPak)
-		{
-			UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
-			return;
-		}
         if (m_Data && GFileManager::GetInstance()->FileIsExist(m_Data))
         {
 			if (m_IsChange)
@@ -100,35 +95,38 @@ void UGoodsList_Icon::OnButtonClick(int index)
 				m_ParentUI->RemoveFromViewport();
 				AUserPawn::GetInstance()->TryCreateMergeActor(m_Data);
 			}
+        }else
+        {
+            if (UAppInstance::GetInstance()->GetNetworkStatus() == ENotReachable)
+            {
+                UIManager::GetInstance()->TopHintText(TEXT("没有网络"));
+                break;
+            }
+            if (UAppInstance::GetInstance()->GetNetworkStatus() == EReachableViaWWAN)
+            {
+                if (!UserInfo::Get()->IsAllow4G())
+                {
+                    UIManager::GetInstance()->TopHintText(TEXT("请在设置中打开4G下载"));
+                    break;
+                }
+            }
+            if (CanDownPak)
+            {
+                if (GetDownFiles())
+                {
+                    m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
+                    DownFiles(m_DownIndex);
+                }
+            }
+            else
+            {
+                UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
+            }
         }
 	}break;
 	case 2:
 	{
-		if (UAppInstance::GetInstance()->GetNetworkStatus() == ENotReachable)
-		{
-			UIManager::GetInstance()->TopHintText(TEXT("没有网络"));
-			break;
-		}
-		if (UAppInstance::GetInstance()->GetNetworkStatus() == EReachableViaWWAN)
-		{
-			if (!UserInfo::Get()->IsAllow4G())
-			{
-				UIManager::GetInstance()->TopHintText(TEXT("请在设置中打开4G下载"));
-				break;
-			}
-		}
-		if (CanDownPak)
-		{
-			if (GetDownFiles())
-			{
-				m_downloadingProgress->SetVisibility(ESlateVisibility::Visible);
-				DownFiles(m_DownIndex);
-			}
-		}
-		else
-		{
-			UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
-		}
+		
 	}break;
 	default:
 		break;
