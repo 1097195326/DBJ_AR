@@ -231,6 +231,7 @@ void UGoodsList::OnButtonClick(int _index)
 	{
 		UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterUI"),this);
 		baseUI->AddToViewport();
+		SetVisibility(ESlateVisibility::Hidden);
 	}break;
 	}
 

@@ -46,6 +46,9 @@ void UGoodsFilterUI::On_Delete()
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2005, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2006, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2007, this);
+
+	m_ParentUI->SetVisibility(ESlateVisibility::Visible);
+
 }
 void UGoodsFilterUI::InitView()
 {
