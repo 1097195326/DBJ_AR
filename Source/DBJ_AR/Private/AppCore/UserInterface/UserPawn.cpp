@@ -50,7 +50,7 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
-    StartARSession();
+    //StartARSession();
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }
@@ -309,6 +309,10 @@ void AUserPawn::TryCreateMergeActor(GoodsData * _goodsData)
 }
 AUserActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 {
+	if (_goodsData == nullptr)
+	{
+		return nullptr;
+	}
 	AUserActor * uactor = nullptr;
 	UStaticMesh * mesh = _goodsData->LoadMesh();
 	if (mesh == nullptr)

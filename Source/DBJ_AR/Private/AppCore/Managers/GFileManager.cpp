@@ -39,8 +39,7 @@ bool GFileManager::FileIsExist(GoodsData * _data)
 		if (_data->matchedProduct == nullptr)
 		{
 			return true;
-		}
-		if (FileIsExist(_data->matchedProduct->modelId, _data->matchedProduct->pakMd5))
+		}else if(FileIsExist(_data->matchedProduct->modelId, _data->matchedProduct->pakMd5))
 		{
 			return true;
 		}

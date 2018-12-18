@@ -47,6 +47,7 @@ void UGoodsList_Icon::On_Init()
 	}
     
 	m_DownIndex = 0;
+	m_Data = nullptr;
 }
 void UGoodsList_Icon::On_Start()
 {
@@ -56,7 +57,10 @@ void UGoodsList_Icon::On_Start()
 void UGoodsList_Icon::On_Delete()
 {
 	UFileDownloadManager::Get()->OnFileDownloadCompleted().Remove(m_DelegateHandle);
-
+	if (m_Data)
+	{
+		delete m_Data;
+	}
 	UI_M->UnRegisterButton(m_IconButton);
 //    UI_M->UnRegisterButton(m_DownloadButton);
 }

@@ -83,11 +83,11 @@ void GoodsData::CloneData(GoodsData * data)
 UStaticMesh * GoodsData::LoadMesh()
 {
 	UStaticMesh * mesh = nullptr;
-	if (Object != nullptr && Object->IsValidLowLevel())
+	/*if (Object != nullptr && Object->IsValidLowLevel())
 	{
 		return (UStaticMesh *)Object;
-	}
+	}*/
 	mesh = GFileManager::GetInstance()->LoadMesh(this);
-	Object = mesh;
+	//Object = mesh;
 	return mesh;
 }
