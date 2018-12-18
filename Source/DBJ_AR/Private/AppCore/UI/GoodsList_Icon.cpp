@@ -87,6 +87,11 @@ void UGoodsList_Icon::OnButtonClick(int index)
 	{
 	case 1:
 	{
+        if (!CanDownPak)
+        {
+            UIManager::GetInstance()->TopHintText(TEXT("正在下载资源中..."));
+            return;
+        }
         if (m_Data && GFileManager::GetInstance()->FileIsExist(m_Data))
         {
 			if (m_IsChange)
