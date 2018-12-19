@@ -22,9 +22,12 @@ void UAppInstance::On_Init()
     Data_M->LoadAllXMLData();
 
     
-    UGameUserSettings* mGameUserSettings = GEngine->GetGameUserSettings();
-    FIntPoint mPoint = mGameUserSettings->GetScreenResolution();
-    GEngine->AddOnScreenDebugMessage(-1, 999999, FColor::Red, FString::Printf(TEXT("ScreenResolution x=%d,y=%d"), mPoint.X,mPoint.Y));
+//    UGameUserSettings* mGameUserSettings = GEngine->GetGameUserSettings();
+//    FIntPoint mPoint = mGameUserSettings->GetScreenResolution();
+//    GEngine->AddOnScreenDebugMessage(-1, 999999, FColor::Red, FString::Printf(TEXT("ScreenResolution x=%d,y=%d"), mPoint.X,mPoint.Y));
+//#if PLATFORM_IOS
+//    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+//#endif
     
 }
 void UAppInstance::On_Delete()
