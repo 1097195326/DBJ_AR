@@ -1,0 +1,35 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{8D2D0058-AB40-DCCC-2D37-65A33C17539D}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "DBJAR",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "GXmlPlugins",
+			"Enabled": true
+		},
+		{
+			"Name": "MsgCore",
+			"Enabled": true
+		},
+		{
+			"Name": "GCore",
+			"Enabled": true
+		},
+		{
+			"Name": "EncryptAndDecrypt",
+			"Enabled": true
+		},
+		{
+			"Name": "DownloadTool",
+			"Enabled": true
+		}
+	]
+}

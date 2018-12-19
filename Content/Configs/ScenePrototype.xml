@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root type="ScenePrototype">
+  <Platform pid="500" name="ios">
+    <scene key="LoginLevel" value="/Game/Maps/LoginMap"/>
+    <scene key="ARLevel"  value="/Game/Maps/AREditerMap"/>
+    <scene key="UpdateLevel" value="/Game/Maps/UpdateLevel"/>
+    <scene key="TestAR" value="/Game/Maps/TestAR"/>
+  </Platform>
+</root>
