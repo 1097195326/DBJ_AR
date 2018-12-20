@@ -32,6 +32,11 @@ void UGoodsList::On_Init()
 	{
 		m_CategoryView = verticalBox;
 	}
+	if (UCanvasPanel * canvasPanel = (UCanvasPanel*)GetWidgetFromName("ContentEmpty"))
+	{
+		m_ContentEmptyPanel = canvasPanel;
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
 	
 	m_IsRequest = false;
 
@@ -117,7 +122,14 @@ void UGoodsList::OnGetProductList(msg_ptr _msg)
 	m_IconList->ClearChildren();*/
      UE_LOG(LogTemp,Log,TEXT("zhx : get msg: %d"),2);
 	TArray<GoodsData*> goods = RuntimeTDataManager::GetInstance()->GetCurrentGoodsList();
-    
+    if (goods.Num() > 0)
+    {
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Visible);
+	}
     UE_LOG(LogTemp,Log,TEXT("zhx : good num : %d"),goods.Num());
 	int CurrentNum = m_IconArray.Num();
 	for (int i = 0; i < goods.Num(); i++)

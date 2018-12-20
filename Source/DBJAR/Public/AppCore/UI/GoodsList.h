@@ -42,6 +42,9 @@ private:
 		TArray<UGoodsListButton*>		m_ListButtons;
 	UPROPERTY()
 	TArray<UGoodsList_Icon*>		m_IconArray;
+	UPROPERTY()
+		UCanvasPanel * m_ContentEmptyPanel;
+
 	int			m_CurrentSelectId;
 	int32		m_LastId;
 
