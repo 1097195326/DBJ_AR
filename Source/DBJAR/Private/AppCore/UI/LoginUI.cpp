@@ -199,6 +199,10 @@ void ULoginUI::CheckRemainDays()
 		alertUI->BindOnlySureFunctionCall(this, &ULoginUI::OnAlertButtonClick);
 		alertUI->AddToViewport(99);
 	}
+	else
+	{
+		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+	}
 }
 void ULoginUI::OnAlertButtonClick()
 {
