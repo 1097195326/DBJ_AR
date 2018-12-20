@@ -26,6 +26,10 @@ void UGoodsFilterUI::On_Init()
 	m_MaterialIndex = 0;
 	m_InnerIndex = 0;
 
+	m_InnerItem = nullptr;
+	m_MaterialItem = nullptr;
+
+
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2005, this, &UGoodsFilterUI::OnGetGoodsType);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2006, this, &UGoodsFilterUI::OnGetMaterials);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2007, this, &UGoodsFilterUI::OnGetInnerDiameters);
@@ -57,17 +61,54 @@ void UGoodsFilterUI::InitView()
 	{
 		UGoodsList * goodsList = (UGoodsList*)m_ParentUI;
 
-		UGoodsFilterItem * typeItem = (UGoodsFilterItem*)UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterItem"),this);
-		m_ViewVerticalBox->AddChild(typeItem);
-		typeItem->SetData(1,m_TypeData,goodsList->m_TypeIndex);
+		m_TypeIndex = goodsList->m_TypeIndex;
+		m_MaterialIndex = goodsList->m_MaterialIndex;
+		m_InnerIndex = goodsList->m_InnerIndex;
 
-		UGoodsFilterItem * materialItem = (UGoodsFilterItem*)UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterItem"),this);
-		m_ViewVerticalBox->AddChild(materialItem);
-		materialItem->SetData(2, m_MaterialData,goodsList->m_MaterialIndex);
+		m_TypeItem = (UGoodsFilterItem*)UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterItem"),this);
+		m_ViewVerticalBox->AddChild(m_TypeItem);
+		m_TypeItem->SetData(1,m_TypeData, m_TypeIndex);
 
-		UGoodsFilterItem * innerItem = (UGoodsFilterItem*)UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterItem"),this);
-		m_ViewVerticalBox->AddChild(innerItem);
-		innerItem->SetData(3, m_InnerData,goodsList->m_InnerIndex);
+		ReviewByType(m_TypeIndex);
+
+	}
+}
+void UGoodsFilterUI::ReviewByType(int type)
+{
+	if (m_InnerItem)
+	{
+		m_InnerItem->RemoveFromParent();
+		m_InnerItem = nullptr;
+	}
+	if (m_MaterialItem)
+	{
+		m_MaterialItem->RemoveFromParent();
+		m_MaterialItem = nullptr;
+	}
+	switch (type)
+	{
+	case 1:
+	{
+		m_InnerItem = (UGoodsFilterItem*)UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterItem"), this);
+		m_ViewVerticalBox->AddChild(m_InnerItem);
+		m_InnerItem->SetData(3, m_InnerData, m_InnerIndex);
+		m_MaterialIndex = 0;
+	}break;
+	case 2:
+	{
+		m_MaterialItem = (UGoodsFilterItem*)UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterItem"), this);
+		m_ViewVerticalBox->AddChild(m_MaterialItem);
+		m_MaterialItem->SetData(2, m_MaterialData, m_MaterialIndex);
+
+		m_InnerItem = (UGoodsFilterItem*)UIManager::GetInstance()->OpenUI(TEXT("GoodsFilterItem"), this);
+		m_ViewVerticalBox->AddChild(m_InnerItem);
+		m_InnerItem->SetData(3, m_InnerData, m_InnerIndex);
+	}break;
+	default:
+	{
+		m_MaterialIndex = 0;
+		m_InnerIndex = 0;
+	}break;
 	}
 }
 void UGoodsFilterUI::OnButtonClick(int _index)

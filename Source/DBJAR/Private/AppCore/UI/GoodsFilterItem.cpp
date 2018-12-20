@@ -61,6 +61,7 @@ void UGoodsFilterItem::SelectButton(UToolButton * _button)
 		m_SelectButton->SelectButton(false);
 		m_SelectButton = nullptr;
 		m_SelectIndex = 0;
+		SetSelectIndex();
 		return;
 	}
 	for (UToolButton * button : m_Buttons)
@@ -70,24 +71,7 @@ void UGoodsFilterItem::SelectButton(UToolButton * _button)
 			button->SelectButton(true);
 			m_SelectButton = button;
 			m_SelectIndex = button->m_Data.Id;
-			UGoodsFilterUI * parentUI = (UGoodsFilterUI*)m_ParentUI;
-			switch (m_type)
-			{
-			case 1:
-			{
-				parentUI->m_TypeIndex = m_SelectIndex;
-			}break;
-			case 2:
-			{
-				parentUI->m_MaterialIndex = m_SelectIndex;
-			}break;
-			case 3:
-			{
-				parentUI->m_InnerIndex = m_SelectIndex;
-			}break;
-			default:
-				break;
-			}
+			SetSelectIndex();
 		}
 		else
 		{
@@ -108,5 +92,27 @@ void UGoodsFilterItem::SelectButton(int _index)
 		{
 			button->SelectButton(false);
 		}
+	}
+}
+void UGoodsFilterItem::SetSelectIndex()
+{
+	UGoodsFilterUI * parentUI = (UGoodsFilterUI*)m_ParentUI;
+	switch (m_type)
+	{
+	case 1:
+	{
+		parentUI->m_TypeIndex = m_SelectIndex;
+		parentUI->ReviewByType(m_SelectIndex);
+	}break;
+	case 2:
+	{
+		parentUI->m_MaterialIndex = m_SelectIndex;
+	}break;
+	case 3:
+	{
+		parentUI->m_InnerIndex = m_SelectIndex;
+	}break;
+	default:
+		break;
 	}
 }

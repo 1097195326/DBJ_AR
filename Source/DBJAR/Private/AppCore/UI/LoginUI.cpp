@@ -2,7 +2,8 @@
 #include "UIManager.h"
 #include "LoginGameModule.h"
 #include "AppInstance.h"
-
+#include "AlertUI.h"
+#include "UserInfo.h"
 
 void ULoginUI::On_Init()
 {
@@ -166,7 +167,7 @@ void ULoginUI::OnUserLogin(msg_ptr _msg)
 
 	if (jsonObj->GetIntegerField(TEXT("code")) == 200)
 	{
-        UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+		CheckRemainDays();
 	}
     else
     {
@@ -180,11 +181,30 @@ void ULoginUI::OnAutoLogin(msg_ptr _msg)
 
 	if (jsonObj->GetIntegerField(TEXT("code")) == 200)
 	{
-		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+		CheckRemainDays();
 	}
 	else
 	{
 		FString msg = jsonObj->GetStringField(TEXT("msg"));
 		UIManager::GetInstance()->TopHintText(msg, 3.f);
+	}
+}
+void ULoginUI::CheckRemainDays()
+{
+	if (UserInfo::Get()->GetLocalData().Tips)
+	{
+		UAlertUI * alertUI = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("AlertUI"));
+		alertUI->SetContentText(UserInfo::Get()->GetLocalData().TipMessage);
+		alertUI->OnlyButtonShow(true);
+		alertUI->BindOnlySureFunctionCall(this, &ULoginUI::OnAlertButtonClick);
+		alertUI->AddToViewport(99);
+	}
+}
+void ULoginUI::OnAlertButtonClick()
+{
+	if (UserInfo::Get()->GetLocalData().RemainingDays > 0)
+	{
+		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+
 	}
 }

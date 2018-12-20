@@ -47,4 +47,8 @@ private:
 
 	FTimerHandle m_TimeHandle;
 	void	TimeRun();
+
+	void CheckRemainDays();
+	void OnAlertButtonClick();
+
 };

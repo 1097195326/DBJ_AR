@@ -20,6 +20,7 @@ public:
 	void SetData(const int & _type, const TArray<IdData> & _data,int _index);
 	void SelectButton(UToolButton * _button);
 	void SelectButton(int _index);
+	void SetSelectIndex();
 
 private:
 	TArray<IdData> m_Data;

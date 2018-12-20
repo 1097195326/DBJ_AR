@@ -33,10 +33,18 @@ public:
 	int			m_TypeIndex;
 	int			m_InnerIndex;
 	int			m_MaterialIndex;
+
+	void	ReviewByType(int type);
 private:
 	TArray<IdData> m_TypeData;
 	TArray<IdData> m_InnerData;
 	TArray<IdData> m_MaterialData;
+	UPROPERTY()
+	UGoodsFilterItem * m_TypeItem;
+	UPROPERTY()
+	UGoodsFilterItem * m_MaterialItem;
+	UPROPERTY()
+	UGoodsFilterItem * m_InnerItem;
 
 	int		m_ReceiveNum;
 };

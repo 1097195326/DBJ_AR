@@ -60,6 +60,7 @@ void UGoodsList_Icon::On_Delete()
 	if (m_Data)
 	{
 		delete m_Data;
+		m_Data = nullptr;
 	}
 	UI_M->UnRegisterButton(m_IconButton);
 //    UI_M->UnRegisterButton(m_DownloadButton);

@@ -88,7 +88,10 @@ void UGoodsChangeUI::OnButtonClick(int id)
 	}break;
 	case 3:
 	{
-		AUserPawn::GetInstance()->CancelChangeSelectModel();
+		if (m_CurrentGoodsData)
+		{
+			AUserPawn::GetInstance()->SureChangeSelectModel(m_CurrentGoodsData);
+		}
 		RemoveFromParent();
 	}break;
 	default:
@@ -134,11 +137,11 @@ void UGoodsChangeUI::OnGetChangeList(msg_ptr _msg)
 			icon->SetParentUI(this);
 			if (mIndex % 2 > 0)
 			{
-				mGridSlot->SetPadding(FMargin(10.f, 10.f, 10.f, 10.f));
+				mGridSlot->SetPadding(FMargin(0.f, 24.f, 24.f, 48.f));
 			}
 			else
 			{
-				mGridSlot->SetPadding(FMargin(10.f, 10.f, 10.f, 10.f));
+				mGridSlot->SetPadding(FMargin(0.f, 32.f, 24.f, 0.f));
 			}
 			m_GoodsListIcons.Add(icon);
 		}

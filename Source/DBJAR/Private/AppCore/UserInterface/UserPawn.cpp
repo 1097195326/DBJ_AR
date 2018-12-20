@@ -50,7 +50,9 @@ void AUserPawn::On_Init()
 }
 void AUserPawn::On_Start()
 {
+#if PLATFORM_IOS
     StartARSession();
+#endif
     m_Controller = Cast<AUserController>(Controller);
 	UE_LOG(LogTemp, Log, TEXT("zhx : user pawn start."));
 }

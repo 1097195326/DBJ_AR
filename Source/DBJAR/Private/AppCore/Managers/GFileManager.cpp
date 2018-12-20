@@ -84,7 +84,7 @@ UStaticMesh * GFileManager::LoadMesh(GoodsData * _goodsData)
 	TArray<FString> files;
 	PakFile.FindFilesAtPath(files, *PakFile.GetMountPoint(), true, false, true);
 
-//    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
+    FPlatformFileManager::Get().SetPlatformFile(*m_LocalPlatformFile);
 
 	for (FString fileName : files)
 	{
