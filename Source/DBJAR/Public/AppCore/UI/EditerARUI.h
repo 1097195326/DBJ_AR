@@ -16,7 +16,16 @@ public:
 		UButton * m_ChangeButton;
 	UPROPERTY()
 	UButton * m_DeleteButton;
-	// top button list
+	// screen 
+	UPROPERTY()
+		UCanvasPanel * m_MainPanel;
+	UPROPERTY()
+		UCanvasPanel * m_ScreenPanel;
+	UPROPERTY()
+		UButton * m_ScreenButton;
+	UPROPERTY()
+		UButton * m_CloseEyeButton;
+	// main top button list
 	UPROPERTY()
 		UButton * m_ShowlistButton;
 	UPROPERTY()
@@ -30,7 +39,9 @@ public:
 	UPROPERTY()
 		UButton * m_OrderlistButton;
 	UPROPERTY()
-	UButton * m_ShareButton;
+		UButton * m_ShareButton;
+	UPROPERTY()
+		UButton * m_OpenEyeButton;
 
 public:
     virtual void On_Init() override;
@@ -42,4 +53,6 @@ public:
 
 	void OnGetCategoryList(msg_ptr _msg);
 	void OnSelectActor(msg_ptr _msg);
+private:
+	bool m_ShowEye;
 };

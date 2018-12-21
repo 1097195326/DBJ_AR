@@ -13,3 +13,11 @@ void AUserPlaneActor::BeginPlay()
 	Super::BeginPlay();
 
 }
+void AUserPlaneActor::StartDraw()
+{
+	m_PlaneComponent->StartUpdate();
+}
+void AUserPlaneActor::StopDraw()
+{
+	m_PlaneComponent->StopUpdate();
+}

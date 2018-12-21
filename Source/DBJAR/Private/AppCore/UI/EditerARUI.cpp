@@ -9,7 +9,8 @@
 #include "RuntimeRDataManager.h"
 #include "AlertUI.h"
 #include "UserInfo.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "UserPlaneActor.h"
 
 void UEditerARUI::On_Init()
 {
@@ -29,6 +30,25 @@ void UEditerARUI::On_Init()
 		m_DeleteButton = widget;
 		m_DeleteButton->SetVisibility(ESlateVisibility::Hidden);
 		
+	}
+	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("MainPanel")))
+	{
+		m_MainPanel = widget;
+	}
+	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("ScreenPanel")))
+	{
+		m_ScreenPanel = widget;
+		m_ScreenPanel->SetVisibility(ESlateVisibility::Hidden);
+		m_ShowEye = false;
+	}
+	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ScreenButton")))
+	{
+		m_ScreenButton = widget;
+	}
+	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ColseEyeButton")))
+	{
+		m_CloseEyeButton = widget;
+		m_CloseEyeButton->SetVisibility(ESlateVisibility::Hidden);
 	}
     //top button list
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ShowListButton")))
@@ -61,6 +81,10 @@ void UEditerARUI::On_Init()
 	{
 		m_ShareButton = widget;
 		
+	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("OpenEyeButton")))
+	{
+		m_OpenEyeButton = widget;
+
 	}
 }
 void UEditerARUI::On_Start()
@@ -79,6 +103,10 @@ void UEditerARUI::On_Start()
     UI_M->RegisterButton(14, m_OrderlistButton, this, &UEditerARUI::On_Button_Click);
     UI_M->RegisterButton(15, m_ShareButton, this, &UEditerARUI::On_Button_Click);
 
+	UI_M->RegisterButton(16, m_OpenEyeButton, this, &UEditerARUI::On_Button_Click);
+	UI_M->RegisterButton(17, m_CloseEyeButton, this, &UEditerARUI::On_Button_Click);
+	UI_M->RegisterButton(18, m_ScreenButton, this, &UEditerARUI::On_Button_Click);
+
 	
 }
 void UEditerARUI::On_Delete()
@@ -96,7 +124,10 @@ void UEditerARUI::On_Delete()
     UI_M->UnRegisterButton(m_AddressButton);
     UI_M->UnRegisterButton(m_OrderlistButton);
     UI_M->UnRegisterButton(m_ShareButton);
-	
+
+	UI_M->UnRegisterButton(m_OpenEyeButton);
+	UI_M->UnRegisterButton(m_CloseEyeButton);
+	UI_M->UnRegisterButton(m_ScreenButton);
 }
 void UEditerARUI::On_Button_Click(int _index)
 {
@@ -156,6 +187,37 @@ void UEditerARUI::On_Button_Click(int _index)
 		case 15:
 		{// share 
 			AUserController::GetInstance()->MakeScreenShot();
+		}break;
+		case 16:
+		{// open eye
+			m_MainPanel->SetVisibility(ESlateVisibility::Hidden);
+			m_ScreenPanel->SetVisibility(ESlateVisibility::Visible);
+
+			TArray<AActor *> allPlaneActor;
+			UGameplayStatics::GetAllActorsOfClass(this, AUserPlaneActor::StaticClass(), allPlaneActor);
+			for (int i = 0; i < allPlaneActor.Num(); i++)
+			{
+				AUserPlaneActor * actor = (AUserPlaneActor *)allPlaneActor[i];
+				actor->StopDraw();
+			}
+		}break;
+		case 17:
+		{// close eye
+			m_MainPanel->SetVisibility(ESlateVisibility::Visible);
+			m_ScreenPanel->SetVisibility(ESlateVisibility::Hidden);
+			TArray<AActor *> allPlaneActor;
+			UGameplayStatics::GetAllActorsOfClass(this, AUserPlaneActor::StaticClass(), allPlaneActor);
+			for (int i = 0; i < allPlaneActor.Num(); i++)
+			{
+				AUserPlaneActor * actor = (AUserPlaneActor *)allPlaneActor[i];
+				actor->StartDraw();
+			}
+		}break;
+		case 18:
+		{// screen button
+			m_ShowEye = !m_ShowEye;
+			m_ShowEye ? m_CloseEyeButton->SetVisibility(ESlateVisibility::Visible) : m_CloseEyeButton->SetVisibility(ESlateVisibility::Hidden);
+
 		}break;
         default:
             break;

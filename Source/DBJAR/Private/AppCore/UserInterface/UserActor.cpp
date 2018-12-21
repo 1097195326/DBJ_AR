@@ -99,6 +99,7 @@ void AUserActor::ResetHuaComponent()
         if (m_Mesh->GetSocketByName(*socketName))
         {
             UE_LOG(LogTemp,Log,TEXT("zhx : user actor reset hua socket"));
+			component->
             component->AttachToComponent(m_Mesh, FAttachmentTransformRules::KeepRelativeTransform, *socketName);
 //            component->RegisterComponent();
         }

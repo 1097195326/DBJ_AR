@@ -43,6 +43,7 @@ void UUserPlaneComponent::StartUpdate()
 void UUserPlaneComponent::StopUpdate()
 {
 	GetWorld()->GetTimerManager().ClearTimer(m_TimerHeadle);
+	ClearAllMeshSections();
 }
 void UUserPlaneComponent::UpdateSection()
 {

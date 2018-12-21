@@ -18,5 +18,7 @@ public:
 
 	virtual void BeginPlay() override;
 
+	void StartDraw();
+	void StopDraw();
 };
 
