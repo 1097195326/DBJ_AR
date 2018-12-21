@@ -44,6 +44,7 @@ void UUserPlaneComponent::StopUpdate()
 {
 	GetWorld()->GetTimerManager().ClearTimer(m_TimerHeadle);
 	ClearAllMeshSections();
+    m_PlaneMap.Empty();
 }
 void UUserPlaneComponent::UpdateSection()
 {
