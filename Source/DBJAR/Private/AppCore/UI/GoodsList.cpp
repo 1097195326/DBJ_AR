@@ -1,4 +1,4 @@
-﻿#include "GoodsList.h"
+#include "GoodsList.h"
 #include "RuntimeTDataManager.h"
 #include "MsgCenter.h"
 #include "UIManager.h"
