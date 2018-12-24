@@ -33,6 +33,6 @@ void ControllerPrototype::SetScreenResolution(FString ScreenResolution)
 
 	}else
 	{
-		ControllerPrototype::ScreenResolutionId = 401;
+		ControllerPrototype::ScreenResolutionId = 400;
 	}
 }
