@@ -4,7 +4,7 @@
 
 G_REGISTER_CLASS(ControllerPrototype)
 
-FString ControllerPrototype::ScreenResolutionId = TEXT("");
+int ControllerPrototype::ScreenResolutionId = 0;
 
 void ControllerPrototype::InitWithXML(TiXmlElement * xml)
 {
@@ -25,5 +25,14 @@ void ControllerPrototype::InitWithXML(TiXmlElement * xml)
 }
 void ControllerPrototype::SetScreenResolution(FString ScreenResolution)
 {
-    
+    if (ScreenResolution.Equals(TEXT("0.46")))
+    {
+		ControllerPrototype::ScreenResolutionId = 401;
+    }else if (ScreenResolution.Equals(TEXT("")))
+    {
+
+	}else
+	{
+		ControllerPrototype::ScreenResolutionId = 401;
+	}
 }

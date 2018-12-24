@@ -12,7 +12,8 @@ UIManager * UIManager::GetInstance()
 UBaseUI* UIManager::OpenUI(const FString & _uiName, UBaseUI * _ParentUI)
 {
     // Í¨¹ýuiNameÕÒ³öUIPath.
-    UIData uiData = Data_M->GetProtoType<UIPrototype>(PrototypeIndex::E_UI_IOS_ID)->GetDataByKey(_uiName);
+	
+    UIData uiData = Data_M->GetProtoType<UIPrototype>(ControllerPrototype::ScreenResolutionId)->GetDataByKey(_uiName);
     FString mUIPath = uiData.m_Value;
 
     if (!mUIPath.IsEmpty())

@@ -4,6 +4,7 @@
 #include <map>
 #include "ProjectDataType.h"
 #include "UIPrototype.h"
+#include "ControllerPrototype.h"
 
 using namespace std;
 

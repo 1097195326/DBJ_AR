@@ -7,7 +7,7 @@
 #include "UserPawn.h"
 #include "AlertUI.h"
 #include "Kismet/KismetSystemLibrary.h"
-
+#include "ControllerPrototype.h"
 
 UAppInstance::UAppInstance()
 {
@@ -21,6 +21,9 @@ void UAppInstance::On_Init()
 
     Data_M->LoadAllXMLData();
 
+	FIntPoint sPoint = GEngine->GetGameUserSettings()->GetScreenResolution();
+	FString strPoint = FString::Printf(TEXT("%0.2f"),sPoint.X/(float)sPoint.Y);
+	ControllerPrototype::SetScreenResolution(strPoint);
     
 //    UGameUserSettings* mGameUserSettings = GEngine->GetGameUserSettings();
 //    FIntPoint mPoint = mGameUserSettings->GetScreenResolution();

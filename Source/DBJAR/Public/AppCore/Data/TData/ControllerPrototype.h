@@ -22,7 +22,7 @@ public:
 public:
 	virtual void InitWithXML(TiXmlElement * _xml) override;
 
-    static FString ScreenResolutionId;
+    static int ScreenResolutionId;
     
     static void SetScreenResolution(FString ScreenResolution);
 };
