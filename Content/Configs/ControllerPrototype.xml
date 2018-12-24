@@ -10,6 +10,6 @@
 		<param key="server" value="300" desc="选取服务器.0=debug,1=release"/>
 		<param key="http_url" value="200" desc="选取接口.0=normal"/>
 		<param key="language" value="0" desc="读取的语言配置表.0=chines,1=english"/>	
-		<param key="appVersion" value="1.4.0" desc="当前版本"/>	
+		<param key="appVersion" value="1.0" desc="当前版本"/>	
 	</setting>
 </root>   

@@ -4,6 +4,7 @@
 
 G_REGISTER_CLASS(ControllerPrototype)
 
+FString ControllerPrototype::ScreenResolutionId = TEXT("");
 
 void ControllerPrototype::InitWithXML(TiXmlElement * xml)
 {
@@ -21,4 +22,8 @@ void ControllerPrototype::InitWithXML(TiXmlElement * xml)
 	m_Server_ID = m_DataMap["server"];
 	m_Http_ID = m_DataMap["http_url"];
 
+}
+void ControllerPrototype::SetScreenResolution(FString ScreenResolution)
+{
+    
 }
