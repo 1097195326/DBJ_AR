@@ -201,7 +201,7 @@ void ULoginUI::CheckRemainDays()
 	}
 	else
 	{
-		//UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
+        UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
 	}
 }
 void ULoginUI::OnAlertButtonClick()
