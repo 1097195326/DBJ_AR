@@ -25,6 +25,8 @@ void ControllerPrototype::InitWithXML(TiXmlElement * xml)
 }
 void ControllerPrototype::SetScreenResolution(FString ScreenResolution)
 {
+    
+    
     if (ScreenResolution.Equals(TEXT("0.46")))
     {
 		ControllerPrototype::ScreenResolutionId = 401;
@@ -35,4 +37,5 @@ void ControllerPrototype::SetScreenResolution(FString ScreenResolution)
 	{
 		ControllerPrototype::ScreenResolutionId = 400;
 	}
+    UE_LOG(LogTemp,Log,TEXT("zhx : current Screen Resolution : %s = %d"),*ScreenResolution,ControllerPrototype::ScreenResolutionId);
 }
