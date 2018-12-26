@@ -43,6 +43,11 @@ void UUserAccountUI::On_Init()
 	{
 		m_OrderListScroll = widget;
 	}
+	if (UCanvasPanel * canvasPanel = (UCanvasPanel*)GetWidgetFromName("ContentEmpty"))
+	{
+		m_ContentEmptyPanel = canvasPanel;
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
 	m_LastId = 0;
 	m_IsRequest = false;
 }
@@ -141,6 +146,14 @@ void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 	m_OrderListScroll->ScrollToStart();*/
 	TArray<R_Order*> OrderList = RuntimeCDataManager::GetInstance()->GetAccountOrderList();
 	
+	if (OrderList.Num() > 0)
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Visible);
+	}
 	for (int i = 0; i < OrderList.Num(); i++)
 	{
 		UUserAccountItem * item = (UUserAccountItem*)UIManager::GetInstance()->OpenUI(TEXT("UserAccountItem"),this);

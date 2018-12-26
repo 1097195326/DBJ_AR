@@ -3,7 +3,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include "ARBlueprintLibrary.h"
 
 static float rotator = 0.f;
 
@@ -42,13 +42,13 @@ void  ALoadingActor::UpdateLoadingComponent()
 		
 		SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), location, 0.1f, 6.f));
 
-		rotator += 1;
+		/*rotator += 1;
 		if (rotator >= 100)
 		{
 			rotator -= 100;
 		}
 		float yawProcess = rotator / 100.f;
-		m_LoadingComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);
+		m_LoadingComponent->SetScalarParameterValueOnMaterials(TEXT("Percent"), yawProcess);*/
 	}
 }
 void ALoadingActor::ResetLoading()

@@ -1,5 +1,5 @@
 #include "ControllerPrototype.h"
-
+#include "Engine.h"
 
 
 G_REGISTER_CLASS(ControllerPrototype)
@@ -30,12 +30,14 @@ void ControllerPrototype::SetScreenResolution(FString ScreenResolution)
     if (ScreenResolution.Equals(TEXT("0.46")))
     {
 		ControllerPrototype::ScreenResolutionId = 401;
-    }else if (ScreenResolution.Equals(TEXT("")))
+    }else if (ScreenResolution.Equals(TEXT("0.75")))
     {
-
+		GEngine->GetGameUserSettings()->SetResolutionScaleValueEx(0.5);
 	}else
 	{
 		ControllerPrototype::ScreenResolutionId = 400;
 	}
+	GEngine->GetGameUserSettings()->SetResolutionScaleValueEx(0.3);
+
     UE_LOG(LogTemp,Log,TEXT("zhx : current Screen Resolution : %s = %d"),*ScreenResolution,ControllerPrototype::ScreenResolutionId);
 }

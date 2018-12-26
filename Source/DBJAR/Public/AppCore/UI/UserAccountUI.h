@@ -33,7 +33,8 @@ public:
 
 	UPROPERTY()
 	UScrollBox * m_OrderListScroll;
-
+	UPROPERTY()
+		UCanvasPanel * m_ContentEmptyPanel;
     void OnButtonClick(int _index);
 
 	void OnGetAccountOrder(msg_ptr _msg);

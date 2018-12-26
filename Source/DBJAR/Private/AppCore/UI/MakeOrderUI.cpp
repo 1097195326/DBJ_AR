@@ -59,6 +59,11 @@ void UMakeOrderUI::On_Init()
 	{
 		m_CommitButtonText = widget;
 	}
+	if (UCanvasPanel * canvasPanel = (UCanvasPanel*)GetWidgetFromName("ContentEmpty"))
+	{
+		m_ContentEmptyPanel = canvasPanel;
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2009, this, &UMakeOrderUI::OnCommitCurrentOrder);
 }
 void UMakeOrderUI::On_Start()
@@ -108,7 +113,14 @@ void UMakeOrderUI::InitView()
 		m_TitleName->SetText(FText::FromString(TEXT("预订单详情")));
 	}
 	TMap<int,GoodsData*> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
-	
+	if (datas.Num() > 0)
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Visible);
+	}
 	for (auto & item : datas)
 	{
 		GoodsData * data = item.Value;

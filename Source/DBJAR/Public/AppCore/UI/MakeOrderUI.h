@@ -48,7 +48,8 @@ public:
 		UButton * m_CommitOrderButton;
 	UPROPERTY()
 	UTextBlock * m_CommitButtonText;
-
+	UPROPERTY()
+		UCanvasPanel * m_ContentEmptyPanel;
     UFUNCTION()
         void OnButtonClick(int _index);
 
