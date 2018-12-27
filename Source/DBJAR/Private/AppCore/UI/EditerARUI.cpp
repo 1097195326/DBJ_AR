@@ -1,4 +1,4 @@
-﻿#include "EditerARUI.h"
+#include "EditerARUI.h"
 #include "UIManager.h"
 #include "EditerARGameModule.h"
 #include "AppInstance.h"
@@ -192,7 +192,8 @@ void UEditerARUI::On_Button_Click(int _index)
 		{// open eye
 			m_MainPanel->SetVisibility(ESlateVisibility::Hidden);
 			m_ScreenPanel->SetVisibility(ESlateVisibility::Visible);
-
+            m_CloseEyeButton->SetVisibility(ESlateVisibility::Hidden);
+            
 			TArray<AActor *> allPlaneActor;
 			UGameplayStatics::GetAllActorsOfClass(this, AUserPlaneActor::StaticClass(), allPlaneActor);
 			for (int i = 0; i < allPlaneActor.Num(); i++)
