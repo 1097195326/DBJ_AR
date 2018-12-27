@@ -33,7 +33,7 @@ void ControllerPrototype::SetScreenResolution(FString ScreenResolution)
     }
     else if (ScreenResolution.Equals(TEXT("0.75")))
     {
-        
+        ControllerPrototype::ScreenResolutionId = 402;
 	}
     
     UE_LOG(LogTemp,Log,TEXT("zhx : current Screen Resolution : %s = %d"),*ScreenResolution,ControllerPrototype::ScreenResolutionId);
