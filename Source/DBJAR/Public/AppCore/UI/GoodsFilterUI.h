@@ -17,6 +17,8 @@ public:
 
 	UPROPERTY()
 		UVerticalBox * m_ViewVerticalBox;
+    UPROPERTY()
+    UButton * m_BackButton;
 	UPROPERTY()
 		UButton * m_CancelButton;
 	UPROPERTY()

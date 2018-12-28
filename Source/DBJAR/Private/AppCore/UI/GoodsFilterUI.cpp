@@ -1,4 +1,4 @@
-﻿#include "GoodsFilterUI.h"
+#include "GoodsFilterUI.h"
 #include "UIManager.h"
 #include "MsgCenter.h"
 #include "EditerARGameModule.h"
@@ -11,6 +11,11 @@ void UGoodsFilterUI::On_Init()
 	{
 		m_ViewVerticalBox = widget;
 	}
+    if (UButton * widget = (UButton*)GetWidgetFromName("BackButton"))
+    {
+        m_BackButton = widget;
+        UIManager::GetInstance()->RegisterButton(3, m_BackButton, this, &UGoodsFilterUI::OnButtonClick);
+    }
     if (UButton * widget = (UButton*)GetWidgetFromName("CancelButton"))
     {
         m_CancelButton = widget;
@@ -129,6 +134,10 @@ void UGoodsFilterUI::OnButtonClick(int _index)
 		baseUI->m_InnerIndex = m_InnerIndex;
 		baseUI->ReloadData(true);
 	}break;
+    case 3:
+    {
+        RemoveFromParent();
+    }break;
 	}
 }
 void UGoodsFilterUI::OnGetInnerDiameters(msg_ptr _msg)
