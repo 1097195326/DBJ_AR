@@ -39,7 +39,7 @@ void  ALoadingActor::UpdateLoadingComponent()
 		FVector location = cameraManager->GetCameraLocation();
 		FVector forward = cameraManager->GetCameraRotation().Vector();
 		location = location + forward.GetSafeNormal() * 150;
-		
+
 		SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), location, 0.1f, 6.f));
 
 		/*rotator += 1;

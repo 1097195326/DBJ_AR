@@ -11,25 +11,25 @@
 #include "UserInfo.h"
 #include "Kismet/GameplayStatics.h"
 #include "UserPlaneActor.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+#include "ARBlueprintLibrary.h"
 
 void UEditerARUI::On_Init()
 {
     if (UButton *widget = Cast<UButton>(GetWidgetFromName("ProductListButton")))
     {
         m_ProductListButton = widget;
-        
     }
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ChangeButton")))
 	{
 		m_ChangeButton = widget;
 		m_ChangeButton->SetVisibility(ESlateVisibility::Hidden);
-		
 	}
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("DeleteButton")))
 	{
 		m_DeleteButton = widget;
 		m_DeleteButton->SetVisibility(ESlateVisibility::Hidden);
-		
 	}
 	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("MainPanel")))
 	{
@@ -54,7 +54,6 @@ void UEditerARUI::On_Init()
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("ShowListButton")))
 	{
 		m_ShowlistButton = widget;
-		
 	}
 	if (UScrollBox *widget = Cast<UScrollBox>(GetWidgetFromName("ShowListPanel")))
 	{
@@ -64,27 +63,25 @@ void UEditerARUI::On_Init()
 	if (UButton *widget = Cast<UButton>(GetWidgetFromName("CloseListButton")))
 	{
 		m_CloseListButton = widget;
-		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("AcountButton")))
 	{
 		m_AcountButton = widget;
-		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("AdressButton")))
 	{
 		m_AddressButton = widget;
-		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("OrderListButton")))
 	{
 		m_OrderlistButton = widget;
-		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("ShareButton")))
 	{
 		m_ShareButton = widget;
-		
 	}if (UButton *widget = Cast<UButton>(GetWidgetFromName("OpenEyeButton")))
 	{
 		m_OpenEyeButton = widget;
-
+	}
+	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("LoadingPanel")))
+	{
+		m_LoadingPanel = widget;
 	}
 }
 void UEditerARUI::On_Start()
@@ -107,7 +104,7 @@ void UEditerARUI::On_Start()
 	UI_M->RegisterButton(17, m_CloseEyeButton, this, &UEditerARUI::On_Button_Click);
 	UI_M->RegisterButton(18, m_ScreenButton, this, &UEditerARUI::On_Button_Click);
 
-	
+	ResetLoading();
 }
 void UEditerARUI::On_Delete()
 {
@@ -186,6 +183,7 @@ void UEditerARUI::On_Button_Click(int _index)
 		}break;
 		case 15:
 		{// share 
+			AUserPawn::GetInstance()->CancelSelectActor();
 			AUserController::GetInstance()->MakeScreenShot();
 		}break;
 		case 16:
@@ -201,6 +199,7 @@ void UEditerARUI::On_Button_Click(int _index)
 				AUserPlaneActor * actor = (AUserPlaneActor *)allPlaneActor[i];
 				actor->StopDraw();
 			}
+			AUserPawn::GetInstance()->CancelSelectActor();
 		}break;
 		case 17:
 		{// close eye
@@ -254,4 +253,23 @@ void UEditerARUI::OnSelectActor(msg_ptr _msg)
 		m_ChangeButton->SetVisibility(ESlateVisibility::Hidden);
 		m_DeleteButton->SetVisibility(ESlateVisibility::Hidden);
 	}
+}
+// set loadding ui
+
+void  UEditerARUI::UpdateLoading()
+{
+#if PLATFORM_WINDOWS
+	return;
+#endif
+	TArray<UARPlaneGeometry*> planeGeometryArray = UARBlueprintLibrary::GetAllTrackedPlanes();
+	if (planeGeometryArray.Num() > 0)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(m_timerHandle);
+		m_LoadingPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+void UEditerARUI::ResetLoading()
+{
+	m_LoadingPanel->SetVisibility(ESlateVisibility::Visible);
+	GetWorld()->GetTimerManager().SetTimer(m_timerHandle, this, &UEditerARUI::UpdateLoading, 0.1f, true, 0.f);
 }

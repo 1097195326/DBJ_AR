@@ -10,6 +10,7 @@
 #include "SharingFunctions.h"
 #include "Engine.h"
 #include "Kismet/GameplayStatics.h"
+#include "UserPlaneActor.h"
 
 AUserController * AUserController::GetInstance()
 {
@@ -57,10 +58,24 @@ void AUserController::On_Delete()
 void AUserController::ScreenShot_Callback(FScreenshotImage Image)
 {
 	UE_LOG(LogTemp, Log, TEXT("zhx : user controller make screen shot call back"));
+	TArray<AActor *> allPlaneActor;
+	UGameplayStatics::GetAllActorsOfClass(this, AUserPlaneActor::StaticClass(), allPlaneActor);
+	for (int i = 0; i < allPlaneActor.Num(); i++)
+	{
+		AUserPlaneActor * actor = (AUserPlaneActor *)allPlaneActor[i];
+		actor->StartDraw();
+	}
 	USharingFunctions::Share("", "AR", "www.dabanjia.com", Image);
 	
 }
 void AUserController::MakeScreenShot()
 {
+	TArray<AActor *> allPlaneActor;
+	UGameplayStatics::GetAllActorsOfClass(this, AUserPlaneActor::StaticClass(), allPlaneActor);
+	for (int i = 0; i < allPlaneActor.Num(); i++)
+	{
+		AUserPlaneActor * actor = (AUserPlaneActor *)allPlaneActor[i];
+		actor->StopDraw();
+	}
 	GEngine->GameViewport->ConsoleCommand(TEXT("Shot"));
 }

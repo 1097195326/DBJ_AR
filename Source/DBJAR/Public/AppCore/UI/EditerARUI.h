@@ -55,4 +55,11 @@ public:
 	void OnSelectActor(msg_ptr _msg);
 private:
 	bool m_ShowEye;
+
+	void UpdateLoading();
+	void ResetLoading();
+	UPROPERTY()
+	FTimerHandle m_timerHandle;
+	UPROPERTY()
+		UCanvasPanel * m_LoadingPanel;
 };

@@ -237,17 +237,7 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 	}
 	bool IsSelect = false;
     
-    if (m_SelectComponent)
-    {
-        m_SelectComponent->SetRenderCustomDepth(false);
-    }
-    if (m_SelectActor)
-    {
-        m_SelectActor->ShowPlaneComponent(false);
-        m_WantToRotate = false;
-    }
-    m_SelectComponent = nullptr;
-    m_SelectActor = nullptr;
+	CancelSelectActor();
     
     FHitResult hitResult;
     if (m_Controller->GetHitResultAtScreenPosition(_position, ECC_WorldStatic, false, hitResult))
@@ -289,6 +279,20 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 
 	UE_LOG(LogTemp, Log, TEXT("zhx : select good fail"));
     return false;
+}
+void AUserPawn::CancelSelectActor()
+{
+	if (m_SelectComponent)
+	{
+		m_SelectComponent->SetRenderCustomDepth(false);
+	}
+	if (m_SelectActor)
+	{
+		m_SelectActor->ShowPlaneComponent(false);
+		m_WantToRotate = false;
+	}
+	m_SelectComponent = nullptr;
+	m_SelectActor = nullptr;
 }
 void AUserPawn::TryCreateMergeActor(GoodsData * _goodsData)
 {

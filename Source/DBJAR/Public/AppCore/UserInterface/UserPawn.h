@@ -79,6 +79,7 @@ public:
         FVector2D    GetFingerPosition(int _fingerNum);
     UFUNCTION(BlueprintCallable)
         bool IsHaveActorInScreenPosition(FVector2D _position);
+	void	CancelSelectActor();
     UFUNCTION(BlueprintCallable)
         AActor * TryCreateARActor(FVector2D _screenPosition);
 	void	TryCreateMergeActor(GoodsData * _goodsData);
