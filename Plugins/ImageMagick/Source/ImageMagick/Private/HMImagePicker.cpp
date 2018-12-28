@@ -36,9 +36,17 @@
 
     if (popover)
     {
-        popover.sourceView = vc.view;
-        popover.sourceRect = CGRectMake(([UIScreen mainScreen].bounds.size.width / 4) * 3 / 4, ([UIScreen mainScreen].bounds.size.height * 3 / 4) +([UIScreen mainScreen].bounds.size.height / 16), [UIScreen mainScreen].bounds.size.width / 8, 5);
-        popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            popover.sourceView = vc.view;
+            popover.sourceRect = CGRectMake(0, ([UIScreen mainScreen].bounds.size.height - 5), [UIScreen mainScreen].bounds.size.width, 5);
+            popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+        }else
+        {
+            popover.sourceView = vc.view;
+            popover.sourceRect = CGRectMake(([UIScreen mainScreen].bounds.size.width / 4) * 3 / 4, ([UIScreen mainScreen].bounds.size.height * 3 / 4) +([UIScreen mainScreen].bounds.size.height / 16), [UIScreen mainScreen].bounds.size.width / 8, 5);
+            popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+        }
     }
     // 设置警告响应事件
     UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

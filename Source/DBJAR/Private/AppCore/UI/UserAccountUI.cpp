@@ -1,4 +1,4 @@
-﻿#include "UserAccountUI.h"
+#include "UserAccountUI.h"
 #include "UIManager.h"
 #include "UserInfo.h"
 #include "EditerARGameModule.h"
@@ -73,7 +73,8 @@ void UUserAccountUI::On_Start()
 	UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this, UserInfo::Get()->GetLocalData().IconPath);
 	if (texture && texture->IsValidLowLevel())
 	{
-		m_UserImage->SetBrushFromTexture(texture);
+//        m_UserImage->SetBrushFromTexture(texture);
+        m_UserImage->GetDynamicMaterial()->SetTextureParameterValue("headTexture", texture);
 	}
 
 	m_IsRequest = true;

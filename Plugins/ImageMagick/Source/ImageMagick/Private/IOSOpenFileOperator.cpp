@@ -32,7 +32,7 @@ void FIOSOpenFileOperator::OpenFile()
         UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
         
         //调用静态库方法  其中返回选中的图片  并返回其本地路径.
-        [[HMImagePickerManager defaultManager] imagePickerWithController:rootViewController scaledToSizeWithWidth:64 height:64 imagePickerBlock:^(UIImage *image, UIImage *icon, NSString *imagePath, NSString *iconPath)
+        [[HMImagePickerManager defaultManager] imagePickerWithController:rootViewController scaledToSizeWithWidth:212 height:212 imagePickerBlock:^(UIImage *image, UIImage *icon, NSString *imagePath, NSString *iconPath)
          {
              std::string mPath = [imagePath UTF8String];
              

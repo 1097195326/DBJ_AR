@@ -52,7 +52,8 @@ void UEditUserInfoUI::On_Start()
 	UTexture2D * texture = UAppInstance::GetInstance()->LoadImageFromDisk(this, UserInfo::Get()->GetLocalData().IconPath);
 	if (texture && texture->IsValidLowLevel())
 	{
-		m_UserImage->SetBrushFromTexture(texture);
+//        m_UserImage->SetBrushFromTexture(texture);
+        m_UserImage->GetDynamicMaterial()->SetTextureParameterValue("headTexture", texture);
 	}
 }
 void UEditUserInfoUI::On_Delete()
@@ -150,7 +151,8 @@ void UEditUserInfoUI::OnSelectPicture(bool isSuccess, FString inIconFilePath, FS
             if (texture && texture->IsValidLowLevel())
             {
                 UE_LOG(LogTemp,Log,TEXT("zhx : get valid texture"));
-                m_UserImage->SetBrushFromTexture(texture);
+//                m_UserImage->SetBrushFromTexture(texture);
+                m_UserImage->GetDynamicMaterial()->SetTextureParameterValue("headTexture", texture);
             }
         }
     }

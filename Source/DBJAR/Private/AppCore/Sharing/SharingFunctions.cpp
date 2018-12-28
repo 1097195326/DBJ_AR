@@ -127,7 +127,7 @@ void USharingFunctions::Share(FString EmailSubject, FString Message, FString Url
             if (Popover)
             {
                 UIView* View = AppDelegate.IOSController.view;
-                CGRect Rect = CGRectMake(Origin.X, Origin.Y, 100, 100);
+                CGRect Rect = CGRectMake(40, 60, [UIScreen mainScreen].bounds.size.width, 100);
                 [Popover presentPopoverFromRect:Rect inView:View permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
             }
         }
