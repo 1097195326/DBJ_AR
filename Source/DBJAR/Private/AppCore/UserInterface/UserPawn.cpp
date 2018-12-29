@@ -252,6 +252,7 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 			{
 				UE_LOG(LogTemp, Log, TEXT("zhx : select plane rotate compoent"));
 				m_WantToRotate = true;
+                IsSelect = false;
 			}
 			else
 			{
