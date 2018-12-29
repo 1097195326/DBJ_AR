@@ -236,6 +236,7 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 		return false;
 	}
 	bool IsSelect = false;
+    bool IsHave = false;
     
 	CancelSelectActor();
     
@@ -257,21 +258,14 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 			else
 			{
 				m_WantToRotate = false;
-				if (m_SelectComponent)
-				{
-					m_SelectComponent->SetRenderCustomDepth(false);
-					m_SelectComponent = nullptr;
-				}
 				m_SelectComponent = Cast<UUserComponent>(hitResult.GetComponent());
 				m_SelectComponent->SetRenderCustomDepth(true);
 				// send msg to ui
 				IsSelect = true;
-				msg_ptr _msg(new LocalMsg(Msg_Local, 3001, &IsSelect));
-				MsgCenter::GetInstance()->SendMsg(_msg);
 				UE_LOG(LogTemp, Log, TEXT("zhx : select actor name :%s,component name : %s"), *m_SelectActor->GetName(), *m_SelectComponent->GetName());
 
 			}
-			return true;
+			IsHave = true;
 		}
 	}
 	
@@ -279,7 +273,7 @@ bool  AUserPawn::IsHaveActorInScreenPosition(FVector2D _position)
 	MsgCenter::GetInstance()->SendMsg(_msg);
 
 	UE_LOG(LogTemp, Log, TEXT("zhx : select good fail"));
-    return false;
+    return IsHave;
 }
 void AUserPawn::CancelSelectActor()
 {
