@@ -82,6 +82,7 @@ void UEditerARUI::On_Init()
 	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("LoadingPanel")))
 	{
 		m_LoadingPanel = widget;
+		m_LoadingPanel->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 void UEditerARUI::On_Start()
@@ -104,7 +105,9 @@ void UEditerARUI::On_Start()
 	UI_M->RegisterButton(17, m_CloseEyeButton, this, &UEditerARUI::On_Button_Click);
 	UI_M->RegisterButton(18, m_ScreenButton, this, &UEditerARUI::On_Button_Click);
 
+#if PLATFORM_IOS
 	ResetLoading();
+#endif
 }
 void UEditerARUI::On_Delete()
 {
