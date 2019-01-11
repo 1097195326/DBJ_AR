@@ -34,7 +34,7 @@ void UGoodsFilterItem::SetData(const int & _type, const TArray<IdData> & _data,i
 	}break;
 	case 3:
 	{
-		m_TitleName->SetText(FText::FromString(TEXT("尺寸")));
+		m_TitleName->SetText(FText::FromString(TEXT("内径(mm)")));
 	}break;
 	default:
 		break;
