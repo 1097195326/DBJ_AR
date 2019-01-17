@@ -29,7 +29,7 @@ public:
 	UPROPERTY()
 		UButton * m_ShowlistButton;
 	UPROPERTY()
-		UScrollBox *  m_ShowlistPanel;
+		UCanvasPanel *  m_ShowlistPanel;
 	UPROPERTY()
 		UButton * m_CloseListButton;
 	UPROPERTY()

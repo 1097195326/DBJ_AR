@@ -55,7 +55,7 @@ void UEditerARUI::On_Init()
 	{
 		m_ShowlistButton = widget;
 	}
-	if (UScrollBox *widget = Cast<UScrollBox>(GetWidgetFromName("ShowListPanel")))
+	if (UCanvasPanel *widget = Cast<UCanvasPanel>(GetWidgetFromName("ShowListPanel")))
 	{
 		m_ShowlistPanel = widget;
 		m_ShowlistPanel->SetVisibility(ESlateVisibility::Hidden);
