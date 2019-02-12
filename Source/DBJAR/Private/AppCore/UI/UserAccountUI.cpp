@@ -147,14 +147,6 @@ void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 	m_OrderListScroll->ScrollToStart();*/
 	TArray<R_Order*> OrderList = RuntimeCDataManager::GetInstance()->GetAccountOrderList();
 	
-	if (OrderList.Num() > 0)
-	{
-		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
-	}
-	else
-	{
-		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Visible);
-	}
 	for (int i = 0; i < OrderList.Num(); i++)
 	{
 		UUserAccountItem * item = (UUserAccountItem*)UIManager::GetInstance()->OpenUI(TEXT("UserAccountItem"),this);
@@ -163,6 +155,14 @@ void UUserAccountUI::OnGetAccountOrder(msg_ptr _msg)
 		slot->SetPadding(FMargin(0.f,24.f,0.f,0.f));
 		item->SetOrder(OrderList[i]);
 
+	}
+	if (m_OrderListScroll->GetChildrenCount() > 0)
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Visible);
 	}
 	m_IsRequest = false;
 }

@@ -89,7 +89,7 @@ void UMakeOrderUI::On_Delete()
 	UIManager::GetInstance()->UnRegisterButton(m_CommitOrderButton);
 
 	RuntimeRDataManager::GetInstance()->ClearOrder();
-
+	m_InfoUIList.Empty();
 }
 void UMakeOrderUI::InitView()
 {
@@ -113,14 +113,7 @@ void UMakeOrderUI::InitView()
 		m_TitleName->SetText(FText::FromString(TEXT("预订单详情")));
 	}
 	TMap<int,GoodsData*> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
-	if (datas.Num() > 0)
-	{
-		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
-	}
-	else
-	{
-		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Visible);
-	}
+	
 	for (auto & item : datas)
 	{
 		GoodsData * data = item.Value;
@@ -136,6 +129,14 @@ void UMakeOrderUI::InitView()
 		}
 	}
 	SetPrice(0);
+	if (m_OrderScroll->GetChildrenCount() > 0)
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		m_ContentEmptyPanel->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 void UMakeOrderUI::ReView()
 {
