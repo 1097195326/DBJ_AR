@@ -41,17 +41,14 @@ void UAppInstance::ApplicationWillEnterBackground()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : ---UGAppInstance::ApplicationWillEnterBackground"));
 	
-//    AUserPawn::GetInstance()->DeleteAllARActor();
-//    AUserPawn::GetInstance()->QuitEditScene();
-//    UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit);
-	MsgCenter::GetInstance()->SendMsg(msg_ptr(new LocalMsg(Msg_Local, 3002, nullptr)));
+//    MsgCenter::GetInstance()->SendMsg(msg_ptr(new LocalMsg(Msg_Local, 3002, nullptr)));
 
 }
 void UAppInstance::ApplicationHasEnteredForeground()
 {
     UE_LOG(LogTemp, Log, TEXT("zhx : ---UGAppInstance::ApplicationHasEnteredForeground"));
     
-	MsgCenter::GetInstance()->SendMsg(msg_ptr(new LocalMsg(Msg_Local, 3003, nullptr)));
+//    MsgCenter::GetInstance()->SendMsg(msg_ptr(new LocalMsg(Msg_Local, 3003, nullptr)));
 
 }
 void UAppInstance::OpenLevel(const FString & _levelName)

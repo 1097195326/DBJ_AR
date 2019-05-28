@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PackAction.h"
 #include "Misc/MessageDialog.h"
@@ -12,6 +12,7 @@
 #include "EditorStyleSet.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Engine.h"
+#include "MultpakTool.h"
 #define LOCTEXT_NAMESPACE "FMultPakToolModule"
 
 
@@ -262,7 +263,7 @@ void FPackAction::CookContent()
 
 	OptionalParams += GetCookingOptionalParams();
 
-	if (FApp::IsRunningDebug())
+//    if (FApp::IsRunningDebug())
 	{
 		OptionalParams += TEXT(" -UseDebugParamForEditorExe");
 	}

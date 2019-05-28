@@ -91,6 +91,7 @@ public:
 	void	DeleteSelectARActor();
 	void	DeleteAllARActor();
     void    QuitEditScene();
+    void    RestartEditScene();
     
 	int		GetChangeProductId();
 	void	ChangeSelectModel(UStaticMesh * mesh);

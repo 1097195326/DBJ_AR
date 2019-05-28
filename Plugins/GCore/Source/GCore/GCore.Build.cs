@@ -74,7 +74,6 @@ public class GCore : ModuleRules
 
         PrivateDependencyModuleNames.AddRange(
             new string[] {
-                "ShaderCore",
                 "RenderCore",
                  "ImageWrapper",
                 "RHI"

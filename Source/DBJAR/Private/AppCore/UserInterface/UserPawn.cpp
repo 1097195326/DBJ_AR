@@ -27,7 +27,7 @@ AUserPawn * AUserPawn::GetInstance()
 AUserPawn::AUserPawn(const FObjectInitializer& ObjectInitializer)
 {
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3002, this, &AUserPawn::ApplicationWillEnterBackground);
-	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3003, this, &AUserPawn::ApplicationWillEnterBackground);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3003, this, &AUserPawn::ApplicationHasEnteredForeground);
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
     
     m_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
@@ -292,21 +292,23 @@ void AUserPawn::CancelSelectActor()
 void AUserPawn::TryCreateMergeActor(GoodsData * _goodsData)
 {
 	AUserActor * one = TryCreateARActor(_goodsData);
-	AUserActor * two = TryCreateARActor(_goodsData->matchedProduct);
-	if (one && two)
-	{
-		UE_LOG(LogTemp, Log, TEXT("zhx : one actor data num : %d"), one->m_GoodsDatas.Num());
-		UE_LOG(LogTemp, Log, TEXT("zhx : two actor data num : %d"), two->m_GoodsDatas.Num());
-
-		one->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
-		two->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
-
-		MergeTwoUserActor(one, two);
-
-		UE_LOG(LogTemp, Log, TEXT("zhx : GetRuntimeGoodsList data num : %d"), RuntimeRDataManager::GetInstance()->GetRuntimeGoodsList().Num());
-
-	}
-
+    if(_goodsData->matchedProduct != nullptr)
+    {
+        AUserActor * two = TryCreateARActor(_goodsData->matchedProduct);
+        if (one && two)
+        {
+            UE_LOG(LogTemp, Log, TEXT("zhx : one actor data num : %d"), one->m_GoodsDatas.Num());
+            UE_LOG(LogTemp, Log, TEXT("zhx : two actor data num : %d"), two->m_GoodsDatas.Num());
+            
+            one->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
+            two->SetMatchId(_goodsData->id, _goodsData->matchedProduct->id);
+            
+            MergeTwoUserActor(one, two);
+            
+            UE_LOG(LogTemp, Log, TEXT("zhx : GetRuntimeGoodsList data num : %d"), RuntimeRDataManager::GetInstance()->GetRuntimeGoodsList().Num());
+            
+        }
+    }
 }
 AUserActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 {
@@ -362,16 +364,16 @@ AUserActor * AUserPawn::TryCreateARActor(GoodsData * _goodsData)
 }
 void AUserPawn::TryDeleteARActor(AUserActor * actor)
 {
-	TArray<AActor *> allUserActor;
-	UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);
+    TArray<AActor *> allUserActor;
+    UGameplayStatics::GetAllActorsOfClass(this, AUserActor::StaticClass(), allUserActor);
 
-	if (allUserActor.Contains(actor))
+    if (allUserActor.Contains(actor))
 	{
 		RuntimeRDataManager::GetInstance()->RemoveGoodsFromList(actor->m_GoodsDatas);
 
 		actor->Destroy();
 	}
-	GEngine->ForceGarbageCollection(true);
+    GEngine->ForceGarbageCollection(true);
 
 }
 void AUserPawn::DeleteSelectARActor()
@@ -405,6 +407,11 @@ void AUserPawn::QuitEditScene()
     DeleteAllARActor();
     StopARSession();
     
+}
+void AUserPawn::RestartEditScene()
+{
+    QuitEditScene();
+    StartARSession();
 }
 AActor * AUserPawn::TryCreateARActor(FVector2D _screenPosition)
 {
@@ -658,5 +665,7 @@ void AUserPawn::ApplicationWillEnterBackground(msg_ptr _msg)
 }
 void AUserPawn::ApplicationHasEnteredForeground(msg_ptr _msg)
 {
-	StopARSession();
+#if PLATFORM_IOS
+    StartARSession();
+#endif
 }

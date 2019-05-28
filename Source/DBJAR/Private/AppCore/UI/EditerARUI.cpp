@@ -229,7 +229,7 @@ void UEditerARUI::On_Button_Click(int _index)
 }
 void UEditerARUI::DeleteAllUserActor()
 {
-	AUserPawn::GetInstance()->DeleteAllARActor();
+    AUserPawn::GetInstance()->RestartEditScene();
 }
 void UEditerARUI::OnGetCategoryList(msg_ptr _msg)
 {
