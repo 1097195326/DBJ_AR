@@ -63,7 +63,7 @@ public class ImageMagick : ModuleRules
             
             PublicAdditionalLibraries.Add("/usr/lib/libxml2.2.dylib");
             PublicAdditionalLibraries.Add("/usr/lib/libz.dylib");
-            
+
             PublicIncludePaths.AddRange(new string[] { Path.Combine(imagemagickPath, "Include","iOS"),Path.Combine(imagemagickPath, "Include","iOS","MagickCore"),Path.Combine(imagemagickPath, "Include","iOS","jpeg"),Path.Combine(imagemagickPath, "Include","iOS","MagickWand") ,Path.Combine(imagemagickPath, "Include","iOS","MagickWand") });
             
             
@@ -71,12 +71,15 @@ public class ImageMagick : ModuleRules
             PublicLibraryPaths.Add(LibPath);
             
             //PublicAdditionalLibraries.Add(Path.Combine(LibPath, "HMImagePickerManager.a"));
+
             PublicAdditionalLibraries.Add(Path.Combine(LibPath, "libjpeg.a"));
             PublicAdditionalLibraries.Add(Path.Combine(LibPath, "libMagick++.a"));
             PublicAdditionalLibraries.Add(Path.Combine(LibPath, "libMagickCore.a"));
             PublicAdditionalLibraries.Add(Path.Combine(LibPath, "libMagickWand.a"));
+
             //PublicAdditionalLibraries.Add(Path.Combine(LibPath, "libpng.a"));
-            
+
+
             PublicFrameworks.AddRange(
             new string[]
             {
