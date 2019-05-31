@@ -36,6 +36,11 @@ void ULoginUI::On_Init()
 		m_Button_Open_Service_Agreement = button;
 		UI_M->RegisterButton(4, m_Button_Open_Service_Agreement, this, &ULoginUI::On_Button_Click);
 	}
+	if (UButton *button = Cast<UButton>(GetWidgetFromName("VisitorButton")))
+	{
+		m_Visitor_Button = button;
+		UI_M->RegisterButton(5, m_Visitor_Button, this, &ULoginUI::On_Button_Click);
+	}
 	if (UEditableText * text = Cast<UEditableText>(GetWidgetFromName("PhoneBox")))
 	{
 		m_Phone_Text = text;
@@ -57,6 +62,7 @@ void ULoginUI::On_Start()
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2002, this, &ULoginUI::OnGetSmsCode);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2001, this, &ULoginUI::OnUserLogin);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 2016, this, &ULoginUI::OnAutoLogin);
+	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_Local, 3005, this, &ULoginUI::OnRequestLogin);
 
     LoginGameModule::GetInstance()->AutoLogin();
 
@@ -66,6 +72,7 @@ void ULoginUI::On_Delete()
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2002, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2001, this);
 	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 2016, this);
+	MsgCenter::GetInstance()->RemoveMsgHeader(Msg_Local, 3005, this);
 
 	if (m_Login_Button)
 	{
@@ -74,6 +81,18 @@ void ULoginUI::On_Delete()
 	if (m_VeriCode_Button)
 	{
 		UI_M->UnRegisterButton(m_VeriCode_Button);
+	}
+	if (m_BackButton)
+	{
+		UI_M->UnRegisterButton(m_BackButton);
+	}
+	if (m_Button_Open_Service_Agreement)
+	{
+		UI_M->UnRegisterButton(m_Button_Open_Service_Agreement);
+	}
+	if (m_Visitor_Button)
+	{
+		UI_M->UnRegisterButton(m_Visitor_Button);
 	}
 }
 static int timeindex = 0;
@@ -128,6 +147,10 @@ void ULoginUI::On_Button_Click(int _index)
 	{
 		m_MainPanel->SetVisibility(ESlateVisibility::Hidden);
 		m_XieyiPanel->SetVisibility(ESlateVisibility::Visible);
+	}break;
+	case 5:
+	{
+		UAppInstance::GetInstance()->OpenLevel(TEXT("ARLevel"));
 	}break;
 	default:
 		break;
@@ -188,6 +211,10 @@ void ULoginUI::OnAutoLogin(msg_ptr _msg)
 		FString msg = jsonObj->GetStringField(TEXT("msg"));
 		UIManager::GetInstance()->TopHintText(msg, 3.f);
 	}
+}
+void ULoginUI::OnRequestLogin(msg_ptr _msg)
+{
+	UIManager::GetInstance()->TopHintText(TEXT("访客状态无法使用该功能，请登录后重试"), 3.f);
 }
 void ULoginUI::CheckRemainDays()
 {

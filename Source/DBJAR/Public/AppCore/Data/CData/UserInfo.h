@@ -25,7 +25,10 @@ private:
 	FString m_LocalDataPath;
 	FString GetSaveName();
 	FString GetSavePath();
+
+	bool	m_IsLogin;
 public:
+	bool IsLogoin();
 	bool ReadLocalData();
 	void ClearLocalData();
 	bool SaveToLocal(TSharedPtr<FJsonObject> _JsonObj);
