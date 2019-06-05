@@ -5,7 +5,7 @@
 class DBJAR_API LoginGameModule : public GameModule
 {
 private:
-
+	bool  mIsRequestUserLogin;
 public:
 	static LoginGameModule * GetInstance();
 	LoginGameModule();
@@ -23,4 +23,6 @@ public:
 	void UpdateRentDay();
 	void OnUpdateRentDay(msg_ptr _msg);
 
+	void SetRequestUserLogin(bool _isRequest);
+	void RequestUserLogin();
 };

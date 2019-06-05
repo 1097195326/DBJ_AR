@@ -11,6 +11,8 @@ LoginGameModule * LoginGameModule::GetInstance()
 }
 LoginGameModule::LoginGameModule()
 {
+	mIsRequestUserLogin = false;
+
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1002, this, &LoginGameModule::OnGetSmsCode);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1001, this, &LoginGameModule::OnUserLogin);
 	MsgCenter::GetInstance()->RegisterMsgHeader(Msg_HttpRequest, 1016, this, &LoginGameModule::OnAutoLogin);
@@ -30,7 +32,11 @@ void LoginGameModule::On_Init()
 void LoginGameModule::On_Start()
 {
 	m_CurrentUIController->On_Start();
-
+	if (mIsRequestUserLogin)
+	{
+		mIsRequestUserLogin = false;
+		RequestUserLogin();
+	}
 }
 void LoginGameModule::On_Delete()
 {
@@ -151,4 +157,13 @@ void LoginGameModule::OnUpdateRentDay(msg_ptr _msg)
 	{
 
 	}*/
+}
+void LoginGameModule::SetRequestUserLogin(bool _isRequest)
+{
+	mIsRequestUserLogin = _isRequest;
+}
+void LoginGameModule::RequestUserLogin()
+{
+	msg_ptr msg(new LocalMsg(Msg_Local, 3005,nullptr));
+	MsgCenter::GetInstance()->SendMsg(msg);
 }

@@ -21,6 +21,8 @@ public:
 	UPROPERTY()
 		UButton * m_VeriCode_Button;
 	UPROPERTY()
+		UButton * m_Visitor_Button;
+	UPROPERTY()
 	UButton * m_Button_Open_Service_Agreement;
 
 	UPROPERTY()
@@ -40,6 +42,7 @@ public:
 	void OnGetSmsCode(msg_ptr _msg);
 	void OnUserLogin(msg_ptr _msg);
 	void OnAutoLogin(msg_ptr _msg);
+	void OnRequestLogin(msg_ptr _msg);
 
 private:
     FString m_sms;

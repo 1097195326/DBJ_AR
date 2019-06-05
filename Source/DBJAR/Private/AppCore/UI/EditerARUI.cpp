@@ -14,6 +14,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "ARBlueprintLibrary.h"
+#include "LoginGameModule.h"
 
 void UEditerARUI::On_Init()
 {
@@ -164,14 +165,23 @@ void UEditerARUI::On_Button_Click(int _index)
 		}break;
 		case 12:
 		{// user account 
-			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"),this);
-			baseUI->AddToViewport();
+			if (UserInfo::Get()->IsLogoin())
+			{
+				UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("UserAccountUI"), this);
+				baseUI->AddToViewport();
+			}
+			else
+			{
+				LoginGameModule::GetInstance()->SetRequestUserLogin(true);
+				AUserPawn::GetInstance()->QuitEditScene();
+				UAppInstance::GetInstance()->OpenLevel(TEXT("LoginLevel"));
+			}
 		}break;
 		case 13:
 		{// reset AR session
 			//AUserPawn::GetInstance()->StopARSession();
 			UAlertUI * alertUI = (UAlertUI*)UIManager::GetInstance()->OpenUI(TEXT("AlertUI"));
-			alertUI->SetContentText(TEXT("删除所有绿植"));
+			alertUI->SetContentText(TEXT("重置AR场景"));
 			alertUI->BindSureFunctionCall(this, &UEditerARUI::DeleteAllUserActor);
 			alertUI->AddToViewport(99);
 			//AUserPawn::GetInstance()->StartARSession();
@@ -179,9 +189,18 @@ void UEditerARUI::On_Button_Click(int _index)
 		case 14:
 		{//to order list 
 			//RemoveFromParent();
-			RuntimeRDataManager::GetInstance()->MakeOrder();
-			UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("MakeOrderUI"), this);
-			baseUI->AddToViewport();
+			if (UserInfo::Get()->IsLogoin())
+			{
+				RuntimeRDataManager::GetInstance()->MakeOrder();
+				UBaseUI * baseUI = UIManager::GetInstance()->OpenUI(TEXT("MakeOrderUI"), this);
+				baseUI->AddToViewport();
+			}
+			else
+			{
+				LoginGameModule::GetInstance()->SetRequestUserLogin(true);
+				AUserPawn::GetInstance()->QuitEditScene();
+				UAppInstance::GetInstance()->OpenLevel(TEXT("LoginLevel"));
+			}
 			//baseUI->addto
 		}break;
 		case 15:

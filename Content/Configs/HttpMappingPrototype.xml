@@ -43,6 +43,8 @@
         <mapping msgId="3003" channel="local" uri="" dest = "ApplicationHasEnteredForeground"/>
         <mapping msgId="3004" channel="local" uri="" dest = "goods icon downloac goodsData finish"/>
 
+        <mapping msgId="3005" channel="local" uri="" dest = "request user to login"/>
+
         <mapping msgId="110" channel="local" uri="" dest = "http connect fail"/>
 
         

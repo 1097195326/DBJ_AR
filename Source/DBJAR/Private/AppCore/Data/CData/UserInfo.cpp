@@ -15,7 +15,8 @@ UserInfo *UserInfo::instance = nullptr;
 UserInfo::UserInfo()
 {
 	m_SaveName = FString(TEXT("UserData.data"));
-    
+	m_IsLogin = false;
+
     FString SavePath = UFileDownloadManager::Get()->GetAppPath();
     
 	m_SavePath = FPaths::Combine(SavePath, m_SaveName);
@@ -70,6 +71,8 @@ bool UserInfo::SaveToLocal(TSharedPtr<FJsonObject> _JsonObj)
 	}
 	ReadLocalData();
 	
+	m_IsLogin = true;
+
 	return true;
 }
 bool UserInfo::ReadLocalData()
@@ -242,7 +245,10 @@ const FSaveUserData& UserInfo::GetLocalData()
 {
 	return m_SaveUserData;
 }
-
+bool UserInfo::IsLogoin()
+{
+	return m_IsLogin;
+}
 bool UserInfo::IsExistLocalFile()
 {
 	return  FPlatformFileManager::Get().GetPlatformFile().FileExists(*m_SavePath);
