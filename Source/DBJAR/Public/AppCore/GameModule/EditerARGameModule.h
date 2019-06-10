@@ -50,4 +50,7 @@ public:
 	// get types
 	void	GetGoodsType();
 	void	OnGetGoodsType(msg_ptr _msg);
+	// Down order 
+	void	DownOrder(FString _url);
+	//void	OnDownOrder(msg_ptr _msg);
 };

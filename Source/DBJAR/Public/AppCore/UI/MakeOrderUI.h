@@ -23,6 +23,8 @@ public:
 	TArray<UOrderInfoUI*> m_InfoUIList;
 
 	UPROPERTY()
+		UButton * m_DownOrderButton;
+	UPROPERTY()
 		UButton * m_BackButton;
 	UPROPERTY()
 	UTextBlock * m_TitleName;
@@ -58,5 +60,8 @@ public:
 	void OnCommitCurrentOrder(msg_ptr _msg);
 
 private:
+
+	void OpenWebview(FString _url);
+
 	int		allPriceI;
 };

@@ -11,6 +11,10 @@ void UMakeOrderUI::On_Init()
 	{
 		m_BackButton = widget;
 	}
+	if (UButton * widget = (UButton*)GetWidgetFromName("DownOrderButton"))
+	{
+		m_DownOrderButton = widget;
+	}
 	if (UTextBlock * widget = (UTextBlock*)GetWidgetFromName("TitleName"))
 	{
 		m_TitleName = widget;
@@ -73,7 +77,8 @@ void UMakeOrderUI::On_Start()
     UIManager::GetInstance()->RegisterButton(1, m_BackButton, this, &UMakeOrderUI::OnButtonClick);
     UIManager::GetInstance()->RegisterButton(2, m_ToOrderInfoButton, this, &UMakeOrderUI::OnButtonClick);
     UIManager::GetInstance()->RegisterButton(3, m_SaveOrderButton, this, &UMakeOrderUI::OnButtonClick);
-    UIManager::GetInstance()->RegisterButton(4, m_CommitOrderButton, this, &UMakeOrderUI::OnButtonClick);
+	UIManager::GetInstance()->RegisterButton(4, m_CommitOrderButton, this, &UMakeOrderUI::OnButtonClick);
+	UIManager::GetInstance()->RegisterButton(5, m_DownOrderButton, this, &UMakeOrderUI::OnButtonClick);
     
 	InitView();
 }
@@ -87,6 +92,7 @@ void UMakeOrderUI::On_Delete()
 	UIManager::GetInstance()->UnRegisterButton(m_ToOrderInfoButton);
 	UIManager::GetInstance()->UnRegisterButton(m_SaveOrderButton);
 	UIManager::GetInstance()->UnRegisterButton(m_CommitOrderButton);
+	UIManager::GetInstance()->UnRegisterButton(m_DownOrderButton);
 
 	RuntimeRDataManager::GetInstance()->ClearOrder();
 	m_InfoUIList.Empty();
@@ -110,6 +116,7 @@ void UMakeOrderUI::InitView()
 	}
 	else
 	{
+		m_DownOrderButton->SetIsEnabled(false);
 		m_TitleName->SetText(FText::FromString(TEXT("预订单详情")));
 	}
 	TMap<int,GoodsData*> datas = RuntimeRDataManager::GetInstance()->GetOrderDatas();
@@ -208,11 +215,23 @@ void UMakeOrderUI::OnButtonClick(int _index)
 		EditerARGameModule::GetInstance()->CommitCurrentOrder();
 		
 	}break;
+	case 5:
+	{
+		EditerARGameModule::GetInstance()->DownOrder(TEXT("http://ar.plantart.cn/orders/excel?orderId=158&supplyId=0"));
+		
+	}
+	break;
 	default:
 		break;
 	}
 	
 }
+
+void UMakeOrderUI::OpenWebview(FString _url)
+{
+	
+}
+
 void UMakeOrderUI::OnCommitCurrentOrder(msg_ptr _msg)
 {
 	RemoveFromParent();

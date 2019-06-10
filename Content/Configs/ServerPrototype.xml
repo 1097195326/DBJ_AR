@@ -7,13 +7,13 @@
 <root type="ServerPrototype">
 	<server pid="300" desc="ios HTTP.">
 		<param key="platform" value="IOS" />
-		<param key="serverUrl" value="http://101.201.75.23:8080/" />
+		<param key="serverUrl" value="http://ar.plantart.cn/" />
 		<param key="apiVersion" value="1.0.0" />
 		<param key="appType" value="FAFA_SOFT_APP" />
 	</server>
 	<server pid="301" desc="android Http.">
 		<param key="platform" value="ANDROID" />
-		<param key="serverUrl" value="http://101.201.75.23:8080/" />
+		<param key="serverUrl" value="http://ar.plantart.cn/" />
 		<param key="apiVersion" value="1.0.0" />
 		<param key="appType" value="FAFA_SOFT_APP" />
 	</server>
