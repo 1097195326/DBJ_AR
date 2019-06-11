@@ -6,6 +6,7 @@
 #include "RuntimeRDataManager.h"
 #include "RuntimeCDataManager.h"
 
+#include "Engine/Engine.h"
 
 EditerARGameModule * EditerARGameModule::GetInstance()
 {
@@ -334,13 +335,15 @@ void EditerARGameModule::OnGetGoodsType(msg_ptr _msg)
 	msg_ptr msg(new LocalMsg(Msg_Local, 2005, jsonObject));
 	MsgCenter::GetInstance()->SendMsg(msg);
 }
-void EditerARGameModule::DownOrder(FString _url)
+void EditerARGameModule::OpenHttpUrl(FString _url)
 {
-	FString cookie = UserInfo::Get()->GetCookie();
-	FString token = UserInfo::Get()->GetToken();
-
-	FString httpUrl = _url;
-	msg_ptr mMsg(new HttpMsg(Msg_HttpRequest, 0000, httpUrl, TEXT(""), Http_Get, cookie, token));
-
-	MsgCenter::GetInstance()->SendMsg(mMsg);
+#if PLATFORM_IOS
+    dispatch_async(dispatch_get_main_queue(),^ {
+        NSString *httpUrlStr = [NSString stringWithFormat:@"%s",TCHAR_TO_UTF8(*_url)];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:httpUrlStr] options:@{} completionHandler:nil];
+    });
+#elif PLATFORM_ANDROID
+    
+#endif
+    
 }

@@ -217,7 +217,7 @@ void UMakeOrderUI::OnButtonClick(int _index)
 	}break;
 	case 5:
 	{
-		EditerARGameModule::GetInstance()->DownOrder(TEXT("http://ar.plantart.cn/orders/excel?orderId=158&supplyId=0"));
+		EditerARGameModule::GetInstance()->OpenHttpUrl(TEXT("http://ar.plantart.cn/orders/excel?orderId=158&supplyId=0"));
 		
 	}
 	break;
