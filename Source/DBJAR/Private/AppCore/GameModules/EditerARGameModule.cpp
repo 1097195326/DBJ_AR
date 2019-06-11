@@ -337,6 +337,7 @@ void EditerARGameModule::OnGetGoodsType(msg_ptr _msg)
 }
 void EditerARGameModule::OpenHttpUrl(FString _url)
 {
+    UE_LOG(LogTemp, Log, TEXT("zhx:EditerARGameModule::OpenHttpUrl : %s"), *_url);
 #if PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(),^ {
         NSString *httpUrlStr = [NSString stringWithFormat:@"%s",TCHAR_TO_UTF8(*_url)];
