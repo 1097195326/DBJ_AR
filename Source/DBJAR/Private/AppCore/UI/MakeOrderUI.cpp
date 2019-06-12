@@ -218,7 +218,7 @@ void UMakeOrderUI::OnButtonClick(int _index)
 	case 5:
 	{
         R_Order * order = RuntimeRDataManager::GetInstance()->GetCurrentOrder();
-        FString url = FString::Printf(TEXT("http://ar.plantart.cn/orders/excel?orderId=%d&supplyId=%d"), order->Id,UserInfo::Get()->GetLocalData().id);
+        FString url = FString::Printf(TEXT("http://ar.plantart.cn/orders/excel?orderId=%d&supplyId=0"), order->Id);
         
 		EditerARGameModule::GetInstance()->OpenHttpUrl(url);
 		
